@@ -325,10 +325,17 @@ QString formatAccountValue(const marketMarket *market)
     return QString(tmp);
 }
 
-QString formatTxPoW(const marketMarket *market)
+QString formatTxPoWh(const marketMarket *market)
 {
     char tmp[32];
-    snprintf(tmp, sizeof(tmp), "%u", market->txPoW);
+    snprintf(tmp, sizeof(tmp), "%u", market->txPoWh);
+    return QString(tmp);
+}
+
+QString formatTxPoWd(const marketMarket *market)
+{
+    char tmp[32];
+    snprintf(tmp, sizeof(tmp), "%u", market->txPoWd);
     return QString(tmp);
 }
 

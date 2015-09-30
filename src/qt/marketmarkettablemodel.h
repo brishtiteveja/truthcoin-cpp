@@ -37,8 +37,9 @@ public:
         DecisionIDs = 8,
         DecisionFunctionIDs = 9,
         AccountValue = 10,
-        TxPoW = 11,
-        Hash = 12,
+        TxPoWh = 11,
+        TxPoWd = 12,
+        Hash = 13,
     };
 
     enum RoleIndex {
@@ -80,7 +81,8 @@ QString formatMaturation(const marketMarket *);
 QString formatDecisionIDs(const marketMarket *);
 QString formatDecisionFunctionIDs(const marketMarket *);
 QString formatAccountValue(const marketMarket *);
-QString formatTxPoW(const marketMarket *);
+QString formatTxPoWh(const marketMarket *);
+QString formatTxPoWd(const marketMarket *);
 QString formatHash(const marketMarket *);
 
 #endif // HIVEMIND_QT_MARKETMARKETTABLEMODEL_H

@@ -30,7 +30,7 @@ class BallotVoteWindow;
 class WalletModel;
 
 
-#define BALLOTBRANCH_NLABLES       13
+#define BALLOTBRANCH_NLABLES       15
 #define BALLOTBALLOT_NLABLES        4
 #define BALLOTOUTCOME_NLABLES       2
 #define BALLOTSEALEDVOTE_NLABLES   13

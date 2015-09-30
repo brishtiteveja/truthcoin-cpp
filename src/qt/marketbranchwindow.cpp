@@ -88,6 +88,8 @@ void MarketBranchWindow::setModel(WalletModel *model)
     tableView->setColumnWidth(MarketBranchTableModel::BallotTime, BALLOTTIME_COLUMN_WIDTH);
     tableView->setColumnWidth(MarketBranchTableModel::UnsealTime, UNSEALTIME_COLUMN_WIDTH);
     tableView->setColumnWidth(MarketBranchTableModel::ConsensusThreshold, CONSENSUSTHRESHOLD_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::Alpha, ALPHA_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::Tol, TOL_COLUMN_WIDTH);
     tableView->setColumnWidth(MarketBranchTableModel::Hash, HASH_COLUMN_WIDTH);
 
     tableModel->setTable();

@@ -27,9 +27,9 @@ class QLineEdit;
 class QRadioButton;
 QT_END_NAMESPACE
 
-#define MARKETBRANCH_NLABLES     13
+#define MARKETBRANCH_NLABLES     15
 #define MARKETDECISION_NLABLES   10
-#define MARKETMARKET_NLABLES     10
+#define MARKETMARKET_NLABLES     12
 #define MARKETTRADE_NLABLES      8
 
 
@@ -98,6 +98,8 @@ private:
     QLineEdit *branchBallotTime;
     QLineEdit *branchUnsealTime;
     QLineEdit *branchConsensusThreshold;
+    QLineEdit *branchAlpha;
+    QLineEdit *branchTol;
     QLabel *createBranchCLI;
     QLabel *createBranchCLIResponse;
 
@@ -123,7 +125,8 @@ private:
     QLineEdit *marketMaxCommission;
     QLineEdit *marketTags;
     QLineEdit *marketMaturation;
-    QLineEdit *marketTxPoW;
+    QLineEdit *marketTxPoWh;
+    QLineEdit *marketTxPoWd;
     QLabel *createMarketCLI;
     QLabel *createMarketCLIResponse;
 
@@ -172,7 +175,8 @@ public slots:
     void onMarketMaxCommissionTextChanged(const QString &);
     void onMarketTagsTextChanged(const QString &);
     void onMarketMaturationTextChanged(const QString &);
-    void onMarketTxPoWTextChanged(const QString &);
+    void onMarketTxPoWhTextChanged(const QString &);
+    void onMarketTxPoWdTextChanged(const QString &);
     void onTradeAddressTextChanged(const QString &);
     void onTradeBuyRadioButtonToggled(bool);
     void onTradePriceTextChanged(const QString &);

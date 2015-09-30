@@ -35,7 +35,9 @@ public:
         BallotTime = 8,
         UnsealTime = 9,
         ConsensusThreshold = 10,
-        Hash = 11,
+        Alpha = 11,
+        Tol = 12,
+        Hash = 13,
     };
 
     enum RoleIndex {
@@ -73,6 +75,8 @@ QString formatTau(const marketBranch *);
 QString formatBallotTime(const marketBranch *);
 QString formatUnsealTime(const marketBranch *);
 QString formatConsensusThreshold(const marketBranch *);
+QString formatAlpha(const marketBranch *);
+QString formatTol(const marketBranch *);
 QString formatHash(const marketBranch *);
 
 #endif // HIVEMIND_QT_MARKETBRANCHTABLEMODEL_H

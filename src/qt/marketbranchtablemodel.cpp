@@ -32,6 +32,8 @@ static int column_alignments[] = {
         Qt::AlignRight|Qt::AlignVCenter, /* ballotTime */
         Qt::AlignRight|Qt::AlignVCenter, /* unsealTime */
         Qt::AlignRight|Qt::AlignVCenter, /* consensusThreshold */
+        Qt::AlignRight|Qt::AlignVCenter, /* alpha */
+        Qt::AlignRight|Qt::AlignVCenter, /* tol */
         Qt::AlignLeft|Qt::AlignVCenter, /* Hash */
     };
 
@@ -88,6 +90,8 @@ MarketBranchTableModel::MarketBranchTableModel(CWallet *wallet, WalletModel *par
         << tr("Ballot Time")
         << tr("Unseal Time")
         << tr("ConsensusThreshold")
+        << tr("Alpha")
+        << tr("Tol")
         << tr("Hash")
         ;
 }
@@ -142,6 +146,10 @@ QVariant MarketBranchTableModel::data(const QModelIndex &index, int role) const
             return QVariant((int)branch->unsealTime);
         case ConsensusThreshold:
             return QVariant((double)branch->consensusThreshold*1e-8);
+        case Alpha:
+            return QVariant((double)branch->alpha*1e-8);
+        case Tol:
+            return QVariant((double)branch->tol*1e-8);
         case Hash:
             return formatHash(branch);
         default:
@@ -192,6 +200,10 @@ QVariant MarketBranchTableModel::headerData(int section, Qt::Orientation orienta
                 return tr("UnsealTime.");
             case ConsensusThreshold:
                 return tr("ConsensusThreshold.");
+            case Alpha:
+                return tr("Alpha.");
+            case Tol:
+                return tr("Tol.");
             case Hash:
                 return tr("Hash.");
             }
@@ -317,6 +329,20 @@ QString formatConsensusThreshold(const marketBranch *branch)
 {
     char tmp[32];
     snprintf(tmp, sizeof(tmp), "%.3f", branch->consensusThreshold*1e-8);
+    return QString(tmp);
+}
+
+QString formatAlpha(const marketBranch *branch)
+{
+    char tmp[32];
+    snprintf(tmp, sizeof(tmp), "%.3f", branch->alpha*1e-8);
+    return QString(tmp);
+}
+
+QString formatTol(const marketBranch *branch)
+{
+    char tmp[32];
+    snprintf(tmp, sizeof(tmp), "%.3f", branch->tol*1e-8);
     return QString(tmp);
 }
 
