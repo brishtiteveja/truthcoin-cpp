@@ -76,6 +76,7 @@ HivemindGUI::HivemindGUI(const NetworkStyle *networkStyle, QWidget *parent) :
     overviewAction(0),
     historyAction(0),
     ballotAction(0),
+    decisionAction(0),
     marketAction(0),
     quitAction(0),
     sendCoinsAction(0),
@@ -291,6 +292,13 @@ void HivemindGUI::createActions(const NetworkStyle *networkStyle)
     marketAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabGroup->addAction(marketAction);
 
+    decisionAction = new QAction(SingleColorIcon(":/icons/decision"), tr("&Decisions"), this);
+    decisionAction->setStatusTip(tr("Browse decisions"));
+    decisionAction->setToolTip(decisionAction->statusTip());
+    decisionAction->setCheckable(true);
+    decisionAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
+    tabGroup->addAction(decisionAction);
+
     ballotAction = new QAction(SingleColorIcon(":/icons/ballot"), tr("&Ballot"), this);
     ballotAction->setStatusTip(tr("See votes"));
     ballotAction->setToolTip(ballotAction->statusTip());
@@ -316,6 +324,8 @@ void HivemindGUI::createActions(const NetworkStyle *networkStyle)
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
     connect(ballotAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(ballotAction, SIGNAL(triggered()), this, SLOT(gotoBallotPage()));
+    connect(decisionAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(decisionAction, SIGNAL(triggered()), this, SLOT(gotoDecisionPage()));
     connect(marketAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(marketAction, SIGNAL(triggered()), this, SLOT(gotoMarketPage()));
 #endif // ENABLE_WALLET
@@ -443,6 +453,7 @@ void HivemindGUI::createToolBars()
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
         toolbar->addAction(marketAction);
+        toolbar->addAction(decisionAction);
         toolbar->addAction(ballotAction);
         overviewAction->setChecked(true);
     }
@@ -523,6 +534,7 @@ void HivemindGUI::setWalletActionsEnabled(bool enabled)
     receiveCoinsMenuAction->setEnabled(enabled);
     historyAction->setEnabled(enabled);
     ballotAction->setEnabled(enabled);
+    decisionAction->setEnabled(enabled);
     marketAction->setEnabled(enabled);
     encryptWalletAction->setEnabled(enabled);
     backupWalletAction->setEnabled(enabled);
@@ -648,6 +660,12 @@ void HivemindGUI::gotoBallotPage()
 {
     ballotAction->setChecked(true);
     if (walletFrame) walletFrame->gotoBallotPage();
+}
+
+void HivemindGUI::gotoDecisionPage()
+{
+    decisionAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoDecisionPage();
 }
 
 void HivemindGUI::gotoMarketPage()

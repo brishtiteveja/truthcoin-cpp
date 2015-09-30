@@ -14,10 +14,10 @@ class marketBranch;
 class marketDecision;
 class marketMarket;
 class marketTrade;
-class MarketBranchWindow;
-class MarketDecisionWindow;
-class MarketMarketWindow;
-class MarketTradeWindow;
+class DecisionBranchWindow;
+class DecisionDecisionWindow;
+class DecisionMarketWindow;
+class DecisionTradeWindow;
 class MarketViewGraph;
 class WalletModel;
 
@@ -70,19 +70,19 @@ private:
     QLabel *marketLabels[2];
 
     /* select tab variables */
-    MarketBranchWindow *branchWindow;
+    DecisionBranchWindow *branchWindow;
     const marketBranch *branch; 
     QLabel branchTabLabels[MARKETBRANCH_NLABLES];
 
-    MarketDecisionWindow *decisionWindow;
+    DecisionDecisionWindow *decisionWindow;
     const marketDecision *decision; 
     QLabel decisionTabLabels[MARKETDECISION_NLABLES];
 
-    MarketMarketWindow *marketWindow;
+    DecisionMarketWindow *marketWindow;
     const marketMarket *market; 
     QLabel marketTabLabels[MARKETMARKET_NLABLES];
 
-    MarketTradeWindow *tradeWindow;
+    DecisionTradeWindow *tradeWindow;
     const marketTrade *trade; 
     QLabel tradeTabLabels[MARKETTRADE_NLABLES];
 

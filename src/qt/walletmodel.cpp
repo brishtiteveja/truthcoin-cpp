@@ -11,10 +11,10 @@
 #include "ballotoutcometablemodel.h"
 #include "ballotsealedvotetablemodel.h"
 #include "ballotvotetablemodel.h"
-#include "marketbranchtablemodel.h"
-#include "marketdecisiontablemodel.h"
-#include "marketmarkettablemodel.h"
-#include "markettradetablemodel.h"
+#include "decisionbranchtablemodel.h"
+#include "decisiondecisiontablemodel.h"
+#include "decisionmarkettablemodel.h"
+#include "decisiontradetablemodel.h"
 #include "recentrequeststablemodel.h"
 #include "resolvevotecoltablemodel.h"
 #include "resolvevoterowtablemodel.h"
@@ -40,10 +40,10 @@ using namespace std;
 
 WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *parent) :
     QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0),
-    marketBranchTableModel(0),
-    marketDecisionTableModel(0),
-    marketMarketTableModel(0),
-    marketTradeTableModel(0),
+    decisionBranchTableModel(0),
+    decisionDecisionTableModel(0),
+    decisionMarketTableModel(0),
+    decisionTradeTableModel(0),
     resolveVoteColTableModel(0),
     resolveVoteRowTableModel(0),
     resolveVoteInputTableModel(0),
@@ -57,15 +57,15 @@ WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *p
     fForceCheckBalanceChanged = false;
 
     addressTableModel = new AddressTableModel(wallet, this);
-    ballotBranchTableModel = new MarketBranchTableModel(wallet, this);
+    ballotBranchTableModel = new DecisionBranchTableModel(wallet, this);
     ballotBallotTableModel = new BallotBallotTableModel(wallet, this);
     ballotOutcomeTableModel = new BallotOutcomeTableModel(wallet, this);
     ballotSealedVoteTableModel = new BallotSealedVoteTableModel(wallet, this);
     ballotVoteTableModel = new BallotVoteTableModel(wallet, this);
-    marketBranchTableModel = new MarketBranchTableModel(wallet, this);
-    marketDecisionTableModel = new MarketDecisionTableModel(wallet, this);
-    marketMarketTableModel = new MarketMarketTableModel(wallet, this);
-    marketTradeTableModel = new MarketTradeTableModel(wallet, this);
+    decisionBranchTableModel = new DecisionBranchTableModel(wallet, this);
+    decisionDecisionTableModel = new DecisionDecisionTableModel(wallet, this);
+    decisionMarketTableModel = new DecisionMarketTableModel(wallet, this);
+    decisionTradeTableModel = new DecisionTradeTableModel(wallet, this);
     resolveVoteColTableModel = new ResolveVoteColTableModel();
     resolveVoteRowTableModel = new ResolveVoteRowTableModel();
     resolveVoteInputTableModel = new ResolveVoteInputTableModel();
@@ -395,7 +395,7 @@ AddressTableModel *WalletModel::getAddressTableModel()
     return addressTableModel;
 }
 
-MarketBranchTableModel *WalletModel::getBallotBranchTableModel()
+DecisionBranchTableModel *WalletModel::getBallotBranchTableModel()
 {
     return ballotBranchTableModel;
 }
@@ -420,24 +420,24 @@ BallotVoteTableModel *WalletModel::getBallotVoteTableModel()
     return ballotVoteTableModel;
 }
 
-MarketBranchTableModel *WalletModel::getMarketBranchTableModel()
+DecisionBranchTableModel *WalletModel::getDecisionBranchTableModel()
 {
-    return marketBranchTableModel;
+    return decisionBranchTableModel;
 }
 
-MarketDecisionTableModel *WalletModel::getMarketDecisionTableModel()
+DecisionDecisionTableModel *WalletModel::getDecisionDecisionTableModel()
 {
-    return marketDecisionTableModel;
+    return decisionDecisionTableModel;
 }
 
-MarketMarketTableModel *WalletModel::getMarketMarketTableModel()
+DecisionMarketTableModel *WalletModel::getDecisionMarketTableModel()
 {
-    return marketMarketTableModel;
+    return decisionMarketTableModel;
 }
 
-MarketTradeTableModel *WalletModel::getMarketTradeTableModel()
+DecisionTradeTableModel *WalletModel::getDecisionTradeTableModel()
 {
-    return marketTradeTableModel;
+    return decisionTradeTableModel;
 }
 
 ResolveVoteColTableModel *WalletModel::getResolveVoteColTableModel()

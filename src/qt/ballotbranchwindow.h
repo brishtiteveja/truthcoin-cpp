@@ -14,8 +14,8 @@ class QLineEdit;
 class QTableView;
 QT_END_NAMESPACE
 
-class MarketBranchFilterProxyModel;
-class MarketBranchTableModel;
+class DecisionBranchFilterProxyModel;
+class DecisionBranchTableModel;
 class BallotView;
 class WalletModel;
 
@@ -48,10 +48,10 @@ public:
 private:
     QLineEdit *filterDescription;
 
-    BallotView *ballotView;
-    MarketBranchTableModel *tableModel;
+    BallotView *view;
+    DecisionBranchTableModel *tableModel;
     QTableView *tableView;
-    MarketBranchFilterProxyModel *proxyModel;
+    DecisionBranchFilterProxyModel *proxyModel;
 
 public slots:
     void currentRowChanged(const QModelIndex &, const QModelIndex &);

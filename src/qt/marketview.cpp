@@ -20,14 +20,14 @@
 
 #include "guiutil.h"
 #include "json/json_spirit_writer_template.h"
-#include "marketbranchwindow.h"
-#include "marketbranchtablemodel.h"
-#include "marketdecisionwindow.h"
-#include "marketdecisiontablemodel.h"
-#include "marketmarketwindow.h"
-#include "marketmarkettablemodel.h"
-#include "markettradewindow.h"
-#include "markettradetablemodel.h"
+#include "decisionbranchwindow.h"
+#include "decisionbranchtablemodel.h"
+#include "decisiondecisionwindow.h"
+#include "decisiondecisiontablemodel.h"
+#include "decisionmarketwindow.h"
+#include "decisionmarkettablemodel.h"
+#include "decisiontradewindow.h"
+#include "decisiontradetablemodel.h"
 #include "marketview.h"
 #include "marketviewgraph.h"
 #include "primitives/market.h"
@@ -102,6 +102,7 @@ MarketView::MarketView(QWidget *parent)
     glayout->addWidget(marketLabels[0], /* row */2, col0);
     glayout->addWidget(marketLabels[1], /* row */2, col1);
 
+#if 0
     /* Horizontal Splitter */
     /* Select     Create   */
     QSplitter *splitter = new QSplitter(Qt::Horizontal);
@@ -147,10 +148,12 @@ MarketView::MarketView(QWidget *parent)
     tabs2->addTab(page3, tr("Trade"));
     initCreateTradeTab(page3);
     gb2layout->addWidget(tabs2);
+#endif
 }
 
 void MarketView::initSelectBranchTab(QWidget *page)
 {
+#if 0
     QGridLayout *glayout = new QGridLayout();
     glayout->setHorizontalSpacing(5);
     glayout->setColumnStretch(0, 1);
@@ -188,7 +191,7 @@ void MarketView::initSelectBranchTab(QWidget *page)
     }
 
     QPushButton *button = new QPushButton(tr("Select"));
-    branchWindow = new MarketBranchWindow(this);
+    branchWindow = new DecisionBranchWindow(this);
     connect(button, SIGNAL(clicked()), this, SLOT(showBranchWindow()));
 
     QVBoxLayout *vlayout = new QVBoxLayout(page);
@@ -197,10 +200,12 @@ void MarketView::initSelectBranchTab(QWidget *page)
     vlayout->addLayout(glayout, 0);
     vlayout->addWidget(button, 0);
     vlayout->addWidget(new QWidget(), 10); /* receives all the stretch */
+#endif
 }
 
 void MarketView::initSelectDecisionTab(QWidget *page)
 {
+#if 0
     QGridLayout *glayout = new QGridLayout();
     glayout->setHorizontalSpacing(5);
     glayout->setColumnStretch(0, 1);
@@ -234,7 +239,7 @@ void MarketView::initSelectDecisionTab(QWidget *page)
     }
 
     QPushButton *button = new QPushButton(tr("Select"));
-    decisionWindow = new MarketDecisionWindow(this);
+    decisionWindow = new DecisionDecisionWindow(this);
     connect(button, SIGNAL(clicked()), this, SLOT(showDecisionWindow()));
 
     QVBoxLayout *vlayout = new QVBoxLayout(page);
@@ -243,10 +248,12 @@ void MarketView::initSelectDecisionTab(QWidget *page)
     vlayout->addLayout(glayout, 0);
     vlayout->addWidget(button, 0);
     vlayout->addWidget(new QWidget(), 10); /* receives all the stretch */
+#endif
 }
 
 void MarketView::initSelectMarketTab(QWidget *page)
 {
+#if 0
     QGridLayout *glayout = new QGridLayout();
     glayout->setHorizontalSpacing(5);
     glayout->setColumnStretch(0, 1);
@@ -282,7 +289,7 @@ void MarketView::initSelectMarketTab(QWidget *page)
     }
 
     QPushButton *button = new QPushButton(tr("Select"));
-    marketWindow = new MarketMarketWindow(this);
+    marketWindow = new DecisionMarketWindow(this);
     connect(button, SIGNAL(clicked()), this, SLOT(showMarketWindow()));
 
     QVBoxLayout *vlayout = new QVBoxLayout(page);
@@ -291,10 +298,12 @@ void MarketView::initSelectMarketTab(QWidget *page)
     vlayout->addLayout(glayout, 0);
     vlayout->addWidget(button, 0);
     vlayout->addWidget(new QWidget(), 10); /* receives all the stretch */
+#endif
 }
 
 void MarketView::initSelectTradeTab(QWidget *page)
 {
+#if 0
     QGridLayout *glayout = new QGridLayout();
     glayout->setHorizontalSpacing(5);
     glayout->setColumnStretch(0, 1);
@@ -325,7 +334,7 @@ void MarketView::initSelectTradeTab(QWidget *page)
     }
 
     QPushButton *button = new QPushButton(tr("Show All Trades"));
-    tradeWindow = new MarketTradeWindow(this);
+    tradeWindow = new DecisionTradeWindow(this);
     connect(button, SIGNAL(clicked()), this, SLOT(showTradeWindow()));
 
     QVBoxLayout *vlayout = new QVBoxLayout(page);
@@ -334,20 +343,24 @@ void MarketView::initSelectTradeTab(QWidget *page)
     vlayout->addLayout(glayout, 0);
     vlayout->addWidget(button, 0);
     vlayout->addWidget(new QWidget(), 10); /* receives all the stretch */
+#endif
 }
 
 void MarketView::showBranchWindow(void)
 {
+#if 0
     if (!branchWindow)
         return;
     branchWindow->show();
     branchWindow->raise();
     branchWindow->setFocus();
     branchWindow->setTableViewFocus();
+#endif
 }
 
 void MarketView::initCreateBranchTab(QWidget *page)
 {
+#if 0
     /* widgets */
     branchName = new QLineEdit();
     branchName->setText("Branch Name");
@@ -506,10 +519,12 @@ void MarketView::initCreateBranchTab(QWidget *page)
 
     /* update CLI */
     updateCreateBranchCLI();
+#endif
 }
 
 void MarketView::initCreateDecisionTab(QWidget *page)
 {
+#if 0
     /* widgets */
     decisionBranchLabel = new QLabel("");
     decisionBranchLabel->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
@@ -620,10 +635,12 @@ void MarketView::initCreateDecisionTab(QWidget *page)
 
     /* update CLI */
     onDecisionIsBinaryRadioButtonToggled(true);
+#endif
 }
 
 void MarketView::initCreateMarketTab(QWidget *page)
 {
+#if 0
     /* widgets */
     marketBranchLabel = new QLabel("");
     marketBranchLabel->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
@@ -766,10 +783,12 @@ void MarketView::initCreateMarketTab(QWidget *page)
 
     /* update CLI */
     updateCreateMarketCLI();
+#endif 
 }
 
 void MarketView::initCreateTradeTab(QWidget *page)
 {
+#if 0
     /* widgets */
     tradeBranchLabel = new QLabel("");
     tradeBranchLabel->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
@@ -877,10 +896,12 @@ void MarketView::initCreateTradeTab(QWidget *page)
 
     /* update CLI */
     updateCreateTradeCLI();
+#endif
 }
 
 void MarketView::updateCreateBranchCLI(void)
 {
+#if 0
     if (!createBranchCLI)
         return;
 
@@ -899,10 +920,12 @@ void MarketView::updateCreateBranchCLI(void)
     cli += QString(" ") + ((branchAlpha->text().size())? branchAlpha->text(): QString("&lt;alpha&gt;"));
     cli += QString(" ") + ((branchTol->text().size())? branchTol->text(): QString("&lt;tol&gt;"));
     createBranchCLI->setText(cli);
+#endif
 }
 
 void MarketView::updateCreateDecisionCLI(void)
 {
+#if 0
     if (!createDecisionCLI)
         return;
 
@@ -922,10 +945,12 @@ void MarketView::updateCreateDecisionCLI(void)
 
     createDecisionCLI->setText(cli);
     createDecisionCLIResponse->setText(QString(""));
+#endif
 }
 
 void MarketView::updateCreateMarketCLI(void)
 {
+#if 0
     if (!createMarketCLI)
         return;
 
@@ -948,10 +973,12 @@ void MarketView::updateCreateMarketCLI(void)
 
     createMarketCLI->setText(cli);
     createMarketCLIResponse->setText(QString(""));
+#endif
 }
 
 void MarketView::updateCreateTradeCLI(void)
 {
+#if 0
     if (!createTradeCLI || !tradeShares || !tradePrice)
         return;
 
@@ -968,47 +995,57 @@ void MarketView::updateCreateTradeCLI(void)
 
     createTradeCLI->setText(cli);
     createTradeCLIResponse->setText(QString(""));
+#endif
 }
 
 void MarketView::showDecisionWindow(void)
 {
+#if 0
     if (!decisionWindow)
         return;
     decisionWindow->show();
     decisionWindow->raise();
     decisionWindow->setFocus();
+#endif
 }
 
 void MarketView::showMarketWindow(void)
 {
+#if 0
     if (!marketWindow)
         return;
     marketWindow->show();
     marketWindow->raise();
     marketWindow->setFocus();
+#endif
 }
 
 void MarketView::showTradeWindow(void)
 {
+#if 0
     if (!tradeWindow)
         return;
     tradeWindow->show();
     tradeWindow->raise();
     tradeWindow->setFocus();
+#endif
 }
 
 void MarketView::setModel(WalletModel *model)
 {
+#if 0
     this->model = model;
     /* branch is last. it populate decisions and market */
     tradeWindow->setModel(model);
     marketWindow->setModel(model);
     decisionWindow->setModel(model);
     branchWindow->setModel(model);
+#endif
 }
 
 void MarketView::onBranchChange(const marketBranch *branch)
 {
+#if 0
     this->branch = branch;
 
     if (!branch) {
@@ -1049,10 +1086,12 @@ void MarketView::onBranchChange(const marketBranch *branch)
     updateCreateDecisionCLI();
     updateCreateMarketCLI();
     updateCreateTradeCLI();
+#endif
 }
 
 void MarketView::onDecisionChange(const marketDecision *decision)
 {
+#if 0
     this->decision = decision;
 
     if (!decision) {
@@ -1085,10 +1124,12 @@ void MarketView::onDecisionChange(const marketDecision *decision)
     /* update CLIs */
     updateCreateMarketCLI();
     updateCreateTradeCLI();
+#endif
 }
 
 void MarketView::onMarketChange(const marketMarket *market)
 {
+#if 0
     this->market = market;
 
     if (!market) {
@@ -1119,7 +1160,7 @@ void MarketView::onMarketChange(const marketMarket *market)
     tradeWindow->onMarketChange(branch, decision, market);
 
     /* graph */
-    const MarketTradeTableModel *tableModel = tradeWindow->getTradeModel();
+    const DecisionTradeTableModel *tableModel = tradeWindow->getTradeModel();
     if (tableModel) {
         double *X = (double *)0;
         double *Y = (double *)0;
@@ -1130,10 +1171,12 @@ void MarketView::onMarketChange(const marketMarket *market)
 
     /* update CLIs */
     updateCreateTradeCLI();
+#endif
 }
 
 void MarketView::onTradeChange(const marketTrade *trade)
 {
+#if 0
     this->trade = trade;
 
     if (!trade) {
@@ -1149,6 +1192,7 @@ void MarketView::onTradeChange(const marketTrade *trade)
         tradeTabLabels[6].setText( formatHash(trade) );
         tradeTabLabels[7].setText( formatUint256(trade->txid) );
     }
+#endif
 }
 
 void MarketView::resizeEvent(QResizeEvent *event)
@@ -1234,9 +1278,11 @@ void MarketView::onDecisionAnswerIsOptionalRadioButtonToggled(bool)
 
 void MarketView::onDecisionIsBinaryRadioButtonToggled(bool)
 {
+#if 0
     bool enableMinMax = !decisionIsBinaryRadioButton->isChecked(); 
     decisionMinimum->setEnabled(enableMinMax);
     decisionMaximum->setEnabled(enableMinMax);
+#endif
     updateCreateDecisionCLI();
 }
 
@@ -1359,6 +1405,7 @@ void MarketView::onTradeNonceTextChanged(const QString &)
  */
 void MarketView::onCreateBranchClicked(void)
 {
+#if 0
     extern Value createbranch(const Array &params, bool fHelp);
 
     std::string name = (branchName->text().size())? branchName->text().toStdString(): "<name>";
@@ -1412,6 +1459,7 @@ void MarketView::onCreateBranchClicked(void)
     } catch (...) {
         createBranchCLIResponse->setText(tr("write_string: unknown exception"));
     }
+#endif
 }
 
 /* onCreateDecisionClicked:
@@ -1429,6 +1477,7 @@ void MarketView::onCreateBranchClicked(void)
  */
 void MarketView::onCreateDecisionClicked(void)
 {
+#if 0
     extern Value createdecision(const Array &params, bool fHelp);
 
     std::string address = (decisionAddress->text().size())? decisionAddress->text().toStdString(): "<address>";
@@ -1474,6 +1523,7 @@ void MarketView::onCreateDecisionClicked(void)
     } catch (...) {
         createDecisionCLIResponse->setText(tr("write_string: unknown exception"));
     }
+#endif
 }
 
 /* onCreateMarketClicked:
@@ -1497,6 +1547,7 @@ void MarketView::onCreateDecisionClicked(void)
  */
 void MarketView::onCreateMarketClicked(void)
 {
+#if 0
     extern Value createmarket(const Array &params, bool fHelp);
 
     std::string address = (marketAddress->text().size())? marketAddress->text().toStdString(): "<address>";
@@ -1548,6 +1599,7 @@ void MarketView::onCreateMarketClicked(void)
     } catch (...) {
         createMarketCLIResponse->setText(tr("write_string: unknown exception"));
     }
+#endif
 }
 
 /* onCreateTradeClicked:
@@ -1565,6 +1617,7 @@ void MarketView::onCreateMarketClicked(void)
  */
 void MarketView::onCreateTradeClicked(void)
 {
+#if 0
     extern Value createtrade(const Array &params, bool fHelp);
 
     std::string address = (tradeAddress->text().size())? tradeAddress->text().toStdString(): "<address>";
@@ -1606,5 +1659,6 @@ void MarketView::onCreateTradeClicked(void)
     } catch (...) {
         createTradeCLIResponse->setText(tr("write_string: unknown exception"));
     }
+#endif
 }
 
