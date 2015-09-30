@@ -29,9 +29,9 @@
 #include "ballotvotetablemodel.h"
 #include "ballotview.h"
 #include "chain.h"
-#include "decisionbranchtablemodel.h"
 #include "guiutil.h"
 #include "main.h"
+#include "marketbranchtablemodel.h"
 #include "primitives/market.h"
 #include "txdb.h"
 #include "walletmodel.h"
@@ -392,10 +392,8 @@ void BallotView::onBranchChange(const marketBranch *branch)
         branchTabLabels[8].setText( formatBallotTime(branch) );
         branchTabLabels[9].setText( formatUnsealTime(branch) );
         branchTabLabels[10].setText( formatConsensusThreshold(branch) );
-        branchTabLabels[11].setText( formatAlpha(branch) );
-        branchTabLabels[12].setText( formatTol(branch) );
-        branchTabLabels[13].setText( formatHash(branch) );
-        branchTabLabels[14].setText( formatUint256(branch->txid) );
+        branchTabLabels[11].setText( formatHash(branch) );
+        branchTabLabels[12].setText( formatUint256(branch->txid) );
     }
 
     /* propagate */
@@ -672,8 +670,6 @@ void BallotView::initSelectBranchTab(QWidget *page)
         "Ballot Time:",
         "Unseal Time:",
         "Consensus Threshold:",
-        "Alpha:",
-        "Tol:",
         "Hash: ",
         "In Tx: ",
     };

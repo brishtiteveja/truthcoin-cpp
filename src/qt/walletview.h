@@ -13,7 +13,6 @@
 class HivemindGUI;
 class ClientModel;
 class BallotView;
-class DecisionView;
 class MarketView;
 class OverviewPage;
 class ReceiveCoinsDialog;
@@ -63,13 +62,11 @@ private:
     OverviewPage *overviewPage;
     QWidget *transactionsPage;
     QWidget *ballotPage;
-    QWidget *decisionPage;
     QWidget *marketPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
 
     BallotView *ballotView;
-    DecisionView *decisionView;
     MarketView *marketView;
     TransactionView *transactionView;
 
@@ -82,8 +79,6 @@ public slots:
     void gotoHistoryPage();
     /** Switch to ballot page */
     void gotoBallotPage();
-    /** Switch to decision page */
-    void gotoDecisionPage();
     /** Switch to market page */
     void gotoMarketPage();
     /** Switch to receive coins page */

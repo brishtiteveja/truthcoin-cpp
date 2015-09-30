@@ -2131,8 +2131,6 @@ Value listbranches(const Array &params, bool fHelp)
         item.push_back(Pair("ballottime", (int)obj->ballotTime));
         item.push_back(Pair("unsealtime", (int)obj->unsealTime));
         item.push_back(Pair("consensusthreshold", ValueFromAmount(obj->consensusThreshold)));
-        item.push_back(Pair("alpha", ValueFromAmount(obj->alpha)));
-        item.push_back(Pair("tol", ValueFromAmount(obj->tol)));
         array.push_back(item);
     }
     entry.push_back(Pair("decisions", array));
@@ -2408,11 +2406,9 @@ Value createbranch(const Array& params, bool fHelp)
         "\n8. tau                 (block number < 65536)"
         "\n9. ballottime          (block number < 65536)"
         "\n10. unsealtime         (block number < 65536)"
-        "\n11. consensusthreshold (numeric)"
-        "\n12. alpha (numeric)"
-        "\n13. tol (numeric)";
+        "\n11. consensusthreshold (numeric)";
 
-    if (fHelp || (params.size() != 13))
+    if (fHelp || (params.size() != 11))
         throw runtime_error(strHelp);
 
     if (!pmarkettree) {
@@ -2434,8 +2430,6 @@ Value createbranch(const Array& params, bool fHelp)
     obj.ballotTime = (uint16_t)params[8].get_int();
     obj.unsealTime = (uint16_t)params[9].get_int();
     obj.consensusThreshold = uint64FromValue(params[10], false);
-    obj.alpha = uint64FromValue(params[11], false);
-    obj.tol = uint64FromValue(params[12], false);
 
     // double-check object is not a duplicate
     uint256 objid = obj.GetHash();
@@ -2604,8 +2598,7 @@ Value createmarket(const Array& params, bool fHelp)
         "\n7. description         (string)"
         "\n8. tags[,...]          (comma-separated list of strings)"
         "\n9. maturation          (block number)"
-        "\n10. tx PoW hash id     (numeric)"
-        "\n11. tx PoW difficulty  (numeric)"
+        "\n10. tx PoW             (numeric)"
         "\nEach decisionid is a hash of a decision optionally followed by a function code."
         "\nThe available function codes are"
         "\n    :X1   X, identity [default]"
@@ -2613,7 +2606,7 @@ Value createmarket(const Array& params, bool fHelp)
         "\n    :X3   X^3"
         "\n    :LNX  LN(X)";
 
-    if (fHelp || (params.size() != 11))
+    if (fHelp || (params.size() != 10))
         throw runtime_error(strHelp);
 
     if (!pmarkettree) {
@@ -2672,8 +2665,7 @@ Value createmarket(const Array& params, bool fHelp)
     obj.description = params[6].get_str();
     obj.tags = params[7].get_str();
     obj.maturation = (uint32_t)params[8].get_int();
-    obj.txPoWh = (uint32_t)params[9].get_int();
-    obj.txPoWd = (uint32_t)params[10].get_int();
+    obj.txPoW = (uint32_t)params[9].get_int();
     double capitalrequired = marketAccountValue(1e-8*obj.B, nstates);
     obj.account = rounduint64(capitalrequired * COIN);
 
@@ -3125,8 +3117,7 @@ Value getmarket(const Array &params, bool fHelp)
     entry.push_back(Pair("description", obj->description));
     entry.push_back(Pair("tags", obj->tags));
     entry.push_back(Pair("maturation", (int)obj->maturation));
-    entry.push_back(Pair("txPoWh", (int)obj->txPoWh));
-    entry.push_back(Pair("txPoWd", (int)obj->txPoWd));
+    entry.push_back(Pair("txPoW", (int)obj->txPoW));
     Array array;
     for(uint32_t i=0; i < obj->decisionIDs.size(); i++) {
         string str = obj->decisionIDs[i].ToString();

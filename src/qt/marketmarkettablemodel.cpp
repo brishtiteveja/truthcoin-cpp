@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -28,6 +28,7 @@ static int column_alignments[] = {
         Qt::AlignLeft|Qt::AlignVCenter, /* Description */
         Qt::AlignLeft|Qt::AlignVCenter, /* Tags */
         Qt::AlignRight|Qt::AlignVCenter, /* Maturation */
+        Qt::AlignLeft|Qt::AlignVCenter, /* Hash */
     };
 
 // Private implementation
@@ -80,6 +81,7 @@ MarketMarketTableModel::MarketMarketTableModel(CWallet *wallet, WalletModel *par
         << tr("Tags")
         << tr("Maturation")
         << tr("Decision IDs")
+        << tr("Hash")
         ;
 }
 
@@ -130,6 +132,8 @@ QVariant MarketMarketTableModel::data(const QModelIndex &index, int role) const
             return QVariant((int)market->maturation);
         case DecisionIDs:
             return formatDecisionIDs(market);
+        case Hash:
+            return formatHash(market);
         default:
             ;
         }
@@ -182,6 +186,8 @@ QVariant MarketMarketTableModel::headerData(int section, Qt::Orientation orienta
                 return tr("Maturation");
             case DecisionIDs:
                 return tr("Decision IDs");
+            case Hash:
+                return tr("Hash");
             }
         }
     }
@@ -240,7 +246,7 @@ MarketMarketTableModel::onDecisionChange(const marketBranch *branch, const marke
 
 QString formatAddress(const marketMarket *market)
 {
-    CTruthcoinAddress addr;
+    CHivemindAddress addr;
     if (addr.Set(market->keyID))
         return QString::fromStdString(addr.ToString());
     return QString("Address");

@@ -130,8 +130,7 @@ struct marketMarket : public marketObj {
     vector<uint256> decisionIDs;
     vector<uint8_t> decisionFunctionIDs;
     uint64_t account;
-    uint32_t txPoWh; /* hash function id */
-    uint32_t txPoWd; /* difficulty */
+    uint32_t txPoW;
 
     marketMarket(void) : marketObj() { marketop = 'M'; } 
     virtual ~marketMarket(void) { } 
@@ -152,8 +151,7 @@ struct marketMarket : public marketObj {
         READWRITE(branchid);
         READWRITE(decisionIDs);
         READWRITE(decisionFunctionIDs);
-        READWRITE(txPoWh);
-        READWRITE(txPoWd);
+        READWRITE(txPoW);
     }
 
     string ToString(void) const;
@@ -179,29 +177,6 @@ struct marketSealedVote : public marketObj {
         READWRITE(branchid);
         READWRITE(height);
         READWRITE(voteid);
-    }
-
-    string ToString(void) const;
-};
-
-struct marketStealVote : public marketObj {
-    uint256 branchid;
-    uint32_t height;
-    CKeyID victimKeyID;
-    CKeyID keyID;
-
-    marketStealVote(void) : marketObj() { marketop = 'L'; } 
-    virtual ~marketStealVote(void) { } 
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(marketop);
-        READWRITE(branchid);
-        READWRITE(height);
-        READWRITE(victimKeyID);
-        READWRITE(keyID);
     }
 
     string ToString(void) const;
@@ -304,6 +279,18 @@ struct marketOutcome : public marketObj {
     int calc(void);
 };
 
+struct marketBallot : public marketObj {
+    uint32_t height; /* a multiple of tau */
+    map<uint256, marketVote *> votes; /* owner of memory */
+
+    marketBallot(void) : marketObj() { marketop = 'b'; } 
+    virtual ~marketBallot(void) {
+        std::map<uint256, marketVote *>::iterator vit;
+        for(vit=votes.begin(); vit != votes.end(); vit++)
+            delete vit->second;
+    }
+};
+
 /* market Branch 
  * decisions partitioned via ending times in blocks ((n-1)*tau, n*tau]
  * ballots available at block n*tau
@@ -323,8 +310,6 @@ struct marketBranch : public marketObj {
     uint16_t ballotTime;
     uint16_t unsealTime;
     uint64_t consensusThreshold;
-    uint64_t alpha;
-    uint64_t tol;
 
     marketBranch(void) : marketObj() { marketop = 'B'; } 
     virtual ~marketBranch(void) { } 
@@ -345,8 +330,6 @@ struct marketBranch : public marketObj {
         READWRITE(ballotTime);
         READWRITE(unsealTime);
         READWRITE(consensusThreshold);
-        READWRITE(alpha);
-        READWRITE(tol);
     }
     string ToString(void) const;
 };

@@ -118,8 +118,6 @@ bool SHORT_TAU_TESTING = true;
         genesisBranch.targetDecisions = 20;
         genesisBranch.maxDecisions = 30;
         genesisBranch.minTradingFee = COIN / 100;
-        genesisBranch.alpha = COIN / 10;
-        genesisBranch.tol = COIN / 5;
 if (SHORT_TAU_TESTING) {
         genesisBranch.tau = 7*40;
         genesisBranch.ballotTime = 2*40;
@@ -164,8 +162,8 @@ if (SHORT_TAU_TESTING) {
         vSeeds.push_back(CDNSSeedData("69.117.250.141", "69.117.250.141"));
 
 if (SHORT_TAU_TESTING) {
-        assert(genesis.hashMerkleRoot == uint256S("0x84468287c97d192c4e5d957964f802cd51ded59b714c2ddb7348edf4f4c45fa5"));
-        assert(hashGenesisBlock == uint256S("0xf4fe00a122af44c6288987581e987da59b58cd3f1bcff83c105d9955c32eda11"));
+        assert(genesis.hashMerkleRoot == uint256S("0xb861ae4e659621a10b941a792a6e3900216ec5ab04ca9d3a886781c0c144d6f3"));
+        assert(hashGenesisBlock == uint256S("0xef4ad4501ebbd7879ff911312554b6d10ff5a4bfee3adf2a58d346d3366ba97b"));
 } else {
         assert(genesis.hashMerkleRoot == uint256S("0x22070acaf5bd2762a487ffc4ec34289c4a52add700561abd96fdabd446b1730c"));
         assert(hashGenesisBlock == uint256S("0x000000006249a3761ba3be5307773df2d7a1c3214a381c96876e098997110fc1"));

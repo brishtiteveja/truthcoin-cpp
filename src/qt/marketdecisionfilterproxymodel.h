@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_MARKETDECISIONFILTERPROXYMODEL_H
-#define TRUTHCOIN_QT_MARKETDECISIONFILTERPROXYMODEL_H
+#ifndef HIVEMIND_QT_MARKETDECISIONFILTERPROXYMODEL_H
+#define HIVEMIND_QT_MARKETDECISIONFILTERPROXYMODEL_H
 
 #include <QModelIndex>
 #include <QObject>
@@ -33,4 +33,4 @@ private:
 };
 
 
-#endif // TRUTHCOIN_QT_MARKETDECISIONFILTERPROXYMODEL_H
+#endif // HIVEMIND_QT_MARKETDECISIONFILTERPROXYMODEL_H

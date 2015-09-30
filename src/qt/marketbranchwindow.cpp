@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -88,6 +88,7 @@ void MarketBranchWindow::setModel(WalletModel *model)
     tableView->setColumnWidth(MarketBranchTableModel::BallotTime, BALLOTTIME_COLUMN_WIDTH);
     tableView->setColumnWidth(MarketBranchTableModel::UnsealTime, UNSEALTIME_COLUMN_WIDTH);
     tableView->setColumnWidth(MarketBranchTableModel::ConsensusThreshold, CONSENSUSTHRESHOLD_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::Hash, HASH_COLUMN_WIDTH);
 
     tableModel->setTable();
 

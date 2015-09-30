@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_MARKETTRADEWINDOW_H
-#define TRUTHCOIN_QT_MARKETTRADEWINDOW_H
+#ifndef HIVEMIND_QT_MARKETTRADEWINDOW_H
+#define HIVEMIND_QT_MARKETTRADEWINDOW_H
 
 #include <QDialog>
 #include <QModelIndex>
@@ -36,6 +36,7 @@ public:
         NSHARES_COLUMN_WIDTH = 100,
         PRICE_COLUMN_WIDTH = 100,
         NONCE_COLUMN_WIDTH = 100,
+        HASH_COLUMN_WIDTH = 200,
     };
 
     explicit MarketTradeWindow(QWidget *parent=0);
@@ -57,4 +58,4 @@ public slots:
     void filterAddressChanged(const QString &);
 };
 
-#endif // TRUTHCOIN_QT_MARKETTRADEWINDOW_H
+#endif // HIVEMIND_QT_MARKETTRADEWINDOW_H

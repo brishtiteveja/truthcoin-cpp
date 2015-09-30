@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -30,8 +30,9 @@ static int column_alignments[] = {
         Qt::AlignRight|Qt::AlignVCenter, /* minTradingFee */
         Qt::AlignRight|Qt::AlignVCenter, /* tau */
         Qt::AlignRight|Qt::AlignVCenter, /* ballotTime */
-        Qt::AlignLeft|Qt::AlignVCenter, /* unsealTime */
-        Qt::AlignLeft|Qt::AlignVCenter /* consensusThreshold */
+        Qt::AlignRight|Qt::AlignVCenter, /* unsealTime */
+        Qt::AlignRight|Qt::AlignVCenter, /* consensusThreshold */
+        Qt::AlignLeft|Qt::AlignVCenter, /* Hash */
     };
 
 
@@ -87,6 +88,7 @@ MarketBranchTableModel::MarketBranchTableModel(CWallet *wallet, WalletModel *par
         << tr("Ballot Time")
         << tr("Unseal Time")
         << tr("ConsensusThreshold")
+        << tr("Hash")
         ;
 }
 
@@ -140,6 +142,8 @@ QVariant MarketBranchTableModel::data(const QModelIndex &index, int role) const
             return QVariant((int)branch->unsealTime);
         case ConsensusThreshold:
             return QVariant((double)branch->consensusThreshold*1e-8);
+        case Hash:
+            return formatHash(branch);
         default:
             ;
         }
@@ -188,6 +192,8 @@ QVariant MarketBranchTableModel::headerData(int section, Qt::Orientation orienta
                 return tr("UnsealTime.");
             case ConsensusThreshold:
                 return tr("ConsensusThreshold.");
+            case Hash:
+                return tr("Hash.");
             }
         }
     }

@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_MARKETTRADETABLEMODEL_H
-#define TRUTHCOIN_QT_MARKETTRADETABLEMODEL_H
+#ifndef HIVEMIND_QT_MARKETTRADETABLEMODEL_H
+#define HIVEMIND_QT_MARKETTRADETABLEMODEL_H
 
 #include <QAbstractTableModel>
 #include <QStringList>
@@ -71,4 +71,4 @@ QString formatNonce(const marketTrade *);
 QString formatBlockNumber(const marketTrade *);
 QString formatHash(const marketTrade *);
 
-#endif // TRUTHCOIN_QT_MARKETTRADETABLEMODEL_H
+#endif // HIVEMIND_QT_MARKETTRADETABLEMODEL_H

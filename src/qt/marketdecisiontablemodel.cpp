@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -27,6 +27,7 @@ static int column_alignments[] = {
         Qt::AlignRight|Qt::AlignVCenter, /* Minimum */
         Qt::AlignRight|Qt::AlignVCenter, /* Maximum */
         Qt::AlignRight|Qt::AlignVCenter, /* AnswerOptional */
+        Qt::AlignLeft|Qt::AlignVCenter, /* Hash */
     };
 
 // Private implementation
@@ -77,6 +78,7 @@ MarketDecisionTableModel::MarketDecisionTableModel(CWallet *wallet, WalletModel 
         << tr("Minimum")
         << tr("Maximum")
         << tr("AnswerOptional")
+        << tr("Hash")
         ;
 }
 
@@ -120,6 +122,10 @@ QVariant MarketDecisionTableModel::data(const QModelIndex &index, int role) cons
             return QVariant((double)decision->min*1e-8);
         case Maximum:
             return QVariant((double)decision->max*1e-8);
+        case AnswerOptional:
+            return formatAnswerOptional(decision);
+        case Hash:
+            return formatHash(decision);
         default:
             ;
         }
@@ -160,6 +166,10 @@ QVariant MarketDecisionTableModel::headerData(int section, Qt::Orientation orien
                 return tr("Minimum");
             case Maximum:
                 return tr("Maximum");
+            case AnswerOptional:
+                return tr("Answer is Optional");
+            case Hash:
+                return tr("Hash");
             }
         }
     }
@@ -218,7 +228,7 @@ MarketDecisionTableModel::onBranchChange(const marketBranch *branch)
 
 QString formatAddress(const marketDecision *decision)
 {
-    CTruthcoinAddress addr;
+    CHivemindAddress addr;
     if (addr.Set(decision->keyID))
         return QString::fromStdString(addr.ToString());
     return QString("Address");

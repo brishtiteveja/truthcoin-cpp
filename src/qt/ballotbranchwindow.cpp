@@ -15,15 +15,15 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
-#include "decisionbranchfilterproxymodel.h"
-#include "decisionbranchtablemodel.h"
+#include "marketbranchfilterproxymodel.h"
+#include "marketbranchtablemodel.h"
 #include "ballotbranchwindow.h"
 #include "ballotview.h"
 #include "walletmodel.h"
 
 
 BallotBranchWindow::BallotBranchWindow(QWidget *parent)
-    : view((BallotView *)parent),
+    : ballotView((BallotView *)parent),
     tableModel(0),
     tableView(0),
     proxyModel(0)
@@ -63,12 +63,12 @@ void BallotBranchWindow::setModel(WalletModel *model)
     if (!model)
         return;
 
-    tableModel = model->getDecisionBranchTableModel();
+    tableModel = model->getMarketBranchTableModel();
 
     if (!tableModel)
         return;
 
-    proxyModel = new DecisionBranchFilterProxyModel(this);
+    proxyModel = new MarketBranchFilterProxyModel(this);
     proxyModel->setSourceModel(tableModel);
 
     tableView->setModel(proxyModel);
@@ -76,19 +76,19 @@ void BallotBranchWindow::setModel(WalletModel *model)
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     tableView->setSortingEnabled(true);
-    tableView->sortByColumn(DecisionBranchTableModel::Name, Qt::AscendingOrder);
+    tableView->sortByColumn(MarketBranchTableModel::Name, Qt::AscendingOrder);
     tableView->verticalHeader()->hide();
 
-    tableView->setColumnWidth(DecisionBranchTableModel::Name, NAME_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::Description, DESCRIPTION_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::BaseListingFee, BASELISTINGFEE_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::TargetDecisions, TARGETDECISIONS_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::MaxDecisions, MAXDECISIONS_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::MinTradingFee, MINTRADINGFEE_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::Tau, TAU_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::BallotTime, BALLOTTIME_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::UnsealTime, UNSEALTIME_COLUMN_WIDTH);
-    tableView->setColumnWidth(DecisionBranchTableModel::ConsensusThreshold, CONSENSUSTHRESHOLD_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::Name, NAME_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::Description, DESCRIPTION_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::BaseListingFee, BASELISTINGFEE_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::TargetDecisions, TARGETDECISIONS_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::MaxDecisions, MAXDECISIONS_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::MinTradingFee, MINTRADINGFEE_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::Tau, TAU_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::BallotTime, BALLOTTIME_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::UnsealTime, UNSEALTIME_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketBranchTableModel::ConsensusThreshold, CONSENSUSTHRESHOLD_COLUMN_WIDTH);
 
     tableModel->setTable();
 
@@ -148,12 +148,12 @@ bool BallotBranchWindow::eventFilter(QObject *obj, QEvent *event)
 
 void BallotBranchWindow::currentRowChanged(const QModelIndex &curr, const QModelIndex &prev)
 {
-    if (!tableModel || !view || !proxyModel || !curr.isValid())
+    if (!tableModel || !ballotView || !proxyModel || !curr.isValid())
         return;
 
     int row = proxyModel->mapToSource(curr).row();
     const marketBranch *branch = tableModel->index(row);
-    view->onBranchChange(branch);
+    ballotView->onBranchChange(branch);
 }
 
 void BallotBranchWindow::filterDescriptionChanged(const QString &str)

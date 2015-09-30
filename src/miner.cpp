@@ -55,8 +55,8 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
     outcome->branchid = branch->GetHash();
     outcome->nDecisions = 0;
     outcome->NA = 2016; /* if conflicts, to be changed (TODO) */
-    outcome->alpha = branch->alpha;
-    outcome->tol = branch->tol;
+    outcome->alpha = 0.10; /* should be a branch parameter  */
+    outcome->tol = 0.10; /* should be a branch parameter  */
 
     /* populate the decisions */
     vector<marketDecision *> decisions = pmarkettree->GetDecisions(branch->GetHash());

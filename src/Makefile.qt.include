@@ -124,20 +124,18 @@ QT_MOC_CPP = \
   qt/moc_ballotvotefilterproxymodel.cpp \
   qt/moc_ballotvotewindow.cpp \
   qt/moc_ballotvotetablemodel.cpp \
-  qt/moc_decisionbranchfilterproxymodel.cpp \
-  qt/moc_decisionbranchtablemodel.cpp \
-  qt/moc_decisionbranchwindow.cpp \
-  qt/moc_decisiondecisionfilterproxymodel.cpp \
-  qt/moc_decisiondecisiontablemodel.cpp \
-  qt/moc_decisiondecisionwindow.cpp \
-  qt/moc_decisionmarketfilterproxymodel.cpp \
-  qt/moc_decisionmarkettablemodel.cpp \
-  qt/moc_decisionmarketwindow.cpp \
-  qt/moc_decisiontradefilterproxymodel.cpp \
-  qt/moc_decisiontradetablemodel.cpp \
-  qt/moc_decisiontradewindow.cpp \
-  qt/moc_decisionview.cpp \
-  qt/moc_decisionviewgraph.cpp \
+  qt/moc_marketbranchfilterproxymodel.cpp \
+  qt/moc_marketbranchtablemodel.cpp \
+  qt/moc_marketbranchwindow.cpp \
+  qt/moc_marketdecisionfilterproxymodel.cpp \
+  qt/moc_marketdecisiontablemodel.cpp \
+  qt/moc_marketdecisionwindow.cpp \
+  qt/moc_marketmarketfilterproxymodel.cpp \
+  qt/moc_marketmarkettablemodel.cpp \
+  qt/moc_marketmarketwindow.cpp \
+  qt/moc_markettradefilterproxymodel.cpp \
+  qt/moc_markettradetablemodel.cpp \
+  qt/moc_markettradewindow.cpp \
   qt/moc_marketview.cpp \
   qt/moc_marketviewgraph.cpp \
   qt/moc_notificator.cpp \
@@ -225,20 +223,18 @@ HIVEMIND_QT_H = \
   qt/ballotvotefilterproxymodel.h \
   qt/ballotvotetablemodel.h \
   qt/ballotvotewindow.h \
-  qt/decisionbranchfilterproxymodel.h \
-  qt/decisionbranchtablemodel.h \
-  qt/decisionbranchwindow.h \
-  qt/decisiondecisionfilterproxymodel.h \
-  qt/decisiondecisiontablemodel.h \
-  qt/decisiondecisionwindow.h \
-  qt/decisionmarketfilterproxymodel.h \
-  qt/decisionmarkettablemodel.h \
-  qt/decisionmarketwindow.h \
-  qt/decisiontradefilterproxymodel.h \
-  qt/decisiontradetablemodel.h \
-  qt/decisiontradewindow.h \
-  qt/decisionview.h \
-  qt/decisionviewgraph.h \
+  qt/marketbranchfilterproxymodel.h \
+  qt/marketbranchtablemodel.h \
+  qt/marketbranchwindow.h \
+  qt/marketdecisionfilterproxymodel.h \
+  qt/marketdecisiontablemodel.h \
+  qt/marketdecisionwindow.h \
+  qt/marketmarketfilterproxymodel.h \
+  qt/marketmarkettablemodel.h \
+  qt/marketmarketwindow.h \
+  qt/markettradefilterproxymodel.h \
+  qt/markettradetablemodel.h \
+  qt/markettradewindow.h \
   qt/marketview.h \
   qt/marketviewgraph.h \
   qt/networkstyle.h \
@@ -313,7 +309,7 @@ RES_ICONS = \
   qt/res/icons/lock_closed.png \
   qt/res/icons/lock_open.png \
   qt/res/icons/ballot.png \
-  qt/res/icons/decision.png \
+  qt/res/icons/decisions.png \
   qt/res/icons/market.png \
   qt/res/icons/open.png \
   qt/res/icons/overview.png \
@@ -380,20 +376,18 @@ HIVEMIND_QT_CPP += \
   qt/ballotvotefilterproxymodel.cpp \
   qt/ballotvotetablemodel.cpp \
   qt/ballotvotewindow.cpp \
-  qt/decisionbranchfilterproxymodel.cpp \
-  qt/decisionbranchtablemodel.cpp \
-  qt/decisionbranchwindow.cpp \
-  qt/decisiondecisionfilterproxymodel.cpp \
-  qt/decisiondecisiontablemodel.cpp \
-  qt/decisiondecisionwindow.cpp \
-  qt/decisionmarketfilterproxymodel.cpp \
-  qt/decisionmarkettablemodel.cpp \
-  qt/decisionmarketwindow.cpp \
-  qt/decisiontradefilterproxymodel.cpp \
-  qt/decisiontradetablemodel.cpp \
-  qt/decisiontradewindow.cpp \
-  qt/decisionview.cpp \
-  qt/decisionviewgraph.cpp \
+  qt/marketbranchfilterproxymodel.cpp \
+  qt/marketbranchtablemodel.cpp \
+  qt/marketbranchwindow.cpp \
+  qt/marketdecisionfilterproxymodel.cpp \
+  qt/marketdecisiontablemodel.cpp \
+  qt/marketdecisionwindow.cpp \
+  qt/marketmarketfilterproxymodel.cpp \
+  qt/marketmarkettablemodel.cpp \
+  qt/marketmarketwindow.cpp \
+  qt/markettradefilterproxymodel.cpp \
+  qt/markettradetablemodel.cpp \
+  qt/markettradewindow.cpp \
   qt/marketview.cpp \
   qt/marketviewgraph.cpp \
   qt/openuridialog.cpp \

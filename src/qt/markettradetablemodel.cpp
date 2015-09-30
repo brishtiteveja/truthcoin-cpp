@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -27,6 +27,7 @@ static int column_alignments[] = {
         Qt::AlignRight|Qt::AlignVCenter, /* Price */
         Qt::AlignRight|Qt::AlignVCenter, /* Nonce */
         Qt::AlignRight|Qt::AlignVCenter, /* BlockNum */
+        Qt::AlignLeft|Qt::AlignVCenter, /* Hash */
     };
 
 // Private implementation
@@ -77,6 +78,7 @@ MarketTradeTableModel::MarketTradeTableModel(CWallet *wallet, WalletModel *paren
         << tr("Price")
         << tr("Nonce")
         << tr("Block")
+        << tr("Hash")
         ;
 }
 
@@ -122,6 +124,8 @@ QVariant MarketTradeTableModel::data(const QModelIndex &index, int role) const
             return QVariant((int)trade->nonce);
         case BlockNumber:
             return QVariant((int)trade->nHeight);
+        case Hash:
+            return formatHash(trade);
         default:
             ;
         }
@@ -162,6 +166,8 @@ QVariant MarketTradeTableModel::headerData(int section, Qt::Orientation orientat
                 return tr("Nonce");
             case BlockNumber:
                 return tr("BlockNumber");
+            case Hash:
+                return tr("Hash");
             }
         }
     }
@@ -252,7 +258,7 @@ void MarketTradeTableModel::getData(double **Xptr, double **Yptr, unsigned int *
 
 QString formatAddress(const marketTrade *trade)
 {
-    CTruthcoinAddress addr;
+    CHivemindAddress addr;
     if (addr.Set(trade->keyID))
         return QString::fromStdString(addr.ToString());
     return QString("Address");

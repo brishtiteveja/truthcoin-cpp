@@ -25,9 +25,6 @@ uint256 marketObj::GetHash(void) const
     if (marketop == 'D')
        ret = SerializeHash(*(marketDecision *) this);
     else
-    if (marketop == 'L')
-       ret = SerializeHash(*(marketStealVote *) this);
-    else
     if (marketop == 'M')
        ret = SerializeHash(*(marketMarket *) this);
     else
@@ -53,9 +50,6 @@ CScript marketObj::GetScript(void) const
     else
     if (marketop == 'D')
        ((marketDecision *) this)->Serialize(ds, nType, nVersion);
-    else
-    if (marketop == 'L')
-       ((marketStealVote *) this)->Serialize(ds, nType, nVersion);
     else
     if (marketop == 'M')
        ((marketMarket *) this)->Serialize(ds, nType, nVersion);
@@ -96,12 +90,6 @@ marketObj *marketObjCtr(const CScript &script)
     else
     if (*vch0 == 'D') {
         marketDecision *obj = new marketDecision;
-        obj->Unserialize(ds, nType, nVersion);
-        return obj;
-    }
-    else
-    if (*vch0 == 'L') {
-        marketStealVote *obj = new marketStealVote;
         obj->Unserialize(ds, nType, nVersion);
         return obj;
     }
@@ -164,8 +152,6 @@ string marketBranch::ToString(void) const
     str << "ballotTime=" << ballotTime << endl;
     str << "unsealTime=" << unsealTime << endl;
     str << "consensusThreshold=" << consensusThreshold/1e8 << endl;
-    str << "alpha=" << alpha/1e8 << endl;
-    str << "tol=" << tol/1e8 << endl;
     return str.str();
 }
 
@@ -210,8 +196,7 @@ string marketMarket::ToString(void) const
     }
     str << endl;
     str << "account=" << account/1e8 << endl;
-    str << "txPoWh=" << txPoWh << endl;
-    str << "txPoWd=" << txPoWd << endl;
+    str << "txPoW=" << txPoW << endl;
     return str.str();
 }
 
@@ -441,19 +426,6 @@ string marketSealedVote::ToString(void) const
     str << "txid=" << txid.GetHex() << endl;
     str << "branchid=" << branchid.ToString() << endl;
     str << "voteid=" << voteid.ToString() << endl;
-
-    return str.str();
-}
-
-string marketStealVote::ToString(void) const
-{
-    stringstream str;
-
-    str << "marketop=" << marketop << endl;
-    str << "hHeight=" << nHeight << endl;
-    str << "txid=" << txid.GetHex() << endl;
-    str << "victimKeyID=" << victimKeyID.ToString() << endl;
-    str << "keyID=" << keyID.ToString() << endl;
 
     return str.str();
 }

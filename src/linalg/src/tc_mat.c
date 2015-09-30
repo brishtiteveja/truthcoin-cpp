@@ -1106,8 +1106,8 @@ tc_vote_proc(struct tc_vote *vote)
     for(uint32_t j=0; j < dist->nc; j++) {
         double val = 0.0;
         if (isbin->a[0][j] != 0.0)
-            val = (wgtT_fM->a[0][j] < 0.5 - 0.50*vote->tol)
-                ? 0.0: ((wgtT_fM->a[0][j] > 0.5 + 0.50*vote->tol)? 1.0: 0.5);
+            val = (wgtT_fM->a[0][j] < 0.5)
+                ? 0.0: ((wgtT_fM->a[0][j] > 0.5)? 1.0: 0.5);
         else
             val = wgtT_fM->a[0][j];
         for(uint32_t i=0; i < dist->nr; i++)
@@ -1160,10 +1160,10 @@ tc_vote_proc(struct tc_vote *vote)
         tc_mat_copy(twgt, scores2);
     double median_factor = tc_wgt_median(wgt, twgt, 0, vote->NA);
     if (median_factor > 0.0) {
-        /* above-median weights are knocked down to halfway to median */
+        /* above-median weights are knocked down to median */
         for(uint32_t i=0; i < wgt->nr; i++)
             if (twgt->a[i][0] > median_factor)
-                twgt->a[i][0] = 0.5 * (twgt->a[i][0] + median_factor);
+                twgt->a[i][0] = median_factor;
     } else {
         /* just use old rep */
         tc_mat_copy(twgt, wgt);

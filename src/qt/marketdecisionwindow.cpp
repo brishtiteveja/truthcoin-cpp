@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -94,6 +94,7 @@ void MarketDecisionWindow::setModel(WalletModel *model)
     tableView->setColumnWidth(MarketDecisionTableModel::Minimum, MINIMUM_COLUMN_WIDTH);
     tableView->setColumnWidth(MarketDecisionTableModel::Maximum, MAXIMUM_COLUMN_WIDTH);
     tableView->setColumnWidth(MarketDecisionTableModel::AnswerOptional, ANSWEROPTIONAL_COLUMN_WIDTH);
+    tableView->setColumnWidth(MarketDecisionTableModel::Hash, HASH_COLUMN_WIDTH);
 
     connect(tableView->selectionModel(),
        SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),

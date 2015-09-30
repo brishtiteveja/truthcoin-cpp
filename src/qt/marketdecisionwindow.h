@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_MARKETDECISIONWINDOW_H
-#define TRUTHCOIN_QT_MARKETDECISIONWINDOW_H
+#ifndef HIVEMIND_QT_MARKETDECISIONWINDOW_H
+#define HIVEMIND_QT_MARKETDECISIONWINDOW_H
 
 #include <QDialog>
 #include <QModelIndex>
@@ -35,6 +35,7 @@ public:
         MINIMUM_COLUMN_WIDTH = 80,
         MAXIMUM_COLUMN_WIDTH = 80,
         ANSWEROPTIONAL_COLUMN_WIDTH = 80,
+        HASH_COLUMN_WIDTH = 200,
     };
 
     explicit MarketDecisionWindow(QWidget *parent=0);
@@ -57,4 +58,4 @@ public slots:
     void filterPromptChanged(const QString &);
 };
 
-#endif // TRUTHCOIN_QT_MARKETDECISIONWINDOW_H
+#endif // HIVEMIND_QT_MARKETDECISIONWINDOW_H
