@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_TEST_BIGNUM_H
-#define TRUTHCOIN_TEST_BIGNUM_H
+#ifndef HIVEMIND_TEST_BIGNUM_H
+#define HIVEMIND_TEST_BIGNUM_H
 
 #include <algorithm>
 #include <limits>
@@ -178,4 +178,4 @@ inline bool operator>=(const CBigNum& a, const CBigNum& b) { return (BN_cmp(&a, 
 inline bool operator<(const CBigNum& a, const CBigNum& b)  { return (BN_cmp(&a, &b) < 0); }
 inline bool operator>(const CBigNum& a, const CBigNum& b)  { return (BN_cmp(&a, &b) > 0); }
 
-#endif // TRUTHCOIN_TEST_BIGNUM_H
+#endif // HIVEMIND_TEST_BIGNUM_H

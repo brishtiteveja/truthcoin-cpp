@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -38,10 +38,10 @@ SendCoinsEntry::SendCoinsEntry(QWidget *parent) :
     ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
 #endif
 
-    // normal truthcoin address field
+    // normal hivemind address field
     GUIUtil::setupAddressWidget(ui->payTo, this);
-    // just a label for displaying truthcoin address(es)
-    ui->payTo_is->setFont(GUIUtil::truthcoinAddressFont());
+    // just a label for displaying hivemind address(es)
+    ui->payTo_is->setFont(GUIUtil::hivemindAddressFont());
 
     // Connect signals
     connect(ui->payAmount, SIGNAL(valueChanged()), this, SIGNAL(payAmountChanged()));
@@ -107,7 +107,7 @@ void SendCoinsEntry::clear()
     ui->memoTextLabel_s->clear();
     ui->payAmount_s->clear();
 
-    // update the display unit, to not use the default ("CSH")
+    // update the display unit, to not use the default ("BTC")
     updateDisplayUnit();
 }
 

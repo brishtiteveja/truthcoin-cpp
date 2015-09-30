@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_ADDRESSTABLEMODEL_H
-#define TRUTHCOIN_QT_ADDRESSTABLEMODEL_H
+#ifndef HIVEMIND_QT_ADDRESSTABLEMODEL_H
+#define HIVEMIND_QT_ADDRESSTABLEMODEL_H
 
 #include <QAbstractTableModel>
 #include <QStringList>
@@ -27,7 +27,7 @@ public:
 
     enum ColumnIndex {
         Label = 0,   /**< User specified label */
-        Address = 1  /**< Truthcoin address */
+        Address = 1  /**< Hivemind address */
     };
 
     enum RoleIndex {
@@ -93,4 +93,4 @@ public slots:
     friend class AddressTablePriv;
 };
 
-#endif // TRUTHCOIN_QT_ADDRESSTABLEMODEL_H
+#endif // HIVEMIND_QT_ADDRESSTABLEMODEL_H

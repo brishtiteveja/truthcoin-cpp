@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_MARKETVIEW_H
-#define TRUTHCOIN_QT_MARKETVIEW_H
+#ifndef HIVEMIND_QT_MARKETVIEW_H
+#define HIVEMIND_QT_MARKETVIEW_H
 
 #include "guiutil.h"
 
@@ -14,23 +14,22 @@ class marketBranch;
 class marketDecision;
 class marketMarket;
 class marketTrade;
-class MarketBranchWindow;
-class MarketDecisionWindow;
-class MarketMarketWindow;
-class MarketTradeWindow;
+class DecisionBranchWindow;
+class DecisionDecisionWindow;
+class DecisionMarketWindow;
+class DecisionTradeWindow;
 class MarketViewGraph;
 class WalletModel;
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
 class QLineEdit;
-class QPushButton;
 class QRadioButton;
 QT_END_NAMESPACE
 
-#define MARKETBRANCH_NLABLES     13
+#define MARKETBRANCH_NLABLES     15
 #define MARKETDECISION_NLABLES   10
-#define MARKETMARKET_NLABLES     10
+#define MARKETMARKET_NLABLES     12
 #define MARKETTRADE_NLABLES      8
 
 
@@ -66,27 +65,24 @@ private:
 private:
     WalletModel *model;
 
-    /* select tab variables */
     QLabel *branchLabels[2];
-    QPushButton *branchButton;
-    MarketBranchWindow *branchWindow;
+    QLabel *decisionLabels[2];
+    QLabel *marketLabels[2];
+
+    /* select tab variables */
+    DecisionBranchWindow *branchWindow;
     const marketBranch *branch; 
     QLabel branchTabLabels[MARKETBRANCH_NLABLES];
 
-    QLabel *decisionLabels[2];
-    QPushButton *decisionButton;
-    MarketDecisionWindow *decisionWindow;
+    DecisionDecisionWindow *decisionWindow;
     const marketDecision *decision; 
     QLabel decisionTabLabels[MARKETDECISION_NLABLES];
 
-    QLabel *marketLabels[2];
-    QPushButton *marketButton;
-    MarketMarketWindow *marketWindow;
+    DecisionMarketWindow *marketWindow;
     const marketMarket *market; 
     QLabel marketTabLabels[MARKETMARKET_NLABLES];
 
-    QPushButton *tradeButton;
-    MarketTradeWindow *tradeWindow;
+    DecisionTradeWindow *tradeWindow;
     const marketTrade *trade; 
     QLabel tradeTabLabels[MARKETTRADE_NLABLES];
 
@@ -102,6 +98,8 @@ private:
     QLineEdit *branchBallotTime;
     QLineEdit *branchUnsealTime;
     QLineEdit *branchConsensusThreshold;
+    QLineEdit *branchAlpha;
+    QLineEdit *branchTol;
     QLabel *createBranchCLI;
     QLabel *createBranchCLIResponse;
 
@@ -127,7 +125,8 @@ private:
     QLineEdit *marketMaxCommission;
     QLineEdit *marketTags;
     QLineEdit *marketMaturation;
-    QLineEdit *marketTxPoW;
+    QLineEdit *marketTxPoWh;
+    QLineEdit *marketTxPoWd;
     QLabel *createMarketCLI;
     QLabel *createMarketCLIResponse;
 
@@ -176,7 +175,8 @@ public slots:
     void onMarketMaxCommissionTextChanged(const QString &);
     void onMarketTagsTextChanged(const QString &);
     void onMarketMaturationTextChanged(const QString &);
-    void onMarketTxPoWTextChanged(const QString &);
+    void onMarketTxPoWhTextChanged(const QString &);
+    void onMarketTxPoWdTextChanged(const QString &);
     void onTradeAddressTextChanged(const QString &);
     void onTradeBuyRadioButtonToggled(bool);
     void onTradePriceTextChanged(const QString &);
@@ -193,4 +193,4 @@ public slots:
     void showTradeWindow(void);
 };
 
-#endif // TRUTHCOIN_QT_MARKETVIEW_H
+#endif // HIVEMIND_QT_MARKETVIEW_H

@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_BALLOTBRANCHWINDOW_H
-#define TRUTHCOIN_QT_BALLOTBRANCHWINDOW_H
+#ifndef HIVEMIND_QT_BALLOTBRANCHWINDOW_H
+#define HIVEMIND_QT_BALLOTBRANCHWINDOW_H
 
 #include <QDialog>
 #include <QModelIndex>
@@ -14,8 +14,8 @@ class QLineEdit;
 class QTableView;
 QT_END_NAMESPACE
 
-class MarketBranchFilterProxyModel;
-class MarketBranchTableModel;
+class DecisionBranchFilterProxyModel;
+class DecisionBranchTableModel;
 class BallotView;
 class WalletModel;
 
@@ -48,14 +48,14 @@ public:
 private:
     QLineEdit *filterDescription;
 
-    BallotView *ballotView;
-    MarketBranchTableModel *tableModel;
+    BallotView *view;
+    DecisionBranchTableModel *tableModel;
     QTableView *tableView;
-    MarketBranchFilterProxyModel *proxyModel;
+    DecisionBranchFilterProxyModel *proxyModel;
 
 public slots:
     void currentRowChanged(const QModelIndex &, const QModelIndex &);
     void filterDescriptionChanged(const QString &);
 };
 
-#endif // TRUTHCOIN_QT_BALLOTBRANCHWINDOW_H
+#endif // HIVEMIND_QT_BALLOTBRANCHWINDOW_H

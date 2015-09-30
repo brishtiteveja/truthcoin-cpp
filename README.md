@@ -1,28 +1,25 @@
-Truthcoin Core integration/staging tree
+Hivemind Core integration/staging tree
 =====================================
 
-[![Build Status](https://travis-ci.org/truthcoin/truthcoin.svg?branch=master)](https://travis-ci.org/truthcoin/truthcoin)  
+[![Build Status](https://travis-ci.org/hivemind/hivemind.svg?branch=master)](https://travis-ci.org/hivemind/hivemind)
 
-This is the actual implementation of [the theoretical work here](https://github.com/psztorc/truthcoin).  
+[http://www.hivemind.info](http://www.hivemind.info)
 
-For an immediately useable, binary version of the Truthcoin Core software, visit [the dev page](https://dev.truthcoin.info).
-
-Status: Pre-Alpha. Unless you're a blockchain-elite, you should probably go away (or [stick to reading](http://www.truthcoin.info/papers/)).  
-
-
-What is Truthcoin?
+What is Hivemind?
 ----------------
 
-Truthcoin is an ambitious modification of Bitcoin, which extends Bitcoin's abilities (to send an receive value-tokens) by adding the ability to create and participate in [markets for event derivatives ("prediction markets")](https://en.wikipedia.org/wiki/Prediction_market).
+Hivemind is an ambitious modification of Bitcoin, which extends Bitcoin's abilities (to send an receive value-tokens) by adding the ability to create and participate in [markets for event derivatives ("prediction markets")](https://en.wikipedia.org/wiki/Prediction_market).
 
-Although substantially more complex, Truthcoin offers correspondingly substantial benefits, having potentially world-changing implications for science, taxation, corporate governance and politics. 
+Although substantially more complex, Hivemind offers correspondingly substantial benefits, having potentially world-changing implications for science, taxation, corporate governance and politics. 
 
-Truthcoin includes two types of value-token.  One, "CashCoin", is used for storing value, buying/selling in markets and paying transaction fees to miners. This coin will resemble Bitcoin-testnet-money (an "Altcoin") for the duration of pre-release testing, and will then be a [sidechain](http://www.blockstream.com/) of Bitcoin. Therefore, the network will "accept" Bitcoin (indeed, this will be the only currency the network accepts). The second (less important) token, "VoteCoin", is used to track a smaller group of special users and reward them for providing reports to the blockchain on the status of the bet-upon events.
+Hivemind includes two types of value-token.  One, "Bitcoin", is used for storing value, buying/selling in markets and paying transaction fees to miners. This coin will resemble Bitcoin-testnet-money (an "Altcoin") for the duration of pre-release testing, and will then be a [sidechain](http://www.blockstream.com/) of Bitcoin. Therefore, the network will "accept" Bitcoin (indeed, this will be the only currency the network accepts). The second (less important) token, "VoteCoin", is used to track a smaller group of special users and reward them for providing reports to the blockchain on the status of the bet-upon events.
+
+For an immediately useable, binary version of the Hivemind Core software, see [http://www.hivemind.info/software/](http://www.hivemind.info/software/).
 
 License
 -------
 
-Truthcoin Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
+Hivemind Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
 information or see http://opensource.org/licenses/MIT.
 
 
@@ -37,8 +34,8 @@ To compile on Ubuntu 14.04:
 # Install Git
 sudo apt-get install git
 
-# Download Truthcoin
-git clone https://github.com/psztorc/truthcoin-cpp.git
+# Download Hivemind
+git clone https://github.com/github.com/bitcoin-hivemind/hivemind
 
 # (permission is required)
 # Username:
@@ -67,13 +64,13 @@ cd ../..
 sudo apt-get install autoconf libboost-all-dev libssl-dev libtool libdb++-dev libprotobuf-dev protobuf-compiler libqt4-dev libqrencode-dev 
 
 
-# Install Truthcoind (no GUI)
-cd truthcoin-cpp/src/
-make truthcoind
-make truthcoin-cli
+# Install Hivemindd (no GUI)
+cd hivemind-cpp/src/
+make hivemindd
+make hivemind-cli
 
-# # Install Truthcoin
-# cd truthcoin-cpp
+# # Install Hivemind
+# cd hivemind-cpp
 # ./autogen.sh
 # ./configure --with-incompatible-bdb
 # make
@@ -89,12 +86,12 @@ Development process
 Developers work in their own trees, then submit pull requests when they think
 their feature or bug fix is ready.
 
-If it is a simple/trivial/non-controversial change, then one of the Truthcoin
+If it is a simple/trivial/non-controversial change, then one of the Hivemind
 development team members simply pulls it.
 
 If it is a *more complicated or potentially controversial* change, then the patch
 submitter will be asked to start a discussion (if they haven't already) on the
-[mailing list](http://sourceforge.net/mailarchive/forum.php?forum_name=truthcoin-development).
+[mailing list](http://sourceforge.net/mailarchive/forum.php?forum_name=hivemind-development).
 
 The patch will be accepted if there is broad consensus that it is a good thing.
 Developers should expect to rework and resubmit patches if the code doesn't
@@ -102,8 +99,8 @@ match the project's coding conventions (see [doc/developer-notes.md](doc/develop
 controversial.
 
 The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/truthcoin/truthcoin/tags) are created
-regularly to indicate new official, stable release versions of Truthcoin.
+completely stable. [Tags](https://github.com/hivemind/hivemind/tags) are created
+regularly to indicate new official, stable release versions of Hivemind.
 
 
 Testing
@@ -128,7 +125,7 @@ submit new unit tests for old code. Unit tests can be compiled and run (assuming
 Every pull request is built for both Windows and Linux on a dedicated server,
 and unit and sanity tests are automatically run. The binaries produced may be
 used for manual QA testing — a link to them will appear in a comment on the
-pull request posted by [TruthcoinPullTester](https://github.com/TruthcoinPullTester). See https://github.com/TheBlueMatt/test-scripts
+pull request posted by [HivemindPullTester](https://github.com/HivemindPullTester). See https://github.com/TheBlueMatt/test-scripts
 for the build/test scripts.
 -->
 
@@ -136,14 +133,14 @@ for the build/test scripts.
 
 Large changes should have a test plan, and should be tested by somebody other
 than the developer who wrote the code.
-See https://github.com/truthcoin/QA/ for how to create a test plan.
+See https://github.com/hivemind/QA/ for how to create a test plan.
 
 <!--
 Translations
 ------------
 
 Changes to translations as well as new translations can be submitted to
-[Truthcoin Core's Transifex page](https://www.transifex.com/projects/p/truthcoin/).
+[Hivemind Core's Transifex page](https://www.transifex.com/projects/p/hivemind/).
 
 Translations are periodically pulled from Transifex and merged into the git repository. See the
 [translation process](doc/translation_process.md) for details on how this works.
@@ -151,6 +148,6 @@ Translations are periodically pulled from Transifex and merged into the git repo
 **Important**: We do not accept translation changes as GitHub pull requests because the next
 pull from Transifex would automatically overwrite them again.
 
-Translators should also subscribe to the [mailing list](https://groups.google.com/forum/#!forum/truthcoin-translators).
+Translators should also subscribe to the [mailing list](https://groups.google.com/forum/#!forum/hivemind-translators).
 
 -->

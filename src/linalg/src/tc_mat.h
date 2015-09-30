@@ -1,11 +1,11 @@
 /* 
- * Copyright (c) 2015 The Truthcoin Core developers
+ * Copyright (c) 2015 The Hivemind Core developers
  * Distributed under the MIT software license, see the accompanying
  * file COPYING or http://www.opensource.org/licenses/mit-license.php.
  */
 
-#ifndef TRUTHCOIN_LINALG_MAT_H
-#define TRUTHCOIN_LINALG_MAT_H
+#ifndef HIVEMIND_LINALG_MAT_H
+#define HIVEMIND_LINALG_MAT_H
 
 #include <stdint.h>
 
@@ -70,5 +70,5 @@ int tc_vote_print(const struct tc_vote *);
 int tc_vote_proc(struct tc_vote *);
 
 
-#endif /* TRUTHCOIN_LINALG_MAT_H */
+#endif /* HIVEMIND_LINALG_MAT_H */
 

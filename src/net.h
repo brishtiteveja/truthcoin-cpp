@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_NET_H
-#define TRUTHCOIN_NET_H
+#ifndef HIVEMIND_NET_H
+#define HIVEMIND_NET_H
 
 #include "bloom.h"
 #include "compat.h"
@@ -624,4 +624,4 @@ public:
     bool Read(CAddrMan& addr);
 };
 
-#endif // TRUTHCOIN_NET_H
+#endif // HIVEMIND_NET_H

@@ -1,12 +1,12 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "transactionview.h"
 
 #include "addresstablemodel.h"
-#include "truthcoinunits.h"
+#include "hivemindunits.h"
 #include "csvmodelwriter.h"
 #include "editaddressdialog.h"
 #include "guiutil.h"
@@ -307,7 +307,7 @@ void TransactionView::changedAmount(const QString &amount)
     if(!transactionProxyModel)
         return;
     CAmount amount_parsed = 0;
-    if(TruthcoinUnits::parse(model->getOptionsModel()->getDisplayUnit(), amount, &amount_parsed))
+    if(HivemindUnits::parse(model->getOptionsModel()->getDisplayUnit(), amount, &amount_parsed))
     {
         transactionProxyModel->setMinAmount(amount_parsed);
     }
@@ -338,7 +338,7 @@ void TransactionView::exportClicked()
     writer.addColumn(tr("Type"), TransactionTableModel::Type, Qt::EditRole);
     writer.addColumn(tr("Label"), 0, TransactionTableModel::LabelRole);
     writer.addColumn(tr("Address"), 0, TransactionTableModel::AddressRole);
-    writer.addColumn(TruthcoinUnits::getAmountColumnTitle(model->getOptionsModel()->getDisplayUnit()), 0, TransactionTableModel::FormattedAmountRole);
+    writer.addColumn(HivemindUnits::getAmountColumnTitle(model->getOptionsModel()->getDisplayUnit()), 0, TransactionTableModel::FormattedAmountRole);
     writer.addColumn(tr("ID"), 0, TransactionTableModel::TxIDRole);
 
     if(!writer.write()) {

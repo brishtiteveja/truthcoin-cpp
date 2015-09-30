@@ -7,11 +7,11 @@
 # Test fee estimation code
 #
 
-from test_framework import TruthcoinTestFramework
-from truthcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from test_framework import HivemindTestFramework
+from hivemindrpc.authproxy import AuthServiceProxy, JSONRPCException
 from util import *
 
-class EstimateFeeTest(TruthcoinTestFramework):
+class EstimateFeeTest(HivemindTestFramework):
 
     def setup_network(self):
         self.nodes = []

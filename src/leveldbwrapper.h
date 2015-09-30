@@ -1,10 +1,10 @@
 // Copyright (c) 2012-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_LEVELDBWRAPPER_H
-#define TRUTHCOIN_LEVELDBWRAPPER_H
+#ifndef HIVEMIND_LEVELDBWRAPPER_H
+#define HIVEMIND_LEVELDBWRAPPER_H
 
 #include "clientversion.h"
 #include "serialize.h"
@@ -171,4 +171,4 @@ public:
     }
 };
 
-#endif // TRUTHCOIN_LEVELDBWRAPPER_H
+#endif // HIVEMIND_LEVELDBWRAPPER_H

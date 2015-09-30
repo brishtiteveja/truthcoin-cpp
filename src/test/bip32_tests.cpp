@@ -1,5 +1,5 @@
 // Copyright (c) 2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -88,10 +88,10 @@ void RunTest(const TestVector &test) {
         key.Encode(data);
         pubkey.Encode(data);
         // Test private key
-        CTruthcoinExtKey b58key; b58key.SetKey(key);
+        CHivemindExtKey b58key; b58key.SetKey(key);
         BOOST_CHECK(b58key.ToString() == derive.prv);
         // Test public key
-        CTruthcoinExtPubKey b58pubkey; b58pubkey.SetKey(pubkey);
+        CHivemindExtPubKey b58pubkey; b58pubkey.SetKey(pubkey);
         BOOST_CHECK(b58pubkey.ToString() == derive.pub);
         // Derive new keys
         CExtKey keyNew;

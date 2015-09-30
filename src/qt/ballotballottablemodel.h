@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_BALLOTBALLOTTABLEMODEL_H
-#define TRUTHCOIN_QT_BALLOTBALLOTTABLEMODEL_H
+#ifndef HIVEMIND_QT_BALLOTBALLOTTABLEMODEL_H
+#define HIVEMIND_QT_BALLOTBALLOTTABLEMODEL_H
 
 #include <QAbstractTableModel>
 #include <QStringList>
@@ -60,4 +60,4 @@ public slots:
 QString formatHeight(const marketPair *);
 QString formatNDecisions(const marketPair *);
 
-#endif // TRUTHCOIN_QT_BALLOTBALLOTTABLEMODEL_H
+#endif // HIVEMIND_QT_BALLOTBALLOTTABLEMODEL_H

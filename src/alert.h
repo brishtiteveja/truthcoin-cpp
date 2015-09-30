@@ -1,11 +1,11 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_ALERT_H
-#define TRUTHCOIN_ALERT_H
+#ifndef HIVEMIND_ALERT_H
+#define HIVEMIND_ALERT_H
 
 #include "serialize.h"
 #include "sync.h"
@@ -111,4 +111,4 @@ public:
     static CAlert getAlertByHash(const uint256 &hash);
 };
 
-#endif // TRUTHCOIN_ALERT_H
+#endif // HIVEMIND_ALERT_H

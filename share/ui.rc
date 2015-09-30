@@ -1,4 +1,4 @@
-truthcoin               ICON    "pixmaps/truthcoin.ico"
+hivemind               ICON    "pixmaps/hivemind.ico"
 
 #include "wx/msw/wx.rc"
 

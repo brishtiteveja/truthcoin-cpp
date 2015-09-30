@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_SPLASHSCREEN_H
-#define TRUTHCOIN_QT_SPLASHSCREEN_H
+#ifndef HIVEMIND_QT_SPLASHSCREEN_H
+#define HIVEMIND_QT_SPLASHSCREEN_H
 
 #include <QSplashScreen>
 
@@ -12,7 +12,7 @@ class NetworkStyle;
 
 /** Class for the splashscreen with information of the running client.
  *
- * @note this is intentionally not a QSplashScreen. Truthcoin Core initialization
+ * @note this is intentionally not a QSplashScreen. Hivemind Core initialization
  * can take a long time, and in that case a progress window that cannot be
  * moved around and minimized has turned out to be frustrating to the user.
  */
@@ -47,4 +47,4 @@ private:
     int curAlignment;
 };
 
-#endif // TRUTHCOIN_QT_SPLASHSCREEN_H
+#endif // HIVEMIND_QT_SPLASHSCREEN_H

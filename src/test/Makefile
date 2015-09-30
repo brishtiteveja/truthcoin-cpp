@@ -1,6 +1,6 @@
 all:
-	$(MAKE) -C .. truthcoin_test
+	$(MAKE) -C .. hivemind_test
 clean:
-	$(MAKE) -C .. truthcoin_test_clean
+	$(MAKE) -C .. hivemind_test_clean
 check:
-	$(MAKE) -C .. truthcoin_test_check
+	$(MAKE) -C .. hivemind_test_check

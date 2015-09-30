@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_ALLOCATORS_H
-#define TRUTHCOIN_ALLOCATORS_H
+#ifndef HIVEMIND_ALLOCATORS_H
+#define HIVEMIND_ALLOCATORS_H
 
 #include <map>
 #include <string>
@@ -266,4 +266,4 @@ typedef std::basic_string<char, std::char_traits<char>, secure_allocator<char> >
 // Byte-vector that clears its contents before deletion.
 typedef std::vector<char, zero_after_free_allocator<char> > CSerializeData;
 
-#endif // TRUTHCOIN_ALLOCATORS_H
+#endif // HIVEMIND_ALLOCATORS_H

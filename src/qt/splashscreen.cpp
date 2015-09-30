@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -38,9 +38,9 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
 #endif
 
     // define text to place
-    QString titleText       = tr("Truthcoin Core");
+    QString titleText       = tr("Hivemind Core");
     QString versionText     = QString("Version %1").arg(QString::fromStdString(FormatFullVersion()));
-    QString copyrightText   = QChar(0xA9)+QString(" 2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin Core developers, The Truthcoin Core developers"));
+    QString copyrightText   = QChar(0xA9)+QString(" 2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin Core developers, The Hivemind Core developers"));
     QString titleAddText    = networkStyle->getTitleAddText();
 
     QString font            = "Arial";
@@ -64,7 +64,7 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     QRect rGradient(QPoint(0,0), splashSize);
     pixPaint.fillRect(rGradient, gradient);
 
-    // draw the truthcoin icon, expected size of PNG: 1024x1024
+    // draw the hivemind icon, expected size of PNG: 1024x1024
     QRect rectIcon(QPoint(-150,-122), QSize(430,430));
 
     const QSize requiredSize(1024,1024);

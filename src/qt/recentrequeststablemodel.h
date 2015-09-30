@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_RECENTREQUESTSTABLEMODEL_H
-#define TRUTHCOIN_QT_RECENTREQUESTSTABLEMODEL_H
+#ifndef HIVEMIND_QT_RECENTREQUESTSTABLEMODEL_H
+#define HIVEMIND_QT_RECENTREQUESTSTABLEMODEL_H
 
 #include "walletmodel.h"
 
@@ -54,7 +54,7 @@ private:
     Qt::SortOrder order;
 };
 
-/** Model for list of recently generated payment requests / truthcoin: URIs.
+/** Model for list of recently generated payment requests / hivemind: URIs.
  * Part of wallet model.
  */
 class RecentRequestsTableModel: public QAbstractTableModel
@@ -106,4 +106,4 @@ private:
     QString getAmountTitle();
 };
 
-#endif // TRUTHCOIN_QT_RECENTREQUESTSTABLEMODEL_H
+#endif // HIVEMIND_QT_RECENTREQUESTSTABLEMODEL_H

@@ -5,20 +5,20 @@
 
 # Base class for RPC testing
 
-# Add python-truthcoinrpc to module search path:
+# Add python-hivemindrpc to module search path:
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "python-truthcoinrpc"))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "python-hivemindrpc"))
 
 import shutil
 import tempfile
 import traceback
 
-from truthcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from hivemindrpc.authproxy import AuthServiceProxy, JSONRPCException
 from util import *
 
 
-class TruthcoinTestFramework(object):
+class HivemindTestFramework(object):
 
     # These may be over-ridden by subclasses:
     def run_test(self):
@@ -61,7 +61,7 @@ class TruthcoinTestFramework(object):
         """
         assert not self.is_network_split
         stop_nodes(self.nodes)
-        wait_truthcoinds()
+        wait_hivemindds()
         self.setup_network(True)
 
     def sync_all(self):
@@ -80,7 +80,7 @@ class TruthcoinTestFramework(object):
         """
         assert self.is_network_split
         stop_nodes(self.nodes)
-        wait_truthcoinds()
+        wait_hivemindds()
         self.setup_network(False)
 
     def main(self):
@@ -88,9 +88,9 @@ class TruthcoinTestFramework(object):
 
         parser = optparse.OptionParser(usage="%prog [options]")
         parser.add_option("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                          help="Leave truthcoinds and test.* datadir on exit or error")
+                          help="Leave hivemindds and test.* datadir on exit or error")
         parser.add_option("--srcdir", dest="srcdir", default="../../src",
-                          help="Source directory containing truthcoind/truthcoin-cli (default: %default%)")
+                          help="Source directory containing hivemindd/hivemind-cli (default: %default%)")
         parser.add_option("--tmpdir", dest="tmpdir", default=tempfile.mkdtemp(prefix="test"),
                           help="Root directory for datadirs")
         parser.add_option("--tracerpc", dest="trace_rpc", default=False, action="store_true",
@@ -131,7 +131,7 @@ class TruthcoinTestFramework(object):
         if not self.options.nocleanup:
             print("Cleaning up")
             stop_nodes(self.nodes)
-            wait_truthcoinds()
+            wait_hivemindds()
             shutil.rmtree(self.options.tmpdir)
 
         if success:

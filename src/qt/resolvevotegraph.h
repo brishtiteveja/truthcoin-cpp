@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_RESOLVEVOTEGRAPH_H
-#define TRUTHCOIN_QT_RESOLVEVOTEGRAPH_H
+#ifndef HIVEMIND_QT_RESOLVEVOTEGRAPH_H
+#define HIVEMIND_QT_RESOLVEVOTEGRAPH_H
 
 #include <stdint.h>
 #include <QWidget>
@@ -25,4 +25,4 @@ private:
     const struct tc_vote **vote_ptr;
 };
 
-#endif // TRUTHCOIN_QT_RESOLVEVOTEGRAPH_H
+#endif // HIVEMIND_QT_RESOLVEVOTEGRAPH_H

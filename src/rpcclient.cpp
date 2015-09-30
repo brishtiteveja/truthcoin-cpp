@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -98,6 +98,8 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "createbranch", 8 },
     { "createbranch", 9 },
     { "createbranch", 10 },
+    { "createbranch", 11 },
+    { "createbranch", 12 },
     { "createdecision", 3 },
     { "createdecision", 4 },
     { "createdecision", 5 },
@@ -107,12 +109,14 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "createmarket", 3 },
     { "createmarket", 4 },
     { "createmarket", 8 },
+    { "createmarket", 9 },
+    { "createmarket", 10 },
     { "createtrade", 3 },
     { "createtrade", 4 },
     { "createtrade", 5 },
     { "createtrade", 6 },
-    { "createvote", 1 },
     { "createvote", 2 },
+    { "createvote", 3 },
     { "getballot", 1 },
     { "getcreatemarketcapitalrequired", 0 },
     { "getcreatemarketcapitalrequired", 1 },

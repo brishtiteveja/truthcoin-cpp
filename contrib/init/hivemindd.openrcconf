@@ -1,0 +1,27 @@
+# /etc/conf.d/hivemindd: config file for /etc/init.d/hivemindd
+
+# Config file location
+#HIVEMINDD_CONFIGFILE="/etc/hivemind/hivemind.conf"
+
+# What directory to write pidfile to?  (created and owned by $HIVEMINDD_USER)
+#HIVEMINDD_PIDDIR="/var/run/hivemindd"
+
+# What filename to give the pidfile
+#HIVEMINDD_PIDFILE="${HIVEMINDD_PIDDIR}/hivemindd.pid"
+
+# Where to write hivemindd data (be mindful that the blockchain is large)
+#HIVEMINDD_DATADIR="/var/lib/hivemindd"
+
+# User and group to own hivemindd process
+#HIVEMINDD_USER="hivemind"
+#HIVEMINDD_GROUP="hivemind"
+
+# Path to hivemindd executable
+#HIVEMINDD_BIN="/usr/bin/hivemindd"
+
+# Nice value to run hivemindd under
+#HIVEMINDD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+HIVEMINDD_OPTS="-disablewallet"
+

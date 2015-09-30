@@ -1,10 +1,10 @@
 // Copyright (c) 2012-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_VERSION_H
-#define TRUTHCOIN_VERSION_H
+#ifndef HIVEMIND_VERSION_H
+#define HIVEMIND_VERSION_H
 
 /**
  * network protocol versioning
@@ -35,4 +35,4 @@ static const int BIP0031_VERSION = 60000;
 //! "mempool" command, enhanced "getdata" behavior starts with this version
 static const int MEMPOOL_GD_VERSION = 60002;
 
-#endif // TRUTHCOIN_VERSION_H
+#endif // HIVEMIND_VERSION_H

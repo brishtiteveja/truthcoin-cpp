@@ -1,15 +1,15 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_UTILITYDIALOG_H
-#define TRUTHCOIN_QT_UTILITYDIALOG_H
+#ifndef HIVEMIND_QT_UTILITYDIALOG_H
+#define HIVEMIND_QT_UTILITYDIALOG_H
 
 #include <QDialog>
 #include <QObject>
 
-class TruthcoinGUI;
+class HivemindGUI;
 class ClientModel;
 
 namespace Ui {
@@ -44,10 +44,10 @@ class ShutdownWindow : public QWidget
 
 public:
     ShutdownWindow(QWidget *parent=0, Qt::WindowFlags f=0);
-    static void showShutdownWindow(TruthcoinGUI *window);
+    static void showShutdownWindow(HivemindGUI *window);
 
 protected:
     void closeEvent(QCloseEvent *event);
 };
 
-#endif // TRUTHCOIN_QT_UTILITYDIALOG_H
+#endif // HIVEMIND_QT_UTILITYDIALOG_H

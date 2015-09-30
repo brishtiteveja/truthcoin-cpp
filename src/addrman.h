@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_ADDRMAN_H
-#define TRUTHCOIN_ADDRMAN_H
+#ifndef HIVEMIND_ADDRMAN_H
+#define HIVEMIND_ADDRMAN_H
 
 #include "netbase.h"
 #include "protocol.h"
@@ -514,4 +514,4 @@ public:
     }
 };
 
-#endif // TRUTHCOIN_ADDRMAN_H
+#endif // HIVEMIND_ADDRMAN_H

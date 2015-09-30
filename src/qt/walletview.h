@@ -1,18 +1,19 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_WALLETVIEW_H
-#define TRUTHCOIN_QT_WALLETVIEW_H
+#ifndef HIVEMIND_QT_WALLETVIEW_H
+#define HIVEMIND_QT_WALLETVIEW_H
 
 #include "amount.h"
 
 #include <QStackedWidget>
 
-class TruthcoinGUI;
+class HivemindGUI;
 class ClientModel;
 class BallotView;
+class DecisionView;
 class MarketView;
 class OverviewPage;
 class ReceiveCoinsDialog;
@@ -40,13 +41,13 @@ public:
     explicit WalletView(QWidget *parent);
     ~WalletView();
 
-    void setTruthcoinGUI(TruthcoinGUI *gui);
+    void setHivemindGUI(HivemindGUI *gui);
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
     void setClientModel(ClientModel *clientModel);
     /** Set the wallet model.
-        The wallet model represents a truthcoin wallet, and offers access to the list of transactions, address book and sending
+        The wallet model represents a hivemind wallet, and offers access to the list of transactions, address book and sending
         functionality.
     */
     void setWalletModel(WalletModel *walletModel);
@@ -62,11 +63,13 @@ private:
     OverviewPage *overviewPage;
     QWidget *transactionsPage;
     QWidget *ballotPage;
+    QWidget *decisionPage;
     QWidget *marketPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
 
     BallotView *ballotView;
+    DecisionView *decisionView;
     MarketView *marketView;
     TransactionView *transactionView;
 
@@ -79,6 +82,8 @@ public slots:
     void gotoHistoryPage();
     /** Switch to ballot page */
     void gotoBallotPage();
+    /** Switch to decision page */
+    void gotoDecisionPage();
     /** Switch to market page */
     void gotoMarketPage();
     /** Switch to receive coins page */
@@ -129,4 +134,4 @@ signals:
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);
 };
 
-#endif // TRUTHCOIN_QT_WALLETVIEW_H
+#endif // HIVEMIND_QT_WALLETVIEW_H

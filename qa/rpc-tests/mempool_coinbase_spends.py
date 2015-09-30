@@ -8,14 +8,14 @@
 # that spend (directly or indirectly) coinbase transactions.
 #
 
-from test_framework import TruthcoinTestFramework
-from truthcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from test_framework import HivemindTestFramework
+from hivemindrpc.authproxy import AuthServiceProxy, JSONRPCException
 from util import *
 import os
 import shutil
 
 # Create one-input, one-output, no-fee transaction:
-class MempoolCoinbaseTest(TruthcoinTestFramework):
+class MempoolCoinbaseTest(HivemindTestFramework):
 
     alert_filename = None  # Set by setup_network
 

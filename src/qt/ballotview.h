@@ -1,23 +1,24 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_BALLOTVIEW_H
-#define TRUTHCOIN_QT_BALLOTVIEW_H
+#ifndef HIVEMIND_QT_BALLOTVIEW_H
+#define HIVEMIND_QT_BALLOTVIEW_H
 
 
+#include <vector>
 #include <QLabel>
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
 class QGridLayout;
 class QLineEdit;
-class QPushButton;
 QT_END_NAMESPACE
 
 #include "guiutil.h"
 
 class marketBranch;
+class marketDecision;
 class marketOutcome;
 class marketSealedVote;
 class marketVote;
@@ -29,11 +30,12 @@ class BallotVoteWindow;
 class WalletModel;
 
 
-#define BALLOTBRANCH_NLABLES       13
+#define BALLOTBRANCH_NLABLES       15
 #define BALLOTBALLOT_NLABLES        4
 #define BALLOTOUTCOME_NLABLES       2
 #define BALLOTSEALEDVOTE_NLABLES   13
 #define BALLOTVOTE_NLABLES         13
+#define BALLOT_NBALLOTGRIDLAYOUTS   1
 #define BALLOT_NOUTCOMEGRIDLAYOUTS  6
 
 
@@ -60,40 +62,62 @@ private:
     void initSelectOutcomeTab(QWidget *);
     void initCreateSealedVoteTab(QWidget *);
     void initCreateVoteTab(QWidget *);
+    void updateCreateSealedVoteCLI(void);
+    void updateCreateSealedVoteScrollArea(void);
+    void updateCreateVoteCLI(void);
 
 private:
     WalletModel *model;
 
-    /* select tab variables */
     QLabel *branchLabels[2];
-    QPushButton *branchButton;
+    QLabel *ballotLabels[2];
+
+    /* select tab variables */
     BallotBranchWindow *branchWindow;
     const marketBranch *branch;
     QLabel branchTabLabels[BALLOTBRANCH_NLABLES];
 
-    QLabel *ballotLabels[2];
-    QPushButton *ballotButton;
     BallotBallotWindow *ballotWindow;
     uint32_t ballotNum;
     QLabel ballotTabLabels[BALLOTBALLOT_NLABLES];
+    QGridLayout *ballotLayouts[BALLOT_NBALLOTGRIDLAYOUTS];
 
-    QPushButton *outcomeButton;
     BallotOutcomeWindow *outcomeWindow;
     const marketOutcome *outcome;
     QLabel outcomeTabLabels[BALLOTOUTCOME_NLABLES];
     QGridLayout *outcomeLayouts[BALLOT_NOUTCOMEGRIDLAYOUTS];
 
-    QPushButton *sealedVoteButton;
     BallotSealedVoteWindow *sealedVoteWindow;
     const marketSealedVote *sealedVote;
     QLabel sealedVoteTabLabels[BALLOTSEALEDVOTE_NLABLES];
+    std::vector<marketDecision *> sealedVoteDecisions;
+    std::vector<double> sealedVoteVotes;
 
-    QPushButton *voteButton;
     BallotVoteWindow *voteWindow;
     const marketVote *vote;
     QLabel voteTabLabels[BALLOTVOTE_NLABLES];
 
+    /* create tab variables */
+    QLabel *sealedVoteBranchLabel;
+    QLineEdit *sealedVoteHeight;
+    QLineEdit *sealedVoteAddress;
+    QGridLayout *sealedVoteLayout;
+    QLabel *createSealedVoteCLI;
+    QLabel *createSealedVoteCLIResponse;
+
+    QLabel *voteBranchLabel;
+    QLineEdit *voteHeight;
+    QLineEdit *voteAddress;
+    QLabel *createVoteCLI;
+    QLabel *createVoteCLIResponse;
+
 public slots:
+    void onSealedVoteHeightTextChanged(const QString &);
+    void onSealedVoteAddressTextChanged(const QString &);
+    void onVoteHeightTextChanged(const QString &);
+    void onVoteAddressTextChanged(const QString &);
+    void onCreateSealedVoteClicked(void);
+    void onCreateVoteClicked(void);
     void showBallotWindow(void);
     void showBranchWindow(void);
     void showOutcomeWindow(void);
@@ -101,4 +125,4 @@ public slots:
     void showVoteWindow(void);
 };
 
-#endif // TRUTHCOIN_QT_BALLOTVIEW_H
+#endif // HIVEMIND_QT_BALLOTVIEW_H

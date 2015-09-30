@@ -7,13 +7,13 @@
 # Test -alertnotify 
 #
 
-from test_framework import TruthcoinTestFramework
-from truthcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from test_framework import HivemindTestFramework
+from hivemindrpc.authproxy import AuthServiceProxy, JSONRPCException
 from util import *
 import os
 import shutil
 
-class ForkNotifyTest(TruthcoinTestFramework):
+class ForkNotifyTest(HivemindTestFramework):
 
     alert_filename = None  # Set by setup_network
 

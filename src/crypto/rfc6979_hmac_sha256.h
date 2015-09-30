@@ -1,10 +1,10 @@
 // Copyright (c) 2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_RFC6979_HMAC_SHA256_H
-#define TRUTHCOIN_RFC6979_HMAC_SHA256_H
+#ifndef HIVEMIND_RFC6979_HMAC_SHA256_H
+#define HIVEMIND_RFC6979_HMAC_SHA256_H
 
 #include "crypto/hmac_sha256.h"
 
@@ -34,4 +34,4 @@ public:
     ~RFC6979_HMAC_SHA256();
 };
 
-#endif // TRUTHCOIN_RFC6979_HMAC_SHA256_H
+#endif // HIVEMIND_RFC6979_HMAC_SHA256_H

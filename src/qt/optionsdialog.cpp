@@ -1,16 +1,16 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/truthcoin-config.h"
+#include "config/hivemind-config.h"
 #endif
 
 #include "optionsdialog.h"
 #include "ui_optionsdialog.h"
 
-#include "truthcoinunits.h"
+#include "hivemindunits.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
 
@@ -105,7 +105,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     ui->thirdPartyTxUrls->setPlaceholderText("https://example.com/tx/%s");
 #endif
 
-    ui->unit->setModel(new TruthcoinUnits(this));
+    ui->unit->setModel(new HivemindUnits(this));
 
     /* Widget-to-option mapper */
     mapper = new QDataWidgetMapper(this);
@@ -160,7 +160,7 @@ void OptionsDialog::setModel(OptionsModel *model)
 void OptionsDialog::setMapper()
 {
     /* Main */
-    mapper->addMapping(ui->truthcoinAtStartup, OptionsModel::StartAtStartup);
+    mapper->addMapping(ui->hivemindAtStartup, OptionsModel::StartAtStartup);
     mapper->addMapping(ui->threadsScriptVerif, OptionsModel::ThreadsScriptVerif);
     mapper->addMapping(ui->databaseCache, OptionsModel::DatabaseCache);
 

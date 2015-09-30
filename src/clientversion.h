@@ -1,20 +1,20 @@
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_CLIENTVERSION_H
-#define TRUTHCOIN_CLIENTVERSION_H
+#ifndef HIVEMIND_CLIENTVERSION_H
+#define HIVEMIND_CLIENTVERSION_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/truthcoin-config.h"
+#include "config/hivemind-config.h"
 #else
 
 /**
  * client versioning and copyright year
  */
 
-//! These need to be macros, as clientversion.cpp's and truthcoin*-res.rc's voodoo requires it
+//! These need to be macros, as clientversion.cpp's and hivemind*-res.rc's voodoo requires it
 #define CLIENT_VERSION_MAJOR 0
 #define CLIENT_VERSION_MINOR 10
 #define CLIENT_VERSION_REVISION 99
@@ -39,10 +39,10 @@
 #define DO_STRINGIZE(X) #X
 
 //! Copyright string used in Windows .rc files
-#define COPYRIGHT_STR "2009-" STRINGIZE(COPYRIGHT_YEAR) " The Truthcoin Core Developers"
+#define COPYRIGHT_STR "2009-" STRINGIZE(COPYRIGHT_YEAR) " The Hivemind Core Developers"
 
 /**
- * truthcoind-res.rc includes this file, but it cannot cope with real c++ code.
+ * hivemindd-res.rc includes this file, but it cannot cope with real c++ code.
  * WINDRES_PREPROC is defined to indicate that its pre-processor is running.
  * Anything other than a define should be guarded below.
  */
@@ -68,4 +68,4 @@ std::string FormatSubVersion(const std::string& name, int nClientVersion, const 
 
 #endif // WINDRES_PREPROC
 
-#endif // TRUTHCOIN_CLIENTVERSION_H
+#endif // HIVEMIND_CLIENTVERSION_H

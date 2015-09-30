@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -118,6 +118,8 @@ bool SHORT_TAU_TESTING = true;
         genesisBranch.targetDecisions = 20;
         genesisBranch.maxDecisions = 30;
         genesisBranch.minTradingFee = COIN / 100;
+        genesisBranch.alpha = COIN / 10;
+        genesisBranch.tol = COIN / 5;
 if (SHORT_TAU_TESTING) {
         genesisBranch.tau = 7*40;
         genesisBranch.ballotTime = 2*40;
@@ -162,8 +164,8 @@ if (SHORT_TAU_TESTING) {
         vSeeds.push_back(CDNSSeedData("69.117.250.141", "69.117.250.141"));
 
 if (SHORT_TAU_TESTING) {
-        assert(genesis.hashMerkleRoot == uint256S("0xb861ae4e659621a10b941a792a6e3900216ec5ab04ca9d3a886781c0c144d6f3"));
-        assert(hashGenesisBlock == uint256S("0xef4ad4501ebbd7879ff911312554b6d10ff5a4bfee3adf2a58d346d3366ba97b"));
+        assert(genesis.hashMerkleRoot == uint256S("0x84468287c97d192c4e5d957964f802cd51ded59b714c2ddb7348edf4f4c45fa5"));
+        assert(hashGenesisBlock == uint256S("0xf4fe00a122af44c6288987581e987da59b58cd3f1bcff83c105d9955c32eda11"));
 } else {
         assert(genesis.hashMerkleRoot == uint256S("0x22070acaf5bd2762a487ffc4ec34289c4a52add700561abd96fdabd446b1730c"));
         assert(hashGenesisBlock == uint256S("0x000000006249a3761ba3be5307773df2d7a1c3214a381c96876e098997110fc1"));
@@ -226,9 +228,9 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         vSeeds.push_back(CDNSSeedData("alexykot.me", "testnet-seed.alexykot.me"));
-        vSeeds.push_back(CDNSSeedData("truthcoin.petertodd.org", "testnet-seed.truthcoin.petertodd.org"));
+        vSeeds.push_back(CDNSSeedData("hivemind.petertodd.org", "testnet-seed.hivemind.petertodd.org"));
         vSeeds.push_back(CDNSSeedData("bluematt.me", "testnet-seed.bluematt.me"));
-        vSeeds.push_back(CDNSSeedData("truthcoin.schildbach.de", "testnet-seed.truthcoin.schildbach.de"));
+        vSeeds.push_back(CDNSSeedData("hivemind.schildbach.de", "testnet-seed.hivemind.schildbach.de"));
 
         base58Prefixes[PUBKEY_ADDRESS] = boost::assign::list_of(111);
         base58Prefixes[SCRIPT_ADDRESS] = boost::assign::list_of(196);

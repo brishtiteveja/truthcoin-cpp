@@ -18,11 +18,11 @@
 #   j) check balances - node0 should have 0, node2 should have 100
 #
 
-from test_framework import TruthcoinTestFramework
+from test_framework import HivemindTestFramework
 from util import *
 
 
-class WalletTest (TruthcoinTestFramework):
+class WalletTest (HivemindTestFramework):
 
     def setup_chain(self):
         print("Initializing test directory "+self.options.tmpdir)
@@ -53,7 +53,7 @@ class WalletTest (TruthcoinTestFramework):
         assert_equal(self.nodes[1].getbalance(), 50)
         assert_equal(self.nodes[2].getbalance(), 0)
 
-        # Send 21 CSH from 0 to 2 using sendtoaddress call.
+        # Send 21 BTC from 0 to 2 using sendtoaddress call.
         # Second transaction will be child of first, and will require a fee
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 11)
         self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 10)

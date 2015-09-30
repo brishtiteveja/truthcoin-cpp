@@ -13,14 +13,14 @@
 # but less mature coinbase spends are NOT.
 #
 
-from test_framework import TruthcoinTestFramework
-from truthcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from test_framework import HivemindTestFramework
+from hivemindrpc.authproxy import AuthServiceProxy, JSONRPCException
 from util import *
 import os
 import shutil
 
 # Create one-input, one-output, no-fee transaction:
-class MempoolSpendCoinbaseTest(TruthcoinTestFramework):
+class MempoolSpendCoinbaseTest(HivemindTestFramework):
 
     def setup_network(self):
         # Just need one node for this test

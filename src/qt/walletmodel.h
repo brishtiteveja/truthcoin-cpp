@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_WALLETMODEL_H
-#define TRUTHCOIN_QT_WALLETMODEL_H
+#ifndef HIVEMIND_QT_WALLETMODEL_H
+#define HIVEMIND_QT_WALLETMODEL_H
 
 #include "paymentrequestplus.h"
 #include "walletmodeltransaction.h"
@@ -21,10 +21,10 @@ class BallotBallotTableModel;
 class BallotOutcomeTableModel;
 class BallotSealedVoteTableModel;
 class BallotVoteTableModel;
-class MarketBranchTableModel;
-class MarketDecisionTableModel;
-class MarketMarketTableModel;
-class MarketTradeTableModel;
+class DecisionBranchTableModel;
+class DecisionDecisionTableModel;
+class DecisionMarketTableModel;
+class DecisionTradeTableModel;
 class OptionsModel;
 class RecentRequestsTableModel;
 class ResolveVoteColTableModel;
@@ -104,7 +104,7 @@ public:
     }
 };
 
-/** Interface to Truthcoin wallet from Qt view code. */
+/** Interface to Hivemind wallet from Qt view code. */
 class WalletModel : public QObject
 {
     Q_OBJECT
@@ -135,15 +135,15 @@ public:
 
     OptionsModel *getOptionsModel();
     AddressTableModel *getAddressTableModel();
-    MarketBranchTableModel *getBallotBranchTableModel();
+    DecisionBranchTableModel *getBallotBranchTableModel();
     BallotBallotTableModel *getBallotBallotTableModel();
     BallotOutcomeTableModel *getBallotOutcomeTableModel();
     BallotSealedVoteTableModel *getBallotSealedVoteTableModel();
     BallotVoteTableModel *getBallotVoteTableModel();
-    MarketBranchTableModel *getMarketBranchTableModel();
-    MarketDecisionTableModel *getMarketDecisionTableModel();
-    MarketMarketTableModel *getMarketMarketTableModel();
-    MarketTradeTableModel *getMarketTradeTableModel();
+    DecisionBranchTableModel *getDecisionBranchTableModel();
+    DecisionDecisionTableModel *getDecisionDecisionTableModel();
+    DecisionMarketTableModel *getDecisionMarketTableModel();
+    DecisionTradeTableModel *getDecisionTradeTableModel();
     ResolveVoteColTableModel *getResolveVoteColTableModel();
     ResolveVoteRowTableModel *getResolveVoteRowTableModel();
     ResolveVoteInputTableModel *getResolveVoteInputTableModel();
@@ -229,15 +229,15 @@ private:
     OptionsModel *optionsModel;
 
     AddressTableModel *addressTableModel;
-    MarketBranchTableModel *ballotBranchTableModel;
+    DecisionBranchTableModel *ballotBranchTableModel;
     BallotBallotTableModel *ballotBallotTableModel;
     BallotOutcomeTableModel *ballotOutcomeTableModel;
     BallotSealedVoteTableModel *ballotSealedVoteTableModel;
     BallotVoteTableModel *ballotVoteTableModel;
-    MarketBranchTableModel *marketBranchTableModel;
-    MarketDecisionTableModel *marketDecisionTableModel;
-    MarketMarketTableModel *marketMarketTableModel;
-    MarketTradeTableModel *marketTradeTableModel;
+    DecisionBranchTableModel *decisionBranchTableModel;
+    DecisionDecisionTableModel *decisionDecisionTableModel;
+    DecisionMarketTableModel *decisionMarketTableModel;
+    DecisionTradeTableModel *decisionTradeTableModel;
     ResolveVoteColTableModel *resolveVoteColTableModel;
     ResolveVoteRowTableModel *resolveVoteRowTableModel;
     ResolveVoteInputTableModel *resolveVoteInputTableModel;
@@ -298,4 +298,4 @@ public slots:
     void pollBalanceChanged();
 };
 
-#endif // TRUTHCOIN_QT_WALLETMODEL_H
+#endif // HIVEMIND_QT_WALLETMODEL_H

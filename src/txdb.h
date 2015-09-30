@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_TXDB_H
-#define TRUTHCOIN_TXDB_H
+#ifndef HIVEMIND_TXDB_H
+#define HIVEMIND_TXDB_H
 
 #include "leveldbwrapper.h"
 #include "main.h"
@@ -81,6 +81,7 @@ public:
     marketMarket *GetMarket(const uint256 &);
     marketOutcome *GetOutcome(const uint256 &);
     marketSealedVote *GetSealedVote(const uint256 &);
+    marketStealVote *GetStealVote(const uint256 &);
     marketTrade *GetTrade(const uint256 &);
     marketVote *GetVote(const uint256 &);
 
@@ -88,8 +89,10 @@ public:
     vector<marketDecision *> GetDecisions(const uint256 &);
     vector<marketMarket *> GetMarkets(const uint256 &);
     vector<marketOutcome *> GetOutcomes(const uint256 &);
+    vector<marketSealedVote *> GetSealedVotes(const uint256 &, uint32_t);
+    vector<marketStealVote *> GetStealVotes(const uint256 &, uint32_t);
     vector<marketTrade *> GetTrades(const uint256 &);
     vector<marketVote *> GetVotes(const uint256 &, uint32_t);
 };
 
-#endif // TRUTHCOIN_TXDB_H
+#endif // HIVEMIND_TXDB_H

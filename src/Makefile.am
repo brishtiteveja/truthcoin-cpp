@@ -17,19 +17,19 @@ $(LIBLEVELDB) $(LIBMEMENV):
           OPT="$(CXXFLAGS) $(CPPFLAGS)"
 endif
 
-TRUTHCOIN_CONFIG_INCLUDES=-I$(builddir)/config
-TRUTHCOIN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
+HIVEMIND_CONFIG_INCLUDES=-I$(builddir)/config
+HIVEMIND_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
 
-TRUTHCOIN_INCLUDES += -I$(srcdir)/fdlibm/include -I$(srcdir)/linalg/include -I$(srcdir)/secp256k1/include
+HIVEMIND_INCLUDES += -I$(srcdir)/fdlibm/include -I$(srcdir)/linalg/include -I$(srcdir)/secp256k1/include
 
-LIBTRUTHCOIN_SERVER=libtruthcoin_server.a
-LIBTRUTHCOIN_WALLET=libtruthcoin_wallet.a
-LIBTRUTHCOIN_COMMON=libtruthcoin_common.a
-LIBTRUTHCOIN_CLI=libtruthcoin_cli.a
-LIBTRUTHCOIN_UTIL=libtruthcoin_util.a
-LIBTRUTHCOIN_CRYPTO=crypto/libtruthcoin_crypto.a
-LIBTRUTHCOIN_UNIVALUE=univalue/libtruthcoin_univalue.a
-LIBTRUTHCOINQT=qt/libtruthcoinqt.a
+LIBHIVEMIND_SERVER=libhivemind_server.a
+LIBHIVEMIND_WALLET=libhivemind_wallet.a
+LIBHIVEMIND_COMMON=libhivemind_common.a
+LIBHIVEMIND_CLI=libhivemind_cli.a
+LIBHIVEMIND_UTIL=libhivemind_util.a
+LIBHIVEMIND_CRYPTO=crypto/libhivemind_crypto.a
+LIBHIVEMIND_UNIVALUE=univalue/libhivemind_univalue.a
+LIBHIVEMINDQT=qt/libhivemindqt.a
 LIBFDLIBM=fdlibm/libfdlibm.la
 LIBLINALG=linalg/liblinalg.la
 LIBSECP256K1=secp256k1/libsecp256k1.la
@@ -47,38 +47,38 @@ $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES = \
-  crypto/libtruthcoin_crypto.a \
-  libtruthcoin_util.a \
-  libtruthcoin_common.a \
-  univalue/libtruthcoin_univalue.a \
-  libtruthcoin_server.a \
-  libtruthcoin_cli.a
+  crypto/libhivemind_crypto.a \
+  libhivemind_util.a \
+  libhivemind_common.a \
+  univalue/libhivemind_univalue.a \
+  libhivemind_server.a \
+  libhivemind_cli.a
 if ENABLE_WALLET
-TRUTHCOIN_INCLUDES += $(BDB_CPPFLAGS)
-EXTRA_LIBRARIES += libtruthcoin_wallet.a
+HIVEMIND_INCLUDES += $(BDB_CPPFLAGS)
+EXTRA_LIBRARIES += libhivemind_wallet.a
 endif
 
-if BUILD_TRUTHCOIN_LIBS
-lib_LTLIBRARIES = libtruthcoinconsensus.la
-LIBTRUTHCOIN_CONSENSUS=libtruthcoinconsensus.la
+if BUILD_HIVEMIND_LIBS
+lib_LTLIBRARIES = libhivemindconsensus.la
+LIBHIVEMIND_CONSENSUS=libhivemindconsensus.la
 else
-LIBTRUTHCOIN_CONSENSUS=
+LIBHIVEMIND_CONSENSUS=
 endif
 
 bin_PROGRAMS =
 TESTS =
 
-if BUILD_TRUTHCOIND
-  bin_PROGRAMS += truthcoind
+if BUILD_HIVEMINDD
+  bin_PROGRAMS += hivemindd
 endif
 
-if BUILD_TRUTHCOIN_UTILS
-  bin_PROGRAMS += truthcoin-cli truthcoin-tx
+if BUILD_HIVEMIND_UTILS
+  bin_PROGRAMS += hivemind-cli hivemind-tx
 endif
 
 .PHONY: FORCE
-# truthcoin core #
-TRUTHCOIN_CORE_H = \
+# hivemind core #
+HIVEMIND_CORE_H = \
   addrman.h \
   alert.h \
   allocators.h \
@@ -167,11 +167,11 @@ obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
 	@$(top_srcdir)/share/genbuild.sh $(abs_top_builddir)/src/obj/build.h \
 	  $(abs_top_srcdir)
-libtruthcoin_util_a-clientversion.$(OBJEXT): obj/build.h
+libhivemind_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between truthcoind and truthcoin-qt
-libtruthcoin_server_a_CPPFLAGS = $(TRUTHCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS)
-libtruthcoin_server_a_SOURCES = \
+# server: shared between hivemindd and hivemind-qt
+libhivemind_server_a_CPPFLAGS = $(HIVEMIND_INCLUDES) $(MINIUPNPC_CPPFLAGS)
+libhivemind_server_a_SOURCES = \
   addrman.cpp \
   alert.cpp \
   bloom.cpp \
@@ -197,12 +197,12 @@ libtruthcoin_server_a_SOURCES = \
   txdb.cpp \
   txmempool.cpp \
   $(JSON_H) \
-  $(TRUTHCOIN_CORE_H)
+  $(HIVEMIND_CORE_H)
 
-# wallet: shared between truthcoind and truthcoin-qt, but only linked
+# wallet: shared between hivemindd and hivemind-qt, but only linked
 # when wallet enabled
-libtruthcoin_wallet_a_CPPFLAGS = $(TRUTHCOIN_INCLUDES)
-libtruthcoin_wallet_a_SOURCES = \
+libhivemind_wallet_a_CPPFLAGS = $(HIVEMIND_INCLUDES)
+libhivemind_wallet_a_SOURCES = \
   db.cpp \
   crypter.cpp \
   rpcdump.cpp \
@@ -210,11 +210,11 @@ libtruthcoin_wallet_a_SOURCES = \
   wallet.cpp \
   wallet_ismine.cpp \
   walletdb.cpp \
-  $(TRUTHCOIN_CORE_H)
+  $(HIVEMIND_CORE_H)
 
 # crypto primitives library
-crypto_libtruthcoin_crypto_a_CPPFLAGS = $(TRUTHCOIN_CONFIG_INCLUDES)
-crypto_libtruthcoin_crypto_a_SOURCES = \
+crypto_libhivemind_crypto_a_CPPFLAGS = $(HIVEMIND_CONFIG_INCLUDES)
+crypto_libhivemind_crypto_a_SOURCES = \
   crypto/sha1.cpp \
   crypto/sha256.cpp \
   crypto/sha512.cpp \
@@ -232,16 +232,16 @@ crypto_libtruthcoin_crypto_a_SOURCES = \
   crypto/ripemd160.h
 
 # univalue JSON library
-univalue_libtruthcoin_univalue_a_SOURCES = \
+univalue_libhivemind_univalue_a_SOURCES = \
   univalue/univalue.cpp \
   univalue/univalue_read.cpp \
   univalue/univalue_write.cpp \
   univalue/univalue_escapes.h \
   univalue/univalue.h
 
-# common: shared between truthcoind, and truthcoin-qt and non-server tools
-libtruthcoin_common_a_CPPFLAGS = $(TRUTHCOIN_INCLUDES)
-libtruthcoin_common_a_SOURCES = \
+# common: shared between hivemindd, and hivemind-qt and non-server tools
+libhivemind_common_a_CPPFLAGS = $(HIVEMIND_INCLUDES)
+libhivemind_common_a_SOURCES = \
   allocators.cpp \
   arith_uint256.cpp \
   amount.cpp \
@@ -267,13 +267,13 @@ libtruthcoin_common_a_SOURCES = \
   script/sign.cpp \
   script/standard.cpp \
   script/script_error.cpp \
-  $(TRUTHCOIN_CORE_H)
+  $(HIVEMIND_CORE_H)
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
 # backward-compatibility objects and their sanity checks are linked.
-libtruthcoin_util_a_CPPFLAGS = $(TRUTHCOIN_INCLUDES)
-libtruthcoin_util_a_SOURCES = \
+libhivemind_util_a_CPPFLAGS = $(HIVEMIND_INCLUDES)
+libhivemind_util_a_SOURCES = \
   chainparamsbase.cpp \
   clientversion.cpp \
   compat/glibc_sanity.cpp \
@@ -287,29 +287,29 @@ libtruthcoin_util_a_SOURCES = \
   utilmoneystr.cpp \
   utilstrencodings.cpp \
   utiltime.cpp \
-  $(TRUTHCOIN_CORE_H)
+  $(HIVEMIND_CORE_H)
 
 if GLIBC_BACK_COMPAT
-libtruthcoin_util_a_SOURCES += compat/glibc_compat.cpp
-libtruthcoin_util_a_SOURCES += compat/glibcxx_compat.cpp
+libhivemind_util_a_SOURCES += compat/glibc_compat.cpp
+libhivemind_util_a_SOURCES += compat/glibcxx_compat.cpp
 endif
 
-# cli: shared between truthcoin-cli and truthcoin-qt
-libtruthcoin_cli_a_CPPFLAGS = $(TRUTHCOIN_INCLUDES)
-libtruthcoin_cli_a_SOURCES = \
+# cli: shared between hivemind-cli and hivemind-qt
+libhivemind_cli_a_CPPFLAGS = $(HIVEMIND_INCLUDES)
+libhivemind_cli_a_SOURCES = \
   rpcclient.cpp \
-  $(TRUTHCOIN_CORE_H)
+  $(HIVEMIND_CORE_H)
 
-nodist_libtruthcoin_util_a_SOURCES = $(srcdir)/obj/build.h
+nodist_libhivemind_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
-# truthcoind binary #
-truthcoind_LDADD = \
-  $(LIBTRUTHCOIN_SERVER) \
-  $(LIBTRUTHCOIN_COMMON) \
-  $(LIBTRUTHCOIN_UNIVALUE) \
-  $(LIBTRUTHCOIN_UTIL) \
-  $(LIBTRUTHCOIN_CRYPTO) \
+# hivemindd binary #
+hivemindd_LDADD = \
+  $(LIBHIVEMIND_SERVER) \
+  $(LIBHIVEMIND_COMMON) \
+  $(LIBHIVEMIND_UNIVALUE) \
+  $(LIBHIVEMIND_UTIL) \
+  $(LIBHIVEMIND_CRYPTO) \
   $(LIBLEVELDB) \
   $(LIBMEMENV) \
   $(LIBFDLIBM) \
@@ -317,58 +317,58 @@ truthcoind_LDADD = \
   $(LIBSECP256K1)
 
 if ENABLE_WALLET
-truthcoind_LDADD += libtruthcoin_wallet.a
+hivemindd_LDADD += libhivemind_wallet.a
 endif
-truthcoind_SOURCES = truthcoind.cpp
+hivemindd_SOURCES = hivemindd.cpp
 #
 
 if TARGET_WINDOWS
-truthcoind_SOURCES += truthcoind-res.rc
+hivemindd_SOURCES += hivemindd-res.rc
 endif
 
-truthcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
-truthcoind_CPPFLAGS = $(TRUTHCOIN_INCLUDES)
-truthcoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+hivemindd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
+hivemindd_CPPFLAGS = $(HIVEMIND_INCLUDES)
+hivemindd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-# truthcoin-cli binary #
-truthcoin_cli_LDADD = \
-  $(LIBTRUTHCOIN_CLI) \
-  $(LIBTRUTHCOIN_UTIL) \
+# hivemind-cli binary #
+hivemind_cli_LDADD = \
+  $(LIBHIVEMIND_CLI) \
+  $(LIBHIVEMIND_UTIL) \
   $(BOOST_LIBS) \
   $(SSL_LIBS) \
   $(CRYPTO_LIBS)
 
-truthcoin_cli_SOURCES = \
-  truthcoin-cli.cpp
+hivemind_cli_SOURCES = \
+  hivemind-cli.cpp
 
-truthcoin_cli_CPPFLAGS = $(TRUTHCOIN_INCLUDES)
+hivemind_cli_CPPFLAGS = $(HIVEMIND_INCLUDES)
 #
 
-# truthcoin-tx binary #
-truthcoin_tx_LDADD = \
-  $(LIBTRUTHCOIN_UNIVALUE) \
-  $(LIBTRUTHCOIN_COMMON) \
-  $(LIBTRUTHCOIN_UTIL) \
-  $(LIBTRUTHCOIN_CRYPTO) \
+# hivemind-tx binary #
+hivemind_tx_LDADD = \
+  $(LIBHIVEMIND_UNIVALUE) \
+  $(LIBHIVEMIND_COMMON) \
+  $(LIBHIVEMIND_UTIL) \
+  $(LIBHIVEMIND_CRYPTO) \
   $(LIBFDLIBM) \
   $(LIBLINALG) \
   $(LIBSECP256K1) \
   $(BOOST_LIBS) \
   $(CRYPTO_LIBS)
 
-truthcoin_tx_SOURCES = truthcoin-tx.cpp
-truthcoin_tx_CPPFLAGS = $(TRUTHCOIN_INCLUDES)
+hivemind_tx_SOURCES = hivemind-tx.cpp
+hivemind_tx_CPPFLAGS = $(HIVEMIND_INCLUDES)
 #
-truthcoin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+hivemind_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-truthcoin_cli_SOURCES += truthcoin-cli-res.rc
+hivemind_cli_SOURCES += hivemind-cli-res.rc
 endif
-truthcoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+hivemind_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-if BUILD_TRUTHCOIN_LIBS
-include_HEADERS = script/truthcoinconsensus.h
-libtruthcoinconsensus_la_SOURCES = \
+if BUILD_HIVEMIND_LIBS
+include_HEADERS = script/hivemindconsensus.h
+libhivemindconsensus_la_SOURCES = \
   crypto/hmac_sha512.cpp \
   crypto/ripemd160.cpp \
   crypto/sha1.cpp \
@@ -380,25 +380,25 @@ libtruthcoinconsensus_la_SOURCES = \
   primitives/market.cpp \
   primitives/transaction.cpp \
   pubkey.cpp \
-  script/truthcoinconsensus.cpp \
+  script/hivemindconsensus.cpp \
   script/interpreter.cpp \
   script/script.cpp \
   uint256.cpp \
   utilstrencodings.cpp
 
 if GLIBC_BACK_COMPAT
-  libtruthcoinconsensus_la_SOURCES += compat/glibc_compat.cpp
-  libtruthcoinconsensus_la_SOURCES += compat/glibcxx_compat.cpp
+  libhivemindconsensus_la_SOURCES += compat/glibc_compat.cpp
+  libhivemindconsensus_la_SOURCES += compat/glibcxx_compat.cpp
 endif
 
-libtruthcoinconsensus_la_LDFLAGS = -no-undefined $(RELDFLAGS)
-libtruthcoinconsensus_la_LIBADD = $(BOOST_LIBS) $(CRYPTO_LIBS)
-libtruthcoinconsensus_la_CPPFLAGS = $(CRYPTO_CFLAGS) -I$(builddir)/obj -DBUILD_TRUTHCOIN_INTERNAL
+libhivemindconsensus_la_LDFLAGS = -no-undefined $(RELDFLAGS)
+libhivemindconsensus_la_LIBADD = $(BOOST_LIBS) $(CRYPTO_LIBS)
+libhivemindconsensus_la_CPPFLAGS = $(CRYPTO_CFLAGS) -I$(builddir)/obj -DBUILD_HIVEMIND_INTERNAL
 if USE_LIBSECP256K1
-libtruthcoinconsensus_la_LIBADD += secp256k1/libsecp256k1.la
+libhivemindconsensus_la_LIBADD += secp256k1/libsecp256k1.la
 endif
-libtruthcoinconsensus_la_LIBADD += linalg/liblinalg.la
-libtruthcoinconsensus_la_LIBADD += fdlibm/libfdlibm.la
+libhivemindconsensus_la_LIBADD += linalg/liblinalg.la
+libhivemindconsensus_la_LIBADD += fdlibm/libfdlibm.la
 endif
 
 CLEANFILES = leveldb/libleveldb.a leveldb/libmemenv.a *.gcda *.gcno

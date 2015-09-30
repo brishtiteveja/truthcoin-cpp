@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_PRIMITIVES_TRANSACTION_H
-#define TRUTHCOIN_PRIMITIVES_TRANSACTION_H
+#ifndef HIVEMIND_PRIMITIVES_TRANSACTION_H
+#define HIVEMIND_PRIMITIVES_TRANSACTION_H
 
 #include "amount.h"
 #include "script/script.h"
@@ -274,4 +274,4 @@ struct CMutableTransaction
     uint256 GetHash() const;
 };
 
-#endif // TRUTHCOIN_PRIMITIVES_TRANSACTION_H
+#endif // HIVEMIND_PRIMITIVES_TRANSACTION_H

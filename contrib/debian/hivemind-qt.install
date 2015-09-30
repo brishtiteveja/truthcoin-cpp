@@ -1,0 +1,4 @@
+usr/local/bin/hivemind-qt usr/bin
+share/pixmaps/hivemind128.png usr/share/pixmaps
+debian/hivemind-qt.desktop usr/share/applications
+debian/hivemind-qt.protocol usr/share/kde4/services/

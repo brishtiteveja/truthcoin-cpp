@@ -1,18 +1,22 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <QButtonGroup>
+#include <QDoubleValidator>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QIntValidator>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QSplitter>
 #include <QTabWidget>
 #include <QVBoxLayout>
 
@@ -25,9 +29,9 @@
 #include "ballotvotetablemodel.h"
 #include "ballotview.h"
 #include "chain.h"
+#include "decisionbranchtablemodel.h"
 #include "guiutil.h"
 #include "main.h"
-#include "marketbranchtablemodel.h"
 #include "primitives/market.h"
 #include "txdb.h"
 #include "walletmodel.h"
@@ -38,6 +42,10 @@ extern CChain chainActive;
 
 const int col0 = 0;
 const int col1 = 1;
+const int col2 = 2;
+const int col3 = 3;
+const int col4 = 4;
+const int col5 = 5;
 
 static QString formatUint256(const uint256 &hash)
 {
@@ -57,7 +65,17 @@ bool branchptrcmp(const marketBranch *aptr, const marketBranch *bptr)
 #endif
 
 BallotView::BallotView(QWidget *parent)
-    : QWidget(parent), model(0), branch(0)
+    : QWidget(parent),
+    model(0),
+    branch(0),
+    ballotNum((uint32_t)(-1)),
+    sealedVoteBranchLabel(0),
+    sealedVoteHeight(0),
+    sealedVoteAddress(0),
+    sealedVoteLayout(0),
+    createSealedVoteCLI(0),
+    createSealedVoteCLIResponse(0)
+
 {
     /* vlayout                        */
     /*    Grid Layout                 */
@@ -66,10 +84,11 @@ BallotView::BallotView(QWidget *parent)
     vlayout->setContentsMargins(0,0,0,0);
     vlayout->setSpacing(0);
     QGridLayout *glayout = new QGridLayout();
-    vlayout->addLayout(glayout);
+    vlayout->addLayout(glayout, 0);
     QHBoxLayout *hlayout = new QHBoxLayout();
-    vlayout->addLayout(hlayout);
-
+    hlayout->setContentsMargins(0,0,0,0);
+    hlayout->setSpacing(0);
+    vlayout->addLayout(hlayout, 10); /* receives all the stretch */
 
     /* Grid Layout */
 
@@ -80,7 +99,7 @@ BallotView::BallotView(QWidget *parent)
     branchLabels[1] = new QLabel("");
     branchLabels[1]->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     branchLabels[1]->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    ballotLabels[0] = new QLabel(tr("Block Number: "));
+    ballotLabels[0] = new QLabel(tr("Outcome Block: "));
     ballotLabels[0]->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     ballotLabels[0]->setTextInteractionFlags(Qt::TextSelectableByMouse);
     ballotLabels[1] = new QLabel("");
@@ -99,16 +118,16 @@ BallotView::BallotView(QWidget *parent)
     glayout->addWidget(ballotLabels[0], /* row */1, col0);
     glayout->addWidget(ballotLabels[1], /* row */1, col1);
 
-    /* Horizontal Layout */
-    /* Select     Create */
-    hlayout->setContentsMargins(0,0,0,0);
-    hlayout->setSpacing(0);
+    /* Horizontal Splitter */
+    /* Select     Create   */
+    QSplitter *splitter = new QSplitter(Qt::Horizontal);
     QGroupBox *groupbox1 = new QGroupBox(tr("Select"));
     QVBoxLayout *gb1layout = new QVBoxLayout(groupbox1);
-    hlayout->addWidget(groupbox1);
+    splitter->addWidget(groupbox1);
     QGroupBox *groupbox2 = new QGroupBox(tr("Create"));
     QVBoxLayout *gb2layout = new QVBoxLayout(groupbox2);
-    hlayout->addWidget(groupbox2);
+    splitter->addWidget(groupbox2);
+    hlayout->addWidget(splitter);
 
     /* Select Tabs */
     QTabWidget *tabs1 = new QTabWidget();
@@ -220,7 +239,7 @@ BallotView::BallotView(QWidget *parent)
     connect(blockNumWidget, SIGNAL(textChanged(QString)), this, SLOT(changedBlock(QString)));
 
     blocknum = chainActive.Height();
-    char tmp[32];
+    char tmp[128];
     snprintf(tmp, sizeof(tmp), "%u", blocknum);
     blockNumWidget->setText( QString(tmp) );
 
@@ -245,29 +264,100 @@ void BallotView::setModel(WalletModel *model)
 void BallotView::onBallotChange(unsigned int blockNum)
 {
    this->ballotNum = blockNum;
-   if (blockNum == (unsigned int)(-1)) {
-        ballotLabels[1]->setText("");
-
+   uint32_t minblock = (branch)? (blockNum - branch->tau + 1): blockNum;
+   uint32_t maxblock = blockNum;
+   if ((!branch) || (blockNum == (unsigned int)(-1))) {
         for(uint32_t i=0; i < BALLOTBALLOT_NLABLES; i++)
            ballotTabLabels[i].setText("");
+
+        ballotLabels[1]->setText("");
    } else {
-        char tmp[32];
+        char tmp[128];
         /* Decisions: */
-        sprintf(tmp, "%u - %u", blockNum - branch->tau + 1, blockNum);
-        ballotLabels[0]->setText( QString(tmp) );
+        sprintf(tmp, "%u - %u", minblock, maxblock);
+        ballotTabLabels[0].setText( QString(tmp) );
 
         /* Sealed Ballots: */
         sprintf(tmp, "<= %u", blockNum + branch->ballotTime);
-        ballotLabels[0]->setText( QString(tmp) );
+        ballotTabLabels[1].setText( QString(tmp) );
 
         /* Unsealed Ballots: */
         sprintf(tmp, "<= %u", blockNum + branch->ballotTime + branch->unsealTime);
-        ballotLabels[0]->setText( QString(tmp) );
+        ballotTabLabels[2].setText( QString(tmp) );
 
         /* Outcome: */
         sprintf(tmp, "%u", blockNum + branch->ballotTime + branch->unsealTime + 1);
-        ballotLabels[0]->setText( QString(tmp) );
+        ballotTabLabels[3].setText( QString(tmp) );
+
+        ballotLabels[1]->setText( QString(tmp) );
    }
+
+    /* delete widgets from ballotLayout */
+    for(uint32_t i=0; i < BALLOT_NBALLOTGRIDLAYOUTS; i++) {
+        for(QLayoutItem *child; (child=ballotLayouts[i]->takeAt(0)); ) {
+            delete child->widget();
+            delete child;
+        }
+    }
+
+    if ((!branch) || (blockNum == (unsigned int)(-1)))
+        return;
+
+    QGridLayout *glayout;
+    QLabel *label;
+    char tmp[128];
+    uint32_t row;
+
+    /* ballotLayouts[0]: main ballot */
+    glayout = ballotLayouts[0];
+    row = 0;
+
+    vector<marketDecision *> vec = pmarkettree->GetDecisions(branch->GetHash());
+    for(size_t i=0; i < vec.size(); i++) {
+        const marketDecision *obj = vec[i];
+        if ((obj->eventOverBy < minblock)
+            || (obj->eventOverBy > maxblock))
+            continue;
+
+        label = new QLabel( QString::fromStdString(obj->prompt) );
+        label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+        label->setAlignment(Qt::AlignLeft|Qt::AlignTop);
+        glayout->addWidget(label, row, col0);
+
+        QString isOptional = (obj->answerOptionality)? tr("not optional"): tr("is optional");
+        label = new QLabel(isOptional);
+        label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+        label->setAlignment(Qt::AlignLeft|Qt::AlignTop);
+        glayout->addWidget(label, row, col1);
+
+        QString isScaled = (obj->isScaled)? tr("is scaled"): tr("is binary");
+        label = new QLabel(isScaled);
+        label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+        label->setAlignment(Qt::AlignLeft|Qt::AlignTop);
+        glayout->addWidget(label, row, col2);
+
+        if (obj->isScaled) {
+            snprintf(tmp, sizeof(tmp), "%.8f", 1e-8*obj->min);
+            label = new QLabel( QString(tmp) );
+            label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+            label->setAlignment(Qt::AlignLeft|Qt::AlignTop);
+            glayout->addWidget(label, row, col3);
+
+            snprintf(tmp, sizeof(tmp), "%.8f", 1e-8*obj->max);
+            label = new QLabel( QString(tmp) );
+            label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+            label->setAlignment(Qt::AlignLeft|Qt::AlignTop);
+            glayout->addWidget(label, row, col4);
+        }
+        glayout->setRowStretch(row, 0);
+
+        row++;
+    }
+    for(size_t i=0; i < vec.size(); i++)
+        delete vec[i];
+
+    glayout->addWidget(new QWidget(), row, col0); /* add widget to receive stretch */
+    glayout->setRowStretch(row, 10);
    
     /* propagate */
     // outcomeWindow->onBallotChange(branch, blockNum);
@@ -281,17 +371,15 @@ void BallotView::onBranchChange(const marketBranch *branch)
 
     if (!branch) {
         branchLabels[1]->setText("");
-//        decisionBranchLabel->setText("");
-//        marketBranchLabel->setText("");
-//        tradeBranchLabel->setText("");
+        sealedVoteBranchLabel->setText("");
+        voteBranchLabel->setText("");
 
         for(uint32_t i=0; i < BALLOTBRANCH_NLABLES; i++)
            branchTabLabels[i].setText("");
     } else {
         branchLabels[1]->setText( QString::fromStdString(branch->name) );
-//        decisionBranchLabel->setText( QString::fromStdString(branch->name) );
-//        marketBranchLabel->setText( QString::fromStdString(branch->name) );
-//        tradeBranchLabel->setText( QString::fromStdString(branch->name) );
+        sealedVoteBranchLabel->setText( QString::fromStdString(branch->name) );
+        voteBranchLabel->setText( QString::fromStdString(branch->name) );
 
         branchTabLabels[0].setText( formatName(branch) );
         branchTabLabels[1].setText( formatDescription(branch) );
@@ -304,20 +392,15 @@ void BallotView::onBranchChange(const marketBranch *branch)
         branchTabLabels[8].setText( formatBallotTime(branch) );
         branchTabLabels[9].setText( formatUnsealTime(branch) );
         branchTabLabels[10].setText( formatConsensusThreshold(branch) );
-        branchTabLabels[11].setText( formatHash(branch) );
-        branchTabLabels[12].setText( formatUint256(branch->txid) );
+        branchTabLabels[11].setText( formatAlpha(branch) );
+        branchTabLabels[12].setText( formatTol(branch) );
+        branchTabLabels[13].setText( formatHash(branch) );
+        branchTabLabels[14].setText( formatUint256(branch->txid) );
     }
 
     /* propagate */
-/*
     ballotWindow->onBranchChange(branch);
-*/
     outcomeWindow->onBranchChange(branch);
-
-    /* update CLIs */
-//    updateCreateDecisionCLI();
-//    updateCreateMarketCLI();
-//    updateCreateTradeCLI();
 }
 
 void BallotView::onOutcomeChange(const marketOutcome *outcome)
@@ -325,16 +408,18 @@ void BallotView::onOutcomeChange(const marketOutcome *outcome)
     if (!outcome) {
         for(uint32_t i=0; i < BALLOTOUTCOME_NLABLES; i++)
            outcomeTabLabels[i].setText("");
+
+        ballotLabels[1]->setText("");
     } else {
         outcomeTabLabels[0].setText( formatHeight(outcome) );
         outcomeTabLabels[1].setText( formatHash(outcome) );
+
+        ballotLabels[1]->setText( formatHeight(outcome) );
     }
 
     /* delete widgets from outcomeLayout */
     for(uint32_t i=0; i < BALLOT_NOUTCOMEGRIDLAYOUTS; i++) {
-
-        QLayoutItem *child;
-        while ((child=outcomeLayouts[i]->takeAt(0)) != 0) {
+        for(QLayoutItem *child; (child=outcomeLayouts[i]->takeAt(0)); ) {
             delete child->widget();
             delete child;
         }
@@ -345,7 +430,7 @@ void BallotView::onOutcomeChange(const marketOutcome *outcome)
 
     QGridLayout *glayout;
     QLabel *label;
-    char tmp[32];
+    char tmp[128];
     uint32_t row;
 
     /* outcomeLayouts[0]: main params */
@@ -421,7 +506,10 @@ void BallotView::onOutcomeChange(const marketOutcome *outcome)
         label->setTextInteractionFlags(Qt::TextSelectableByMouse);
         label->setAlignment(Qt::AlignLeft|Qt::AlignTop);
         glayout->addWidget(label, row, col0);
-        snprintf(tmp, sizeof(tmp), "%s", outcome->voterIDs[i].ToString().c_str());
+        CHivemindAddress addr;
+        addr.is_votecoin = 1;
+        addr.Set(outcome->voterIDs[i]);
+        snprintf(tmp, sizeof(tmp), "%s", addr.ToString().c_str());
         label = new QLabel(QString(tmp));
         label->setTextInteractionFlags(Qt::TextSelectableByMouse);
         label->setAlignment(Qt::AlignRight|Qt::AlignTop);
@@ -584,6 +672,8 @@ void BallotView::initSelectBranchTab(QWidget *page)
         "Ballot Time:",
         "Unseal Time:",
         "Consensus Threshold:",
+        "Alpha:",
+        "Tol:",
         "Hash: ",
         "In Tx: ",
     };
@@ -601,15 +691,15 @@ void BallotView::initSelectBranchTab(QWidget *page)
        glayout->addWidget(value, /* row */i, col1);
     }
 
-    branchButton = new QPushButton(tr("Select"));
+    QPushButton *button = new QPushButton(tr("Select"));
     branchWindow = new BallotBranchWindow(this);
-    connect(branchButton, SIGNAL(clicked()), this, SLOT(showBranchWindow()));
+    connect(button, SIGNAL(clicked()), this, SLOT(showBranchWindow()));
 
     QVBoxLayout *vlayout = new QVBoxLayout(page);
     vlayout->setContentsMargins(10,10,10,10);
     vlayout->setSpacing(2);
     vlayout->addLayout(glayout, 0);
-    vlayout->addWidget(branchButton, 0);
+    vlayout->addWidget(button, 0);
     vlayout->addWidget(new QWidget(), 10); /* receives all the stretch */
 }
 
@@ -640,16 +730,43 @@ void BallotView::initSelectBallotTab(QWidget *page)
        glayout->addWidget(value, /* row */i, col1);
     }
 
-    ballotButton = new QPushButton(tr("Select"));
+    QPushButton *button = new QPushButton(tr("Select"));
     ballotWindow = new BallotBallotWindow(this);
-    connect(ballotButton, SIGNAL(clicked()), this, SLOT(showBallotWindow()));
+    connect(button, SIGNAL(clicked()), this, SLOT(showBallotWindow()));
+
+    QWidget *ballotWidget = new QWidget();
+    QVBoxLayout *ballotLayout = new QVBoxLayout(ballotWidget);
+    ballotLayout->setContentsMargins(0,0,0,0);
+    ballotLayout->setSpacing(10);
+    for(uint32_t i=0; i < BALLOT_NBALLOTGRIDLAYOUTS; i++) {
+        QGridLayout *glayout = new QGridLayout();
+        if (i == 0)
+           glayout->setColumnStretch(0, 10); /* receives the stretch */
+        glayout->setContentsMargins(0,0,0,0);
+        glayout->setHorizontalSpacing(4);
+        glayout->setVerticalSpacing(2);
+        ballotLayout->addLayout(glayout, 0);
+        /* record */
+        ballotLayouts[i] = glayout;
+    }
+    ballotLayout->addLayout(new QGridLayout(), 10); /* add one more to receive the stretch */
+
+    QScrollArea *ballotScrollArea = new QScrollArea();
+    ballotScrollArea->setWidgetResizable(true);
+    ballotScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    ballotScrollArea->setWidget(ballotWidget);
+    QVBoxLayout *ballotScrollAreaLayout = new QVBoxLayout();
+    ballotScrollAreaLayout->addWidget(ballotScrollArea, 1);
 
     QVBoxLayout *vlayout = new QVBoxLayout(page);
     vlayout->setContentsMargins(10,10,10,10);
     vlayout->setSpacing(2);
     vlayout->addLayout(glayout, 0);
-    vlayout->addWidget(ballotButton, 0);
-    vlayout->addWidget(new QWidget(), 10); /* receives all the stretch */
+    vlayout->addWidget(button, 0);
+    vlayout->addLayout(ballotScrollAreaLayout, 10); /* receives all the stretch */
+
+    /* fill in ballotLayouts[] */
+    onBallotChange((unsigned int)(-1));
 }
 
 void BallotView::initSelectSealedVoteTab(QWidget *page)
@@ -688,15 +805,15 @@ void BallotView::initSelectSealedVoteTab(QWidget *page)
        glayout->addWidget(value, /* row */i, col1);
     }
 
-    sealedVoteButton = new QPushButton(tr("Select"));
+    QPushButton *button = new QPushButton(tr("Select"));
     sealedVoteWindow = new BallotSealedVoteWindow(this);
-    connect(sealedVoteButton, SIGNAL(clicked()), this, SLOT(showSealedVoteWindow()));
+    connect(button, SIGNAL(clicked()), this, SLOT(showSealedVoteWindow()));
 
     QVBoxLayout *vlayout = new QVBoxLayout(page);
     vlayout->setContentsMargins(10,10,10,10);
     vlayout->setSpacing(2);
     vlayout->addLayout(glayout, 0);
-    vlayout->addWidget(sealedVoteButton, 0);
+    vlayout->addWidget(button, 0);
     vlayout->addWidget(new QWidget(), 10); /* receives all the stretch */
 }
 
@@ -736,15 +853,15 @@ void BallotView::initSelectVoteTab(QWidget *page)
        glayout->addWidget(value, /* row */i, col1);
     }
 
-    voteButton = new QPushButton(tr("Select"));
+    QPushButton *button = new QPushButton(tr("Select"));
     voteWindow = new BallotVoteWindow(this);
-    connect(voteButton, SIGNAL(clicked()), this, SLOT(showVoteWindow()));
+    connect(button, SIGNAL(clicked()), this, SLOT(showVoteWindow()));
 
     QVBoxLayout *vlayout = new QVBoxLayout(page);
     vlayout->setContentsMargins(10,10,10,10);
     vlayout->setSpacing(2);
     vlayout->addLayout(glayout, 0);
-    vlayout->addWidget(voteButton, 0);
+    vlayout->addWidget(button, 0);
     vlayout->addWidget(new QWidget(), 10); /* receives all the stretch */
 }
 
@@ -759,7 +876,7 @@ void BallotView::initSelectOutcomeTab(QWidget *page)
     glayout->setColumnStretch(1, 9);
 
     const char *labelnames[BALLOTOUTCOME_NLABLES] = {
-        "Height: ",
+        "Block: ",
         "Hash:",
     };
 
@@ -776,9 +893,9 @@ void BallotView::initSelectOutcomeTab(QWidget *page)
        glayout->addWidget(value, /* row */i, col1);
     }
 
-    outcomeButton = new QPushButton(tr("Select"));
+    QPushButton *button = new QPushButton(tr("Select"));
     outcomeWindow = new BallotOutcomeWindow(this);
-    connect(outcomeButton, SIGNAL(clicked()), this, SLOT(showOutcomeWindow()));
+    connect(button, SIGNAL(clicked()), this, SLOT(showOutcomeWindow()));
 
     QWidget *outcomeWidget = new QWidget();
     QVBoxLayout *outcomeLayout = new QVBoxLayout(outcomeWidget);
@@ -808,7 +925,7 @@ void BallotView::initSelectOutcomeTab(QWidget *page)
     vlayout->setContentsMargins(10,10,10,10);
     vlayout->setSpacing(2);
     vlayout->addLayout(glayout, 0);
-    vlayout->addWidget(outcomeButton, 0);
+    vlayout->addWidget(button, 0);
     vlayout->addLayout(outcomeScrollAreaLayout, 10); /* receives all the stretch */
 
     /* fill in outcomeLayouts[] */
@@ -817,10 +934,263 @@ void BallotView::initSelectOutcomeTab(QWidget *page)
 
 void BallotView::initCreateSealedVoteTab(QWidget *page)
 {
+    /* widgets */
+    sealedVoteBranchLabel = new QLabel("");
+    sealedVoteBranchLabel->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
 
+    sealedVoteHeight = new QLineEdit();
+    sealedVoteHeight->setText("");
+    sealedVoteHeight->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    sealedVoteHeight->setValidator( new QIntValidator(0, 1000000, this) );
+    connect(sealedVoteHeight, SIGNAL(textChanged(QString)), this, SLOT(onSealedVoteHeightTextChanged(QString)));
+
+    sealedVoteAddress = new QLineEdit();
+    sealedVoteAddress->setText("");
+    sealedVoteAddress->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    connect(sealedVoteAddress, SIGNAL(textChanged(QString)), this, SLOT(onSealedVoteAddressTextChanged(QString)));
+
+    QWidget *sealedVoteWidget = new QWidget();
+    sealedVoteLayout = new QGridLayout(sealedVoteWidget);
+    sealedVoteLayout->setColumnStretch(0, 10); /* receives the stretch */
+    sealedVoteLayout->setContentsMargins(0,0,0,0);
+    sealedVoteLayout->setHorizontalSpacing(4);
+    sealedVoteLayout->setVerticalSpacing(0);
+
+    QScrollArea *sealedVoteScrollArea = new QScrollArea();
+    sealedVoteScrollArea->setWidgetResizable(true);
+    sealedVoteScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    sealedVoteScrollArea->setWidget(sealedVoteWidget);
+
+    QPushButton *createSealedVoteButton = new QPushButton(tr("Create Sealed Vote"));
+    connect(createSealedVoteButton, SIGNAL(clicked()), this, SLOT(onCreateSealedVoteClicked()));
+    createSealedVoteCLI = new QLabel("");
+    createSealedVoteCLI->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    createSealedVoteCLI->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    createSealedVoteCLI->setWordWrap(true);
+    createSealedVoteCLIResponse = new QLabel("");
+    createSealedVoteCLIResponse->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    createSealedVoteCLIResponse->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    createSealedVoteCLIResponse->setWordWrap(true);
+
+    /* Grid Layout           */
+    /*     label0   widget0  */
+    /*     label1   widget1  */
+    /*     ...      ...      */
+    /*                       */
+    QGridLayout *glayout = new QGridLayout(page);
+    glayout->setContentsMargins(10,10,10,10);
+    glayout->setHorizontalSpacing(15);
+    glayout->setColumnStretch(0, 1);
+    glayout->setColumnStretch(1, 5);
+    int row = 0;
+    glayout->addWidget(new QLabel(tr("Branch: ")), row, col0);
+    glayout->addWidget(sealedVoteBranchLabel, row, col1);
+    glayout->setRowStretch(row, 0);
+    row++;
+    glayout->addWidget(new QLabel(tr("Height: ")), row, col0);
+    glayout->addWidget(sealedVoteHeight, row, col1);
+    glayout->setRowStretch(row, 0);
+    row++;
+    glayout->addWidget(new QLabel(tr("Address: ")), row, col0);
+    glayout->addWidget(sealedVoteAddress, row, col1);
+    glayout->setRowStretch(row, 0);
+    row++;
+    glayout->addWidget(sealedVoteScrollArea, row, col0, 1, 2);
+    glayout->setRowStretch(row, 10); /* receives all the stretch */
+    row++;
+    glayout->addWidget(new QLabel(tr("CLI: ")), row, col0);
+    glayout->addWidget(createSealedVoteCLI, row, col1);
+    glayout->setRowStretch(row, 0);
+    row++;
+    glayout->addWidget(createSealedVoteButton, row, col1);
+    glayout->setRowStretch(row, 0);
+    row++;
+    glayout->addWidget(new QLabel(tr("Status: ")), row, col0);
+    glayout->addWidget(createSealedVoteCLIResponse, row, col1);
+    glayout->setRowStretch(row, 0);
+    row++;
+
+#if 0
+    /* update CLI */
+    onDecisionIsBinaryRadioButtonToggled(true);
+#endif
 }
 
 void BallotView::initCreateVoteTab(QWidget *page)
+{
+    /* widgets */
+    voteBranchLabel = new QLabel("");
+    voteBranchLabel->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+
+    voteHeight = new QLineEdit();
+    voteHeight->setText("");
+    voteHeight->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    voteHeight->setValidator( new QIntValidator(0, 1000000, this) );
+    connect(voteHeight, SIGNAL(textChanged(QString)), this, SLOT(onVoteHeightTextChanged(QString)));
+
+    voteAddress = new QLineEdit();
+    voteAddress->setText("");
+    voteAddress->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    connect(voteAddress, SIGNAL(textChanged(QString)), this, SLOT(onVoteAddressTextChanged(QString)));
+
+    QPushButton *createVoteButton = new QPushButton(tr("Create Vote"));
+    connect(createVoteButton, SIGNAL(clicked()), this, SLOT(onCreateVoteClicked()));
+    createVoteCLI = new QLabel("");
+    createVoteCLI->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    createVoteCLI->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    createVoteCLI->setWordWrap(true);
+    createVoteCLIResponse = new QLabel("");
+    createVoteCLIResponse->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    createVoteCLIResponse->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    createVoteCLIResponse->setWordWrap(true);
+
+
+    /* Grid Layout           */
+    /*     label0   widget0  */
+    /*     label1   widget1  */
+    /*     ...      ...      */
+    /*                       */
+    QGridLayout *glayout = new QGridLayout();
+    glayout->setHorizontalSpacing(15);
+    glayout->setColumnStretch(0, 1);
+    glayout->setColumnStretch(1, 5);
+    int row = 0;
+    glayout->addWidget(new QLabel(tr("Branch: ")), row, col0);
+    glayout->addWidget(voteBranchLabel, row, col1);
+    row++;
+    glayout->addWidget(new QLabel(tr("Height: ")), row, col0);
+    glayout->addWidget(voteHeight, row, col1);
+    row++;
+    glayout->addWidget(new QLabel(tr("Address: ")), row, col0);
+    glayout->addWidget(voteAddress, row, col1);
+    row++;
+
+    glayout->addWidget(new QLabel(tr("CLI: ")), row, col0);
+    glayout->addWidget(createVoteCLI, row, col1);
+    row++;
+    glayout->addWidget(createVoteButton, row, col1);
+    row++;
+    glayout->addWidget(new QLabel(tr("Status: ")), row, col0);
+    glayout->addWidget(createVoteCLIResponse, row, col1);
+    row++;
+
+    /* VBoxLayout Layout */
+    /*     glayout       */
+    /*     widget        */
+    QVBoxLayout *vlayout = new QVBoxLayout(page);
+    vlayout->setContentsMargins(10,10,10,10);
+    vlayout->setSpacing(5);
+    vlayout->addLayout(glayout, 0);
+    vlayout->addWidget(new QWidget(), 8); /* receives all the stretch */
+
+#if 0
+    /* update CLI */
+    onDecisionIsBinaryRadioButtonToggled(true);
+#endif
+}
+
+void BallotView::updateCreateSealedVoteCLI(void)
+{
+
+}
+
+void BallotView::updateCreateSealedVoteScrollArea(void)
+{
+    /* delete current scroll area */
+    for(QLayoutItem *child; (child=sealedVoteLayout->takeAt(0)); ) {
+        delete child->widget();
+        delete child;
+    }
+
+    /* delete current decisions */
+    for(uint32_t i=0; i < sealedVoteDecisions.size(); i++)
+        delete sealedVoteDecisions[i];
+    sealedVoteDecisions.clear();
+    sealedVoteVotes.clear();
+
+    if (!branch)
+        return;
+
+    if (!sealedVoteHeight)
+        return;
+
+    if (!sealedVoteLayout)
+        return;
+
+    uint32_t blockNum = atoi( sealedVoteHeight->text().toStdString().c_str() );
+    if (blockNum < branch->tau)
+        return;
+
+    uint32_t maxblock = ((blockNum + branch->tau - 1) / branch->tau) * branch->tau;
+    uint32_t minblock = maxblock - (branch->tau - 1);
+
+    uint32_t row = 0;
+    vector<marketDecision *> vec = pmarkettree->GetDecisions(branch->GetHash());
+    for(size_t i=0; i < vec.size(); i++) {
+        marketDecision *obj = vec[i];
+        if ((obj->eventOverBy < minblock)
+            || (obj->eventOverBy > maxblock))
+        {
+            delete obj;
+            continue;
+        }
+
+        sealedVoteDecisions.push_back(obj);
+        sealedVoteVotes.push_back(0.5);
+        QLabel *label;
+        char tmp[128];
+
+        label = new QLabel( QString::fromStdString(obj->prompt) );
+        sealedVoteLayout->addWidget(label, row, col0);
+
+        QString isOptional = (obj->answerOptionality)? tr("not optional"): tr("is optional");
+        label = new QLabel(isOptional);
+        sealedVoteLayout->addWidget(label, row, col1);
+
+        QString isScaled = (obj->isScaled)? tr("is scaled"): tr("is binary");
+        label = new QLabel(isScaled);
+        sealedVoteLayout->addWidget(label, row, col2);
+
+        if (obj->isScaled) {
+            snprintf(tmp, sizeof(tmp), "%.8f", 1e-8*obj->min);
+            label = new QLabel( QString(tmp) );
+            sealedVoteLayout->addWidget(label, row, col3);
+
+            snprintf(tmp, sizeof(tmp), "%.8f", 1e-8*obj->max);
+            label = new QLabel( QString(tmp) );
+            sealedVoteLayout->addWidget(label, row, col4);
+
+            snprintf(tmp, sizeof(tmp), "%.8f", 0.5e-8*(obj->min + obj->max));
+            QLineEdit *lineedit = new QLineEdit();
+            lineedit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+            lineedit->setValidator( new QDoubleValidator(1e-8*obj->min, 1e-8*obj->max, 8) );
+            lineedit->setText( QString(tmp) );
+            lineedit->setMinimumWidth(100);
+            sealedVoteLayout->addWidget(lineedit, row, col5);
+        }
+        else {
+            QRadioButton *zero = new QRadioButton(tr("No"));
+            QRadioButton *one = new QRadioButton(tr("Yes"));
+            QRadioButton *NA = new QRadioButton(tr("N/A"));
+            NA->setChecked(true);
+            QButtonGroup *buttonGroup = new QButtonGroup();
+            buttonGroup->addButton(zero);
+            buttonGroup->addButton(one);
+            buttonGroup->addButton(NA);
+
+            sealedVoteLayout->addWidget(zero, row, col3);
+            sealedVoteLayout->addWidget(one, row, col4);
+            sealedVoteLayout->addWidget(NA, row, col5);
+        }
+        sealedVoteLayout->setRowStretch(row, 0); /* receives no stretch */
+
+        row++;
+    }
+    sealedVoteLayout->addWidget(new QWidget, row, col0); /* dummy widget */
+    sealedVoteLayout->setRowStretch(row, 10); /* receives the stretch */
+}
+
+void BallotView::updateCreateVoteCLI(void)
 {
 
 }
@@ -913,6 +1283,88 @@ void BallotView::changedBlock(const QString &str)
     refresh();
 }
 #endif
+
+void BallotView::onSealedVoteHeightTextChanged(const QString &str)
+{
+    updateCreateSealedVoteScrollArea();
+}
+
+void BallotView::onSealedVoteAddressTextChanged(const QString &)
+{
+    updateCreateSealedVoteCLI();
+}
+
+void BallotView::onVoteHeightTextChanged(const QString &)
+{
+    updateCreateVoteCLI();
+}
+
+void BallotView::onVoteAddressTextChanged(const QString &)
+{
+    updateCreateVoteCLI();
+}
+
+void BallotView::onCreateSealedVoteClicked(void)
+{
+#if 0
+
+#endif
+}
+
+/* onCreateVoteClicked:
+ * createvote params
+ *      "createvote address branchid height NA decisionid,vote [...]"
+ *      "\nCreates a new vote for the outcomeid."
+ *      "\n1. votecoin_address    (base58 address)"
+ *      "\n2. branchid            (u256 string)"
+ *      "\n3. height              (numeric)"
+ *      "\n4. NA                  (numeric)"
+ *      "\n5. decisionid,vote     (u256 string, numeric).";
+ */
+void BallotView::onCreateVoteClicked(void)
+{
+#if 0
+    std::string address = (tradeAddress->text().size())? tradeAddress->text().toStdString(): "<address>";
+    std::string marketid = (marketTabLabels[8].text().size())? marketTabLabels[8].text().toStdString(): "<marketid>";
+    std::string buy_or_sell = (tradeBuyRadioButton->isChecked())? "buy": "sell";
+    double number_shares = atof( tradeShares->text().toStdString().c_str() );
+    double price = atof( tradePrice->text().toStdString().c_str() );
+    int decision_state = atoi( tradeDecState->text().toStdString().c_str() );
+    int nonce = atoi( tradeNonce->text().toStdString().c_str() );
+
+    Array params;
+    params.push_back( Value(address) );
+    params.push_back( Value(marketid) );
+    params.push_back( Value(buy_or_sell) );
+    params.push_back( Value(number_shares) );
+    params.push_back( Value(price) );
+    params.push_back( Value(decision_state) );
+    params.push_back( Value(nonce) );
+
+    Value resp;
+    try {
+        resp = createtrade(params, false);
+    } catch (const std::runtime_error &e) {
+        createTradeCLIResponse->setText(QString(e.what()));
+        return;
+    } catch (const std::exception &e) {
+        createTradeCLIResponse->setText(QString(e.what()));
+        return;
+    }  catch (const Object &e) {
+        resp = e;
+    } catch (...) {
+        createTradeCLIResponse->setText(tr("createtrade: unknown exception"));
+        return;
+    }
+
+    try {
+        std::string text = write_string(resp, true);
+        createTradeCLIResponse->setText(QString::fromStdString(text));
+    } catch (...) {
+        createTradeCLIResponse->setText(tr("write_string: unknown exception"));
+    }
+#endif
+}
 
 void BallotView::showBranchWindow(void)
 {

@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_GUICONSTANTS_H
-#define TRUTHCOIN_QT_GUICONSTANTS_H
+#ifndef HIVEMIND_QT_GUICONSTANTS_H
+#define HIVEMIND_QT_GUICONSTANTS_H
 
 /* Milliseconds between model updates */
 static const int MODEL_UPDATE_DELAY = 250;
@@ -12,7 +12,7 @@ static const int MODEL_UPDATE_DELAY = 250;
 /* AskPassphraseDialog -- Maximum passphrase length */
 static const int MAX_PASSPHRASE_SIZE = 1024;
 
-/* TruthcoinGUI -- Size of icons in status bar */
+/* HivemindGUI -- Size of icons in status bar */
 static const int STATUSBAR_ICONSIZE = 16;
 
 /* Invalid field background style */
@@ -45,9 +45,9 @@ static const int MAX_URI_LENGTH = 255;
 /* Number of frames in spinner animation */
 #define SPINNER_FRAMES 35
 
-#define QAPP_ORG_NAME "Truthcoin"
-#define QAPP_ORG_DOMAIN "truthcoin.org"
-#define QAPP_APP_NAME_DEFAULT "Truthcoin-Qt"
-#define QAPP_APP_NAME_TESTNET "Truthcoin-Qt-testnet"
+#define QAPP_ORG_NAME "Hivemind"
+#define QAPP_ORG_DOMAIN "hivemind.org"
+#define QAPP_APP_NAME_DEFAULT "Hivemind-Qt"
+#define QAPP_APP_NAME_TESTNET "Hivemind-Qt-testnet"
 
-#endif // TRUTHCOIN_QT_GUICONSTANTS_H
+#endif // HIVEMIND_QT_GUICONSTANTS_H

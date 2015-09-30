@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_CRYPTER_H
-#define TRUTHCOIN_CRYPTER_H
+#ifndef HIVEMIND_CRYPTER_H
+#define HIVEMIND_CRYPTER_H
 
 #include "allocators.h"
 #include "keystore.h"
@@ -197,4 +197,4 @@ public:
     boost::signals2::signal<void (CCryptoKeyStore* wallet)> NotifyStatusChanged;
 };
 
-#endif // TRUTHCOIN_CRYPTER_H
+#endif // HIVEMIND_CRYPTER_H

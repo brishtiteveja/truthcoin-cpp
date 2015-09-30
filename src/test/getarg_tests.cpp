@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,7 +21,7 @@ static void ResetArgs(const std::string& strArg)
       boost::split(vecArg, strArg, boost::is_space(), boost::token_compress_on);
 
     // Insert dummy executable name:
-    vecArg.insert(vecArg.begin(), "testtruthcoin");
+    vecArg.insert(vecArg.begin(), "testhivemind");
 
     // Convert to char*:
     std::vector<const char*> vecChar;

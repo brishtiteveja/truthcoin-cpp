@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_RANDOM_H
-#define TRUTHCOIN_RANDOM_H
+#ifndef HIVEMIND_RANDOM_H
+#define HIVEMIND_RANDOM_H
 
 #include "uint256.h"
 
@@ -47,4 +47,4 @@ static inline uint32_t insecure_rand(void)
     return (insecure_rand_Rw << 16) + insecure_rand_Rz;
 }
 
-#endif // TRUTHCOIN_RANDOM_H
+#endif // HIVEMIND_RANDOM_H

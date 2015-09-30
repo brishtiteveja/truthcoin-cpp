@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: liblinalg
 Description: Simple Linear Algebra Routines
-URL: https://github.com/truthcoin/
+URL: https://github.com/hivemind/
 Version: @PACKAGE_VERSION@
 Cflags: -I${includedir}
 Libs.private: @LINALG_LIBS@

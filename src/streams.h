@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_STREAMS_H
-#define TRUTHCOIN_STREAMS_H
+#ifndef HIVEMIND_STREAMS_H
+#define HIVEMIND_STREAMS_H
 
 #include "allocators.h"
 #include "serialize.h"
@@ -569,4 +569,4 @@ public:
     }
 };
 
-#endif // TRUTHCOIN_STREAMS_H
+#endif // HIVEMIND_STREAMS_H

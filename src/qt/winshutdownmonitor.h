@@ -1,10 +1,10 @@
 // Copyright (c) 2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_WINSHUTDOWNMONITOR_H
-#define TRUTHCOIN_QT_WINSHUTDOWNMONITOR_H
+#ifndef HIVEMIND_QT_WINSHUTDOWNMONITOR_H
+#define HIVEMIND_QT_WINSHUTDOWNMONITOR_H
 
 #ifdef WIN32
 #include <QByteArray>
@@ -27,4 +27,4 @@ public:
 #endif
 #endif
 
-#endif // TRUTHCOIN_QT_WINSHUTDOWNMONITOR_H
+#endif // HIVEMIND_QT_WINSHUTDOWNMONITOR_H

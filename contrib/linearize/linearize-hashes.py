@@ -17,7 +17,7 @@ import sys
 
 settings = {}
 
-class TruthcoinRPC:
+class HivemindRPC:
 	def __init__(self, host, port, username, password):
 		authpair = "%s:%s" % (username, password)
 		self.authhdr = "Basic %s" % (base64.b64encode(authpair))
@@ -53,7 +53,7 @@ class TruthcoinRPC:
 		return 'error' in resp_obj and resp_obj['error'] is not None
 
 def get_block_hashes(settings, max_blocks_per_call=10000):
-	rpc = TruthcoinRPC(settings['host'], settings['port'],
+	rpc = HivemindRPC(settings['host'], settings['port'],
 			 settings['rpcuser'], settings['rpcpassword'])
 
 	height = settings['min_height']

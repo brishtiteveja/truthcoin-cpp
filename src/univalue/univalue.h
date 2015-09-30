@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_UNIVALUE_UNIVALUE_H
-#define TRUTHCOIN_UNIVALUE_UNIVALUE_H
+#ifndef HIVEMIND_UNIVALUE_UNIVALUE_H
+#define HIVEMIND_UNIVALUE_UNIVALUE_H
 
 #include <stdint.h>
 #include <string>
@@ -152,4 +152,4 @@ extern enum jtokentype getJsonToken(std::string& tokenVal,
                                     unsigned int& consumed, const char *raw);
 extern const char *uvTypeName(UniValue::VType t);
 
-#endif // TRUTHCOIN_UNIVALUE_UNIVALUE_H
+#endif // HIVEMIND_UNIVALUE_UNIVALUE_H

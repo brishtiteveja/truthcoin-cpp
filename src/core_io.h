@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_CORE_IO_H
-#define TRUTHCOIN_CORE_IO_H
+#ifndef HIVEMIND_CORE_IO_H
+#define HIVEMIND_CORE_IO_H
 
 #include <string>
 #include <vector>
@@ -30,4 +30,4 @@ extern void ScriptPubKeyToUniv(const CScript& scriptPubKey,
                         UniValue& out, bool fIncludeHex);
 extern void TxToUniv(const CTransaction& tx, const uint256& hashBlock, UniValue& entry);
 
-#endif // TRUTHCOIN_CORE_IO_H
+#endif // HIVEMIND_CORE_IO_H

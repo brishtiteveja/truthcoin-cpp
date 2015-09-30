@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -56,9 +56,9 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 sub.involvesWatchAddress = mine == ISMINE_WATCH_ONLY;
                 if (ExtractDestination(txout.scriptPubKey, address) && IsMine(*wallet, address))
                 {
-                    // Received by Truthcoin Address
+                    // Received by Hivemind Address
                     sub.type = TransactionRecord::RecvWithAddress;
-                    sub.address = CTruthcoinAddress(address).ToString();
+                    sub.address = CHivemindAddress(address).ToString();
                 }
                 else
                 {
@@ -128,9 +128,9 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 CTxDestination address;
                 if (ExtractDestination(txout.scriptPubKey, address))
                 {
-                    // Sent to Truthcoin Address
+                    // Sent to Hivemind Address
                     sub.type = TransactionRecord::SendToAddress;
-                    sub.address = CTruthcoinAddress(address).ToString();
+                    sub.address = CHivemindAddress(address).ToString();
                 }
                 else
                 {

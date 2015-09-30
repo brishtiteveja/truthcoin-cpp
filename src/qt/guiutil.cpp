@@ -1,12 +1,12 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "guiutil.h"
 
-#include "truthcoinaddressvalidator.h"
-#include "truthcoinunits.h"
+#include "hivemindaddressvalidator.h"
+#include "hivemindunits.h"
 #include "qvalidatedlineedit.h"
 #include "walletmodel.h"
 
@@ -85,7 +85,7 @@ QString dateTimeStr(qint64 nTime)
     return dateTimeStr(QDateTime::fromTime_t((qint32)nTime));
 }
 
-QFont truthcoinAddressFont()
+QFont hivemindAddressFont()
 {
     QFont font("Monospace");
 #if QT_VERSION >= 0x040800
@@ -100,14 +100,14 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
 {
     parent->setFocusProxy(widget);
 
-    widget->setFont(truthcoinAddressFont());
+    widget->setFont(hivemindAddressFont());
 #if QT_VERSION >= 0x040700
     // We don't want translators to use own addresses in translations
     // and this is the only place, where this address is supplied.
-    widget->setPlaceholderText(QObject::tr("Enter a Truthcoin address (e.g. %1)").arg("1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L"));
+    widget->setPlaceholderText(QObject::tr("Enter a Hivemind address (e.g. %1)").arg("1NS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L"));
 #endif
-    widget->setValidator(new TruthcoinAddressEntryValidator(parent));
-    widget->setCheckValidator(new TruthcoinAddressCheckValidator(parent));
+    widget->setValidator(new HivemindAddressEntryValidator(parent));
+    widget->setCheckValidator(new HivemindAddressCheckValidator(parent));
 }
 
 void setupAmountWidget(QLineEdit *widget, QWidget *parent)
@@ -119,10 +119,10 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
     widget->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
 }
 
-bool parseTruthcoinURI(const QUrl &uri, SendCoinsRecipient *out)
+bool parseHivemindURI(const QUrl &uri, SendCoinsRecipient *out)
 {
-    // return if URI is not valid or is no truthcoin: URI
-    if(!uri.isValid() || uri.scheme() != QString("truthcoin"))
+    // return if URI is not valid or is no hivemind: URI
+    if(!uri.isValid() || uri.scheme() != QString("hivemind"))
         return false;
 
     SendCoinsRecipient rv;
@@ -162,7 +162,7 @@ bool parseTruthcoinURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if(!TruthcoinUnits::parse(TruthcoinUnits::CSH, i->second, &rv.amount))
+                if(!HivemindUnits::parse(HivemindUnits::BTC, i->second, &rv.amount))
                 {
                     return false;
                 }
@@ -180,28 +180,28 @@ bool parseTruthcoinURI(const QUrl &uri, SendCoinsRecipient *out)
     return true;
 }
 
-bool parseTruthcoinURI(QString uri, SendCoinsRecipient *out)
+bool parseHivemindURI(QString uri, SendCoinsRecipient *out)
 {
-    // Convert truthcoin:// to truthcoin:
+    // Convert hivemind:// to hivemind:
     //
-    //    Cannot handle this later, because truthcoin:// will cause Qt to see the part after // as host,
+    //    Cannot handle this later, because hivemind:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
-    if(uri.startsWith("truthcoin://", Qt::CaseInsensitive))
+    if(uri.startsWith("hivemind://", Qt::CaseInsensitive))
     {
-        uri.replace(0, 10, "truthcoin:");
+        uri.replace(0, 10, "hivemind:");
     }
     QUrl uriInstance(uri);
-    return parseTruthcoinURI(uriInstance, out);
+    return parseHivemindURI(uriInstance, out);
 }
 
-QString formatTruthcoinURI(const SendCoinsRecipient &info)
+QString formatHivemindURI(const SendCoinsRecipient &info)
 {
-    QString ret = QString("truthcoin:%1").arg(info.address);
+    QString ret = QString("hivemind:%1").arg(info.address);
     int paramCount = 0;
 
     if (info.amount)
     {
-        ret += QString("?amount=%1").arg(TruthcoinUnits::format(TruthcoinUnits::CSH, info.amount, false, TruthcoinUnits::separatorNever));
+        ret += QString("?amount=%1").arg(HivemindUnits::format(HivemindUnits::BTC, info.amount, false, HivemindUnits::separatorNever));
         paramCount++;
     }
 
@@ -224,7 +224,7 @@ QString formatTruthcoinURI(const SendCoinsRecipient &info)
 
 bool isDust(const QString& address, const CAmount& amount)
 {
-    CTxDestination dest = CTruthcoinAddress(address.toStdString()).Get();
+    CTxDestination dest = CHivemindAddress(address.toStdString()).Get();
     CScript script = GetScriptForDestination(dest);
     CTxOut txOut(amount, script);
     return txOut.IsDust(::minRelayTxFee);
@@ -549,12 +549,12 @@ TableViewLastColumnResizingFixer::TableViewLastColumnResizingFixer(QTableView* t
 #ifdef WIN32
 boost::filesystem::path static StartupShortcutPath()
 {
-    return GetSpecialFolderPath(CSIDL_STARTUP) / "Truthcoin.lnk";
+    return GetSpecialFolderPath(CSIDL_STARTUP) / "Hivemind.lnk";
 }
 
 bool GetStartOnSystemStartup()
 {
-    // check for Truthcoin.lnk
+    // check for Hivemind.lnk
     return boost::filesystem::exists(StartupShortcutPath());
 }
 
@@ -631,7 +631,7 @@ boost::filesystem::path static GetAutostartDir()
 
 boost::filesystem::path static GetAutostartFilePath()
 {
-    return GetAutostartDir() / "truthcoin.desktop";
+    return GetAutostartDir() / "hivemind.desktop";
 }
 
 bool GetStartOnSystemStartup()
@@ -669,10 +669,10 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         boost::filesystem::ofstream optionFile(GetAutostartFilePath(), std::ios_base::out|std::ios_base::trunc);
         if (!optionFile.good())
             return false;
-        // Write a truthcoin.desktop file to the autostart directory:
+        // Write a hivemind.desktop file to the autostart directory:
         optionFile << "[Desktop Entry]\n";
         optionFile << "Type=Application\n";
-        optionFile << "Name=Truthcoin\n";
+        optionFile << "Name=Hivemind\n";
         optionFile << "Exec=" << pszExePath << " -min\n";
         optionFile << "Terminal=false\n";
         optionFile << "Hidden=false\n";
@@ -691,7 +691,7 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl);
 LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef findUrl)
 {
-    // loop through the list of startup items and try to find the truthcoin app
+    // loop through the list of startup items and try to find the hivemind app
     CFArrayRef listSnapshot = LSSharedFileListCopySnapshot(list, NULL);
     for(int i = 0; i < CFArrayGetCount(listSnapshot); i++) {
         LSSharedFileListItemRef item = (LSSharedFileListItemRef)CFArrayGetValueAtIndex(listSnapshot, i);
@@ -712,21 +712,21 @@ LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef
 
 bool GetStartOnSystemStartup()
 {
-    CFURLRef truthcoinAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+    CFURLRef hivemindAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, truthcoinAppUrl);
+    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, hivemindAppUrl);
     return !!foundItem; // return boolified object
 }
 
 bool SetStartOnSystemStartup(bool fAutoStart)
 {
-    CFURLRef truthcoinAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+    CFURLRef hivemindAppUrl = CFBundleCopyBundleURL(CFBundleGetMainBundle());
     LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, truthcoinAppUrl);
+    LSSharedFileListItemRef foundItem = findStartupItemInList(loginItems, hivemindAppUrl);
 
     if(fAutoStart && !foundItem) {
-        // add truthcoin app to startup item list
-        LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemBeforeFirst, NULL, NULL, truthcoinAppUrl, NULL, NULL);
+        // add hivemind app to startup item list
+        LSSharedFileListInsertItemURL(loginItems, kLSSharedFileListItemBeforeFirst, NULL, NULL, hivemindAppUrl, NULL, NULL);
     }
     else if(!fAutoStart && foundItem) {
         // remove item

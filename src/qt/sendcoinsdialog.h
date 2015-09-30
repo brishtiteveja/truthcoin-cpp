@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_SENDCOINSDIALOG_H
-#define TRUTHCOIN_QT_SENDCOINSDIALOG_H
+#ifndef HIVEMIND_QT_SENDCOINSDIALOG_H
+#define HIVEMIND_QT_SENDCOINSDIALOG_H
 
 #include "walletmodel.h"
 
@@ -24,7 +24,7 @@ QT_BEGIN_NAMESPACE
 class QUrl;
 QT_END_NAMESPACE
 
-/** Dialog for sending truthcoins */
+/** Dialog for sending hiveminds */
 class SendCoinsDialog : public QDialog
 {
     Q_OBJECT
@@ -97,4 +97,4 @@ signals:
     void message(const QString &title, const QString &message, unsigned int style);
 };
 
-#endif // TRUTHCOIN_QT_SENDCOINSDIALOG_H
+#endif // HIVEMIND_QT_SENDCOINSDIALOG_H

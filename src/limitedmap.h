@@ -1,10 +1,10 @@
 // Copyright (c) 2012-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_LIMITEDMAP_H
-#define TRUTHCOIN_LIMITEDMAP_H
+#ifndef HIVEMIND_LIMITEDMAP_H
+#define HIVEMIND_LIMITEDMAP_H
 
 #include <assert.h>
 #include <map>
@@ -92,4 +92,4 @@ public:
     }
 };
 
-#endif // TRUTHCOIN_LIMITEDMAP_H
+#endif // HIVEMIND_LIMITEDMAP_H

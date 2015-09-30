@@ -1,11 +1,11 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_RPCSERVER_H
-#define TRUTHCOIN_RPCSERVER_H
+#ifndef HIVEMIND_RPCSERVER_H
+#define HIVEMIND_RPCSERVER_H
 
 #include "amount.h"
 #include "rpcprotocol.h"
@@ -94,7 +94,7 @@ public:
 };
 
 /**
- * Truthcoin RPC command dispatcher.
+ * Hivemind RPC command dispatcher.
  */
 class CRPCTable
 {
@@ -256,4 +256,4 @@ extern bool HTTPReq_REST(AcceptedConnection *conn,
                   const std::map<std::string, std::string>& mapHeaders,
                   bool fRun);
 
-#endif // TRUTHCOIN_RPCSERVER_H
+#endif // HIVEMIND_RPCSERVER_H

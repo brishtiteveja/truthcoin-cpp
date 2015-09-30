@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -100,9 +100,9 @@ QVariant BallotBallotTableModel::data(const QModelIndex &index, int role) const
         switch(index.column())
         {
         case Height:
-            return formatHeight(pair);
+            return pair->Height;
         case nDecisions:
-            return formatNDecisions(pair);
+            return pair->nDecisions;
         default:
             ;
         }
@@ -192,26 +192,29 @@ void BallotBallotTableModel::onBranchChange(
         if (maxEventOverBy != -1) {
             /* init pairs[] */
             uint32_t nrows = maxEventOverBy / branch->tau;
-            marketPair *pairs = new marketPair[nrows]; 
+            marketPair **pairs = new marketPair *[nrows]; 
             for(uint32_t i=0; i < nrows; i++) {
-                pairs[i].Height = branch->tau * (i+1);
-                pairs[i].nDecisions = 0;
+                pairs[i] = new marketPair;
+                pairs[i]->Height = branch->tau * (i+1);
+                pairs[i]->nDecisions = 0;
             }
     
             /* populate pairs[] */
             for(size_t i=0; i < vec.size(); i++) {
                 if (vec[i]->eventOverBy < branch->tau)
                    continue;
-                uint32_t bucket_num = vec[i]->eventOverBy / branch->tau - 1;
+                uint32_t bucket_num = (vec[i]->eventOverBy - 1) / branch->tau;
                 if (bucket_num < nrows)
-                    pairs[bucket_num].nDecisions++;
+                    pairs[bucket_num]->nDecisions++;
             }
     
             /* insert */
             beginInsertRows(QModelIndex(), 0, nrows-1);
             for(size_t i=0; i < nrows; i++)
-                priv->cached.append(&pairs[i]);
+                priv->cached.append(pairs[i]);
             endInsertRows();
+
+            delete [] pairs;
         } 
 
         /* clean up */

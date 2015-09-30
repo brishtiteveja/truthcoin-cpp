@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_CLIENTMODEL_H
-#define TRUTHCOIN_QT_CLIENTMODEL_H
+#ifndef HIVEMIND_QT_CLIENTMODEL_H
+#define HIVEMIND_QT_CLIENTMODEL_H
 
 #include <QObject>
 
@@ -34,7 +34,7 @@ enum NumConnections {
     CONNECTIONS_ALL  = (CONNECTIONS_IN | CONNECTIONS_OUT),
 };
 
-/** Model for Truthcoin network client. */
+/** Model for Hivemind network client. */
 class ClientModel : public QObject
 {
     Q_OBJECT
@@ -103,4 +103,4 @@ public slots:
     void updateAlert(const QString &hash, int status);
 };
 
-#endif // TRUTHCOIN_QT_CLIENTMODEL_H
+#endif // HIVEMIND_QT_CLIENTMODEL_H

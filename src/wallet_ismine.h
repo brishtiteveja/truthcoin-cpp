@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_WALLET_ISMINE_H
-#define TRUTHCOIN_WALLET_ISMINE_H
+#ifndef HIVEMIND_WALLET_ISMINE_H
+#define HIVEMIND_WALLET_ISMINE_H
 
 #include "key.h"
 #include "script/standard.h"
@@ -27,4 +27,4 @@ typedef uint8_t isminefilter;
 isminetype IsMine(const CKeyStore& keystore, const CScript& scriptPubKey);
 isminetype IsMine(const CKeyStore& keystore, const CTxDestination& dest);
 
-#endif // TRUTHCOIN_WALLET_ISMINE_H
+#endif // HIVEMIND_WALLET_ISMINE_H

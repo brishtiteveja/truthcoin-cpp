@@ -1,12 +1,12 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_TRANSACTIONTABLEMODEL_H
-#define TRUTHCOIN_QT_TRANSACTIONTABLEMODEL_H
+#ifndef HIVEMIND_QT_TRANSACTIONTABLEMODEL_H
+#define HIVEMIND_QT_TRANSACTIONTABLEMODEL_H
 
-#include "truthcoinunits.h"
+#include "hivemindunits.h"
 
 #include <QAbstractTableModel>
 #include <QStringList>
@@ -93,7 +93,7 @@ private:
     QString formatTxDate(const TransactionRecord *wtx) const;
     QString formatTxType(const TransactionRecord *wtx) const;
     QString formatTxToAddress(const TransactionRecord *wtx, bool tooltip) const;
-    QString formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed=true, TruthcoinUnits::SeparatorStyle separators=TruthcoinUnits::separatorStandard) const;
+    QString formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed=true, HivemindUnits::SeparatorStyle separators=HivemindUnits::separatorStandard) const;
     QString formatTooltip(const TransactionRecord *rec) const;
     QVariant txStatusDecoration(const TransactionRecord *wtx) const;
     QVariant txWatchonlyDecoration(const TransactionRecord *wtx) const;
@@ -112,4 +112,4 @@ public slots:
     friend class TransactionTablePriv;
 };
 
-#endif // TRUTHCOIN_QT_TRANSACTIONTABLEMODEL_H
+#endif // HIVEMIND_QT_TRANSACTIONTABLEMODEL_H

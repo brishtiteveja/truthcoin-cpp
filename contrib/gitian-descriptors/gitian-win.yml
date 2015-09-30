@@ -1,5 +1,5 @@
 ---
-name: "truthcoin-win-0.10"
+name: "hivemind-win-0.10"
 enable_cache: true
 suites:
 - "precise"
@@ -76,14 +76,14 @@ script: |
   ./autogen.sh
   ./configure --prefix=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`
   make dist
-  SOURCEDIST=`echo truthcoin-*.tar.gz`
+  SOURCEDIST=`echo hivemind-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
 
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar xf ../$SOURCEDIST
-  find truthcoin-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find hivemind-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   popd
 
   ORIGPATH="$PATH"
@@ -100,7 +100,7 @@ script: |
     make ${MAKEOPTS}
     make deploy
     make install-strip
-    cp -f truthcoin-*setup*.exe $OUTDIR/
+    cp -f hivemind-*setup*.exe $OUTDIR/
     cd installed
     mv ${DISTNAME}/bin/*.dll ${DISTNAME}/lib/
     find . -name "lib*.la" -delete

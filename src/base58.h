@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,8 +12,8 @@
  * - E-mail usually won't line-break if there's no punctuation to break at.
  * - Double-clicking selects the whole number as one word if it's all alphanumeric.
  */
-#ifndef TRUTHCOIN_BASE58_H
-#define TRUTHCOIN_BASE58_H
+#ifndef HIVEMIND_BASE58_H
+#define HIVEMIND_BASE58_H
 
 #include "chainparams.h"
 #include "key.h"
@@ -95,13 +95,13 @@ public:
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
 };
 
-/** base58-encoded Truthcoin addresses.
+/** base58-encoded Hivemind addresses.
  * Public-key-hash-addresses have version 0 (or 111 testnet).
  * The data vector contains RIPEMD160(SHA256(pubkey)), where pubkey is the serialized public key.
  * Script-hash-addresses have version 5 (or 196 testnet).
  * The data vector contains RIPEMD160(SHA256(cscript)), where cscript is the serialized redemption script.
  */
-class CTruthcoinAddress : public CBase58Data {
+class CHivemindAddress : public CBase58Data {
 public:
     bool Set(const CKeyID &id);
     bool Set(const CScriptID &id);
@@ -109,10 +109,10 @@ public:
     bool IsValid() const;
     bool IsValid(const CChainParams &params) const;
 
-    CTruthcoinAddress(): is_votecoin(0) {}
-    CTruthcoinAddress(const CTxDestination &dest): is_votecoin(0) { Set(dest); }
-    CTruthcoinAddress(const std::string& strAddress): is_votecoin(0) { SetString(strAddress); }
-    CTruthcoinAddress(const char* pszAddress): is_votecoin(0) { SetString(pszAddress); }
+    CHivemindAddress(): is_votecoin(0) {}
+    CHivemindAddress(const CTxDestination &dest): is_votecoin(0) { Set(dest); }
+    CHivemindAddress(const std::string& strAddress): is_votecoin(0) { SetString(strAddress); }
+    CHivemindAddress(const char* pszAddress): is_votecoin(0) { SetString(pszAddress); }
 
     CTxDestination Get() const;
     bool GetKeyID(CKeyID &keyID) const;
@@ -123,7 +123,7 @@ public:
 /**
  * A base58-encoded secret key
  */
-class CTruthcoinSecret : public CBase58Data
+class CHivemindSecret : public CBase58Data
 {
 public:
     void SetKey(const CKey& vchSecret);
@@ -132,11 +132,11 @@ public:
     bool SetString(const char* pszSecret);
     bool SetString(const std::string& strSecret);
 
-    CTruthcoinSecret(const CKey& vchSecret) { SetKey(vchSecret); }
-    CTruthcoinSecret() {}
+    CHivemindSecret(const CKey& vchSecret) { SetKey(vchSecret); }
+    CHivemindSecret() {}
 };
 
-template<typename K, int Size, CChainParams::Base58Type Type> class CTruthcoinExtKeyBase : public CBase58Data
+template<typename K, int Size, CChainParams::Base58Type Type> class CHivemindExtKeyBase : public CBase58Data
 {
 public:
     void SetKey(const K &key) {
@@ -151,14 +151,14 @@ public:
         return ret;
     }
 
-    CTruthcoinExtKeyBase(const K &key) {
+    CHivemindExtKeyBase(const K &key) {
         SetKey(key);
     }
 
-    CTruthcoinExtKeyBase() {}
+    CHivemindExtKeyBase() {}
 };
 
-typedef CTruthcoinExtKeyBase<CExtKey, 74, CChainParams::EXT_SECRET_KEY> CTruthcoinExtKey;
-typedef CTruthcoinExtKeyBase<CExtPubKey, 74, CChainParams::EXT_PUBLIC_KEY> CTruthcoinExtPubKey;
+typedef CHivemindExtKeyBase<CExtKey, 74, CChainParams::EXT_SECRET_KEY> CHivemindExtKey;
+typedef CHivemindExtKeyBase<CExtPubKey, 74, CChainParams::EXT_PUBLIC_KEY> CHivemindExtPubKey;
 
-#endif // TRUTHCOIN_BASE58_H
+#endif // HIVEMIND_BASE58_H

@@ -1,5 +1,5 @@
 // Copyright (c) 2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -204,13 +204,13 @@ int CBase58Data::CompareTo(const CBase58Data& b58) const
 
 namespace
 {
-class CTruthcoinAddressVisitor : public boost::static_visitor<bool>
+class CHivemindAddressVisitor : public boost::static_visitor<bool>
 {
 private:
-    CTruthcoinAddress* addr;
+    CHivemindAddress* addr;
 
 public:
-    CTruthcoinAddressVisitor(CTruthcoinAddress* addrIn) : addr(addrIn) {}
+    CHivemindAddressVisitor(CHivemindAddress* addrIn) : addr(addrIn) {}
 
     bool operator()(const CKeyID& id) const { return addr->Set(id); }
     bool operator()(const CScriptID& id) const { return addr->Set(id); }
@@ -219,7 +219,7 @@ public:
 
 } // anon namespace
 
-bool CTruthcoinAddress::Set(const CKeyID& id)
+bool CHivemindAddress::Set(const CKeyID& id)
 {
     const std::vector<unsigned char> &pubkeyaddr = (is_votecoin)
             ? Params().Base58Prefix(CChainParams::VPUBKEY_ADDRESS)
@@ -228,23 +228,23 @@ bool CTruthcoinAddress::Set(const CKeyID& id)
     return true;
 }
 
-bool CTruthcoinAddress::Set(const CScriptID& id)
+bool CHivemindAddress::Set(const CScriptID& id)
 {
     SetData(Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS), &id, 20);
     return true;
 }
 
-bool CTruthcoinAddress::Set(const CTxDestination& dest)
+bool CHivemindAddress::Set(const CTxDestination& dest)
 {
-    return boost::apply_visitor(CTruthcoinAddressVisitor(this), dest);
+    return boost::apply_visitor(CHivemindAddressVisitor(this), dest);
 }
 
-bool CTruthcoinAddress::IsValid() const
+bool CHivemindAddress::IsValid() const
 {
     return IsValid(Params());
 }
 
-bool CTruthcoinAddress::IsValid(const CChainParams& params) const
+bool CHivemindAddress::IsValid(const CChainParams& params) const
 {
     bool fCorrectSize = vchData.size() == 20;
     bool fKnownVersion = 
@@ -254,7 +254,7 @@ bool CTruthcoinAddress::IsValid(const CChainParams& params) const
     return fCorrectSize && fKnownVersion;
 }
 
-CTxDestination CTruthcoinAddress::Get() const
+CTxDestination CHivemindAddress::Get() const
 {
     if (!IsValid())
         return CNoDestination();
@@ -268,7 +268,7 @@ CTxDestination CTruthcoinAddress::Get() const
         return CNoDestination();
 }
 
-bool CTruthcoinAddress::GetKeyID(CKeyID& keyID) const
+bool CHivemindAddress::GetKeyID(CKeyID& keyID) const
 {
     if (!IsValid())
         return false;
@@ -281,12 +281,12 @@ bool CTruthcoinAddress::GetKeyID(CKeyID& keyID) const
     return true;
 }
 
-bool CTruthcoinAddress::IsScript() const
+bool CHivemindAddress::IsScript() const
 {
     return IsValid() && vchVersion == Params().Base58Prefix(CChainParams::SCRIPT_ADDRESS);
 }
 
-void CTruthcoinSecret::SetKey(const CKey& vchSecret)
+void CHivemindSecret::SetKey(const CKey& vchSecret)
 {
     assert(vchSecret.IsValid());
     SetData(Params().Base58Prefix(CChainParams::SECRET_KEY), vchSecret.begin(), vchSecret.size());
@@ -294,7 +294,7 @@ void CTruthcoinSecret::SetKey(const CKey& vchSecret)
         vchData.push_back(1);
 }
 
-CKey CTruthcoinSecret::GetKey()
+CKey CHivemindSecret::GetKey()
 {
     CKey ret;
     assert(vchData.size() >= 32);
@@ -302,19 +302,19 @@ CKey CTruthcoinSecret::GetKey()
     return ret;
 }
 
-bool CTruthcoinSecret::IsValid() const
+bool CHivemindSecret::IsValid() const
 {
     bool fExpectedFormat = vchData.size() == 32 || (vchData.size() == 33 && vchData[32] == 1);
     bool fCorrectVersion = vchVersion == Params().Base58Prefix(CChainParams::SECRET_KEY);
     return fExpectedFormat && fCorrectVersion;
 }
 
-bool CTruthcoinSecret::SetString(const char* pszSecret)
+bool CHivemindSecret::SetString(const char* pszSecret)
 {
     return CBase58Data::SetString(pszSecret) && IsValid();
 }
 
-bool CTruthcoinSecret::SetString(const std::string& strSecret)
+bool CHivemindSecret::SetString(const std::string& strSecret)
 {
     return SetString(strSecret.c_str());
 }

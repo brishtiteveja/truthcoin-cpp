@@ -1,5 +1,5 @@
-Building Truthcoin
+Building Hivemind
 
-See doc/build-*.md for instructions on building truthcoind,
+See doc/build-*.md for instructions on building hivemindd,
 the intended-for-services, no-graphical-interface, reference
-implementation of Truthcoin.
+implementation of Hivemind.

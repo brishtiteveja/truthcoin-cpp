@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_OPTIONSMODEL_H
-#define TRUTHCOIN_QT_OPTIONSMODEL_H
+#ifndef HIVEMIND_QT_OPTIONSMODEL_H
+#define HIVEMIND_QT_OPTIONSMODEL_H
 
 #include "amount.h"
 
@@ -14,7 +14,7 @@ QT_BEGIN_NAMESPACE
 class QNetworkProxy;
 QT_END_NAMESPACE
 
-/** Interface from Qt to configuration data structure for Truthcoin client.
+/** Interface from Qt to configuration data structure for Hivemind client.
    To Qt, the options are presented as a list with the different options
    laid out vertically.
    This can be changed to a tree once the settings become sufficiently
@@ -35,7 +35,7 @@ public:
         ProxyUse,               // bool
         ProxyIP,                // QString
         ProxyPort,              // int
-        DisplayUnit,            // TruthcoinUnits::Unit
+        DisplayUnit,            // HivemindUnits::Unit
         ThirdPartyTxUrls,       // QString
         Language,               // QString
         CoinControlFeatures,    // bool
@@ -87,4 +87,4 @@ signals:
     void coinControlFeaturesChanged(bool);
 };
 
-#endif // TRUTHCOIN_QT_OPTIONSMODEL_H
+#endif // HIVEMIND_QT_OPTIONSMODEL_H

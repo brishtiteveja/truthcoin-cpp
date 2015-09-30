@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,10 +7,11 @@
 
 #include "addressbookpage.h"
 #include "askpassphrasedialog.h"
-#include "truthcoingui.h"
+#include "hivemindgui.h"
 #include "clientmodel.h"
 #include "guiutil.h"
 #include "ballotview.h"
+#include "decisionview.h"
 #include "marketview.h"
 #include "optionsmodel.h"
 #include "overviewpage.h"
@@ -32,6 +33,7 @@
 #include <QProgressDialog>
 #include <QPushButton>
 #include <QVBoxLayout>
+
 
 WalletView::WalletView(QWidget *parent):
     QStackedWidget(parent),
@@ -65,6 +67,15 @@ WalletView::WalletView(QWidget *parent):
     bvbox->addLayout(bhbox_buttons);
     ballotPage->setLayout(bvbox);
 
+    decisionPage = new QWidget(this);
+    QVBoxLayout *dvbox = new QVBoxLayout();
+    QHBoxLayout *dhbox_buttons = new QHBoxLayout();
+    decisionView = new DecisionView(this);
+    dvbox->addWidget(decisionView);
+    dhbox_buttons->addStretch();
+    dvbox->addLayout(dhbox_buttons);
+    decisionPage->setLayout(dvbox);
+
     marketPage = new QWidget(this);
     QVBoxLayout *mvbox = new QVBoxLayout();
     QHBoxLayout *mhbox_buttons = new QHBoxLayout();
@@ -80,6 +91,7 @@ WalletView::WalletView(QWidget *parent):
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(marketPage);
+    addWidget(decisionPage);
     addWidget(ballotPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
@@ -103,7 +115,7 @@ WalletView::~WalletView()
 {
 }
 
-void WalletView::setTruthcoinGUI(TruthcoinGUI *gui)
+void WalletView::setHivemindGUI(HivemindGUI *gui)
 {
     if (gui)
     {
@@ -135,6 +147,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
 
     // Put transaction list in tabs
     ballotView->setModel(walletModel);
+    decisionView->setModel(walletModel);
     marketView->setModel(walletModel);
     transactionView->setModel(walletModel);
     overviewPage->setWalletModel(walletModel);
@@ -193,6 +206,11 @@ void WalletView::gotoHistoryPage()
 void WalletView::gotoBallotPage()
 {
     setCurrentWidget(ballotPage);
+}
+
+void WalletView::gotoDecisionPage()
+{
+    setCurrentWidget(decisionPage);
 }
 
 void WalletView::gotoMarketPage()

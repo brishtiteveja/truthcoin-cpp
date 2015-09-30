@@ -1,10 +1,10 @@
 // Copyright (c) 2014 The Bitcoin developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_SCICON_H
-#define TRUTHCOIN_QT_SCICON_H
+#ifndef HIVEMIND_QT_SCICON_H
+#define HIVEMIND_QT_SCICON_H
 
 #include <QtCore>
 
@@ -22,4 +22,4 @@ QIcon SingleColorIcon(const QString& filename);
 QIcon TextColorIcon(const QIcon&);
 QIcon TextColorIcon(const QString& filename);
 
-#endif // TRUTHCOIN_QT_SCICON_H
+#endif // HIVEMIND_QT_SCICON_H

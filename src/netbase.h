@@ -1,13 +1,13 @@
 // Copyright (c) 2009-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_NETBASE_H
-#define TRUTHCOIN_NETBASE_H
+#ifndef HIVEMIND_NETBASE_H
+#define HIVEMIND_NETBASE_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/truthcoin-config.h"
+#include "config/hivemind-config.h"
 #endif
 
 #include "compat.h"
@@ -192,4 +192,4 @@ bool CloseSocket(SOCKET& hSocket);
 /** Disable or enable blocking-mode for a socket */
 bool SetSocketNonBlocking(SOCKET& hSocket, bool fNonBlocking);
 
-#endif // TRUTHCOIN_NETBASE_H
+#endif // HIVEMIND_NETBASE_H

@@ -1,12 +1,12 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "overviewpage.h"
 #include "ui_overviewpage.h"
 
-#include "truthcoinunits.h"
+#include "hivemindunits.h"
 #include "clientmodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
@@ -26,7 +26,7 @@ class TxViewDelegate : public QAbstractItemDelegate
 {
     Q_OBJECT
 public:
-    TxViewDelegate(): QAbstractItemDelegate(), unit(TruthcoinUnits::CSH)
+    TxViewDelegate(): QAbstractItemDelegate(), unit(HivemindUnits::BTC)
     {
 
     }
@@ -83,7 +83,7 @@ public:
             foreground = option.palette.color(QPalette::Text);
         }
         painter->setPen(foreground);
-        QString amountText = TruthcoinUnits::formatWithUnit(unit, amount, true, TruthcoinUnits::separatorAlways);
+        QString amountText = HivemindUnits::formatWithUnit(unit, amount, true, HivemindUnits::separatorAlways);
         if(!confirmed)
         {
             amountText = QString("[") + amountText + QString("]");
@@ -158,14 +158,14 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     currentWatchOnlyBalance = watchOnlyBalance;
     currentWatchUnconfBalance = watchUnconfBalance;
     currentWatchImmatureBalance = watchImmatureBalance;
-    ui->labelBalance->setText(TruthcoinUnits::formatWithUnit(unit, balance, false, TruthcoinUnits::separatorAlways));
-    ui->labelUnconfirmed->setText(TruthcoinUnits::formatWithUnit(unit, unconfirmedBalance, false, TruthcoinUnits::separatorAlways));
-    ui->labelImmature->setText(TruthcoinUnits::formatWithUnit(unit, immatureBalance, false, TruthcoinUnits::separatorAlways));
-    ui->labelTotal->setText(TruthcoinUnits::formatWithUnit(unit, balance + unconfirmedBalance + immatureBalance, false, TruthcoinUnits::separatorAlways));
-    ui->labelWatchAvailable->setText(TruthcoinUnits::formatWithUnit(unit, watchOnlyBalance, false, TruthcoinUnits::separatorAlways));
-    ui->labelWatchPending->setText(TruthcoinUnits::formatWithUnit(unit, watchUnconfBalance, false, TruthcoinUnits::separatorAlways));
-    ui->labelWatchImmature->setText(TruthcoinUnits::formatWithUnit(unit, watchImmatureBalance, false, TruthcoinUnits::separatorAlways));
-    ui->labelWatchTotal->setText(TruthcoinUnits::formatWithUnit(unit, watchOnlyBalance + watchUnconfBalance + watchImmatureBalance, false, TruthcoinUnits::separatorAlways));
+    ui->labelBalance->setText(HivemindUnits::formatWithUnit(unit, balance, false, HivemindUnits::separatorAlways));
+    ui->labelUnconfirmed->setText(HivemindUnits::formatWithUnit(unit, unconfirmedBalance, false, HivemindUnits::separatorAlways));
+    ui->labelImmature->setText(HivemindUnits::formatWithUnit(unit, immatureBalance, false, HivemindUnits::separatorAlways));
+    ui->labelTotal->setText(HivemindUnits::formatWithUnit(unit, balance + unconfirmedBalance + immatureBalance, false, HivemindUnits::separatorAlways));
+    ui->labelWatchAvailable->setText(HivemindUnits::formatWithUnit(unit, watchOnlyBalance, false, HivemindUnits::separatorAlways));
+    ui->labelWatchPending->setText(HivemindUnits::formatWithUnit(unit, watchUnconfBalance, false, HivemindUnits::separatorAlways));
+    ui->labelWatchImmature->setText(HivemindUnits::formatWithUnit(unit, watchImmatureBalance, false, HivemindUnits::separatorAlways));
+    ui->labelWatchTotal->setText(HivemindUnits::formatWithUnit(unit, watchOnlyBalance + watchUnconfBalance + watchImmatureBalance, false, HivemindUnits::separatorAlways));
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
@@ -231,7 +231,7 @@ void OverviewPage::setWalletModel(WalletModel *model)
         connect(model, SIGNAL(notifyWatchonlyChanged(bool)), this, SLOT(updateWatchOnlyLabels(bool)));
     }
 
-    // update the display unit, to not use the default ("CSH")
+    // update the display unit, to not use the default ("BTC")
     updateDisplayUnit();
 }
 

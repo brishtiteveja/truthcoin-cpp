@@ -1,0 +1,86 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/hivemind/.hivemind" ]; then
+	HIVEMINDD_DEFAULT_DATADIR="/var/lib/hivemind/.hivemind"
+else
+	HIVEMINDD_DEFAULT_DATADIR="/var/lib/hivemindd"
+fi
+
+HIVEMINDD_CONFIGFILE=${HIVEMINDD_CONFIGFILE:-/etc/hivemind/hivemind.conf}
+HIVEMINDD_PIDDIR=${HIVEMINDD_PIDDIR:-/var/run/hivemindd}
+HIVEMINDD_PIDFILE=${HIVEMINDD_PIDFILE:-${HIVEMINDD_PIDDIR}/hivemindd.pid}
+HIVEMINDD_DATADIR=${HIVEMINDD_DATADIR:-${HIVEMINDD_DEFAULT_DATADIR}}
+HIVEMINDD_USER=${HIVEMINDD_USER:-hivemind}
+HIVEMINDD_GROUP=${HIVEMINDD_GROUP:-hivemind}
+HIVEMINDD_BIN=${HIVEMINDD_BIN:-/usr/bin/hivemindd}
+
+name="Hivemind Core Daemon"
+description="Hivemind crypto-currency p2p network daemon"
+
+command="/usr/bin/hivemindd"
+command_args="-pid=\"${HIVEMINDD_PIDFILE}\" \
+		-conf=\"${HIVEMINDD_CONFIGFILE}\" \
+		-datadir=\"${HIVEMINDD_DATADIR}\" \
+		-daemon \
+		${HIVEMINDD_OPTS}"
+
+required_files="${HIVEMINDD_CONFIGFILE}"
+start_stop_daemon_args="-u ${HIVEMINDD_USER} \
+			-N ${HIVEMINDD_NICE:-0} -w 2000"
+pidfile="${HIVEMINDD_PIDFILE}"
+retry=60
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${HIVEMINDD_USER}:${HIVEMINDD_GROUP}" \
+	"${HIVEMINDD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${HIVEMINDD_USER}:${HIVEMINDD_GROUP}" \
+	"${HIVEMINDD_PIDDIR}"
+
+	checkpath -f \
+	-o ${HIVEMINDD_USER}:${HIVEMINDD_GROUP} \
+	-m 0660 \
+	${HIVEMINDD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${HIVEMINDD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run hivemindd."
+		eerror "The setting must appear in ${HIVEMINDD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Hivemind Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

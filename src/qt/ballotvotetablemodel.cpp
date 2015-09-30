@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -204,7 +204,7 @@ QString formatHeight(const marketVote *vote)
 
 QString formatAddress(const marketVote *vote)
 {
-    CTruthcoinAddress addr;
+    CHivemindAddress addr;
     if (addr.Set(vote->keyID))
         return QString::fromStdString(addr.ToString());
     return QString("Address");

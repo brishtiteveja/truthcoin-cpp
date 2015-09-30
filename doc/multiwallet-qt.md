@@ -1,22 +1,22 @@
 Multiwallet Qt Development and Integration Strategy
 ===================================================
 
-In order to support loading of multiple wallets in truthcoin-qt, a few changes in the UI architecture will be needed.
+In order to support loading of multiple wallets in hivemind-qt, a few changes in the UI architecture will be needed.
 Fortunately, only four of the files in the existing project are affected by this change.
 
 Two new classes have been implemented in two new .h/.cpp file pairs, with much of the functionality that was previously
-implemented in the TruthcoinGUI class moved over to these new classes.
+implemented in the HivemindGUI class moved over to these new classes.
 
-The two existing files most affected, by far, are truthcoingui.h and truthcoingui.cpp, as the TruthcoinGUI class will require
+The two existing files most affected, by far, are hivemindgui.h and hivemindgui.cpp, as the HivemindGUI class will require
 some major retrofitting.
 
-Only requiring some minor changes is truthcoin.cpp.
+Only requiring some minor changes is hivemind.cpp.
 
-Finally, two new headers and source files will have to be added to truthcoin-qt.pro.
+Finally, two new headers and source files will have to be added to hivemind-qt.pro.
 
-Changes to class TruthcoinGUI
+Changes to class HivemindGUI
 ---------------------------
-The principal change to the TruthcoinGUI class concerns the QStackedWidget instance called centralWidget.
+The principal change to the HivemindGUI class concerns the QStackedWidget instance called centralWidget.
 This widget owns five page views: overviewPage, transactionsPage, addressBookPage, receiveCoinsPage, and sendCoinsPage.
 
 A new class called *WalletView* inheriting from QStackedWidget has been written to handle all renderings and updates of
@@ -24,17 +24,17 @@ these page views. In addition to owning these five page views, a WalletView also
 This allows the construction of multiple WalletView objects, each rendering a distinct wallet.
 
 A second class called *WalletFrame* inheriting from QFrame has been written as a container for embedding all wallet-related
-controls into TruthcoinGUI. At present it contains the WalletView instances for the wallets and does little more than passing on messages
-from TruthcoinGUI to the currently selected WalletView. It is a WalletFrame instance
-that takes the place of what used to be centralWidget in TruthcoinGUI. The purpose of this class is to allow future
-refinements of the wallet controls with minimal need for further modifications to TruthcoinGUI, thus greatly simplifying
+controls into HivemindGUI. At present it contains the WalletView instances for the wallets and does little more than passing on messages
+from HivemindGUI to the currently selected WalletView. It is a WalletFrame instance
+that takes the place of what used to be centralWidget in HivemindGUI. The purpose of this class is to allow future
+refinements of the wallet controls with minimal need for further modifications to HivemindGUI, thus greatly simplifying
 merges while reducing the risk of breaking top-level stuff.
 
-Changes to truthcoin.cpp
+Changes to hivemind.cpp
 ----------------------
-truthcoin.cpp is the entry point into truthcoin-qt, and as such, will require some minor modifications to provide hooks for
+hivemind.cpp is the entry point into hivemind-qt, and as such, will require some minor modifications to provide hooks for
 multiple wallet support. Most importantly will be the way it instantiates WalletModels and passes them to the
-singleton TruthcoinGUI instance called window. Formerly, TruthcoinGUI kept a pointer to a single instance of a WalletModel.
+singleton HivemindGUI instance called window. Formerly, HivemindGUI kept a pointer to a single instance of a WalletModel.
 The initial change required is very simple: rather than calling `window.setWalletModel(&walletModel);` we perform the
 following two steps:
 

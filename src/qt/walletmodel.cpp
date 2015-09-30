@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,10 +11,10 @@
 #include "ballotoutcometablemodel.h"
 #include "ballotsealedvotetablemodel.h"
 #include "ballotvotetablemodel.h"
-#include "marketbranchtablemodel.h"
-#include "marketdecisiontablemodel.h"
-#include "marketmarkettablemodel.h"
-#include "markettradetablemodel.h"
+#include "decisionbranchtablemodel.h"
+#include "decisiondecisiontablemodel.h"
+#include "decisionmarkettablemodel.h"
+#include "decisiontradetablemodel.h"
 #include "recentrequeststablemodel.h"
 #include "resolvevotecoltablemodel.h"
 #include "resolvevoterowtablemodel.h"
@@ -40,10 +40,10 @@ using namespace std;
 
 WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *parent) :
     QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0),
-    marketBranchTableModel(0),
-    marketDecisionTableModel(0),
-    marketMarketTableModel(0),
-    marketTradeTableModel(0),
+    decisionBranchTableModel(0),
+    decisionDecisionTableModel(0),
+    decisionMarketTableModel(0),
+    decisionTradeTableModel(0),
     resolveVoteColTableModel(0),
     resolveVoteRowTableModel(0),
     resolveVoteInputTableModel(0),
@@ -57,15 +57,15 @@ WalletModel::WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *p
     fForceCheckBalanceChanged = false;
 
     addressTableModel = new AddressTableModel(wallet, this);
-    ballotBranchTableModel = new MarketBranchTableModel(wallet, this);
+    ballotBranchTableModel = new DecisionBranchTableModel(wallet, this);
     ballotBallotTableModel = new BallotBallotTableModel(wallet, this);
     ballotOutcomeTableModel = new BallotOutcomeTableModel(wallet, this);
     ballotSealedVoteTableModel = new BallotSealedVoteTableModel(wallet, this);
     ballotVoteTableModel = new BallotVoteTableModel(wallet, this);
-    marketBranchTableModel = new MarketBranchTableModel(wallet, this);
-    marketDecisionTableModel = new MarketDecisionTableModel(wallet, this);
-    marketMarketTableModel = new MarketMarketTableModel(wallet, this);
-    marketTradeTableModel = new MarketTradeTableModel(wallet, this);
+    decisionBranchTableModel = new DecisionBranchTableModel(wallet, this);
+    decisionDecisionTableModel = new DecisionDecisionTableModel(wallet, this);
+    decisionMarketTableModel = new DecisionMarketTableModel(wallet, this);
+    decisionTradeTableModel = new DecisionTradeTableModel(wallet, this);
     resolveVoteColTableModel = new ResolveVoteColTableModel();
     resolveVoteRowTableModel = new ResolveVoteRowTableModel();
     resolveVoteInputTableModel = new ResolveVoteInputTableModel();
@@ -216,7 +216,7 @@ void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
 
 bool WalletModel::validateAddress(const QString &address)
 {
-    CTruthcoinAddress addressParsed(address.toStdString());
+    CHivemindAddress addressParsed(address.toStdString());
     return addressParsed.IsValid();
 }
 
@@ -257,7 +257,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             total += subtotal;
         }
         else
-        {   // User-entered truthcoin address / amount:
+        {   // User-entered hivemind address / amount:
             if(!validateAddress(rcp.address))
             {
                 return InvalidAddress;
@@ -269,7 +269,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             setAddress.insert(rcp.address);
             ++nAddresses;
 
-            CScript scriptPubKey = GetScriptForDestination(CTruthcoinAddress(rcp.address.toStdString()).Get());
+            CScript scriptPubKey = GetScriptForDestination(CHivemindAddress(rcp.address.toStdString()).Get());
             vecSend.push_back(std::pair<CScript, CAmount>(scriptPubKey, rcp.amount));
 
             total += rcp.amount;
@@ -312,7 +312,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             return TransactionCreationFailed;
         }
 
-        // reject insane fee > 0.1 truthcoin
+        // reject insane fee > 0.1 hivemind
         if (nFeeRequired > 10000000)
             return InsaneFee;
     }
@@ -338,7 +338,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
                 rcp.paymentRequest.SerializeToString(&value);
                 newTx->vOrderForm.push_back(make_pair(key, value));
             }
-            else if (!rcp.message.isEmpty()) // Message from normal truthcoin:URI (truthcoin:123...?message=example)
+            else if (!rcp.message.isEmpty()) // Message from normal hivemind:URI (hivemind:123...?message=example)
                 newTx->vOrderForm.push_back(make_pair("Message", rcp.message.toStdString()));
         }
 
@@ -360,7 +360,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
         if (!rcp.paymentRequest.IsInitialized())
         {
             std::string strAddress = rcp.address.toStdString();
-            CTxDestination dest = CTruthcoinAddress(strAddress).Get();
+            CTxDestination dest = CHivemindAddress(strAddress).Get();
             std::string strLabel = rcp.label.toStdString();
             {
                 LOCK(wallet->cs_wallet);
@@ -395,7 +395,7 @@ AddressTableModel *WalletModel::getAddressTableModel()
     return addressTableModel;
 }
 
-MarketBranchTableModel *WalletModel::getBallotBranchTableModel()
+DecisionBranchTableModel *WalletModel::getBallotBranchTableModel()
 {
     return ballotBranchTableModel;
 }
@@ -420,24 +420,24 @@ BallotVoteTableModel *WalletModel::getBallotVoteTableModel()
     return ballotVoteTableModel;
 }
 
-MarketBranchTableModel *WalletModel::getMarketBranchTableModel()
+DecisionBranchTableModel *WalletModel::getDecisionBranchTableModel()
 {
-    return marketBranchTableModel;
+    return decisionBranchTableModel;
 }
 
-MarketDecisionTableModel *WalletModel::getMarketDecisionTableModel()
+DecisionDecisionTableModel *WalletModel::getDecisionDecisionTableModel()
 {
-    return marketDecisionTableModel;
+    return decisionDecisionTableModel;
 }
 
-MarketMarketTableModel *WalletModel::getMarketMarketTableModel()
+DecisionMarketTableModel *WalletModel::getDecisionMarketTableModel()
 {
-    return marketMarketTableModel;
+    return decisionMarketTableModel;
 }
 
-MarketTradeTableModel *WalletModel::getMarketTradeTableModel()
+DecisionTradeTableModel *WalletModel::getDecisionTradeTableModel()
 {
-    return marketTradeTableModel;
+    return decisionTradeTableModel;
 }
 
 ResolveVoteColTableModel *WalletModel::getResolveVoteColTableModel()
@@ -536,7 +536,7 @@ static void NotifyAddressBookChanged(WalletModel *walletmodel, CWallet *wallet,
         const CTxDestination &address, const std::string &label, bool isMine,
         const std::string &purpose, ChangeType status)
 {
-    QString strAddress = QString::fromStdString(CTruthcoinAddress(address).ToString());
+    QString strAddress = QString::fromStdString(CHivemindAddress(address).ToString());
     QString strLabel = QString::fromStdString(label);
     QString strPurpose = QString::fromStdString(purpose);
 
@@ -688,7 +688,7 @@ void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) 
         CTxDestination address;
         if(!out.fSpendable || !ExtractDestination(cout.tx->vout[cout.i].scriptPubKey, address))
             continue;
-        mapCoins[QString::fromStdString(CTruthcoinAddress(address).ToString())].push_back(out);
+        mapCoins[QString::fromStdString(CHivemindAddress(address).ToString())].push_back(out);
     }
 }
 
@@ -727,7 +727,7 @@ void WalletModel::loadReceiveRequests(std::vector<std::string>& vReceiveRequests
 
 bool WalletModel::saveReceiveRequest(const std::string &sAddress, const int64_t nId, const std::string &sRequest)
 {
-    CTxDestination dest = CTruthcoinAddress(sAddress).Get();
+    CTxDestination dest = CHivemindAddress(sAddress).Get();
 
     std::stringstream ss;
     ss << nId;

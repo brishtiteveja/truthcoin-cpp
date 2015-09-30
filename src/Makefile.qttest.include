@@ -1,5 +1,5 @@
-bin_PROGRAMS += qt/test/test_truthcoin-qt
-TESTS += qt/test/test_truthcoin-qt
+bin_PROGRAMS += qt/test/test_hivemind-qt
+TESTS += qt/test/test_hivemind-qt
 
 TEST_QT_MOC_CPP = qt/test/moc_uritests.cpp
 
@@ -12,38 +12,38 @@ TEST_QT_H = \
   qt/test/paymentrequestdata.h \
   qt/test/paymentservertests.h
 
-qt_test_test_truthcoin_qt_CPPFLAGS = $(TRUTHCOIN_INCLUDES) $(TRUTHCOIN_QT_INCLUDES) \
+qt_test_test_hivemind_qt_CPPFLAGS = $(HIVEMIND_INCLUDES) $(HIVEMIND_QT_INCLUDES) \
   $(QT_INCLUDES) $(QT_TEST_INCLUDES) $(PROTOBUF_CFLAGS)
 
-qt_test_test_truthcoin_qt_SOURCES = \
+qt_test_test_hivemind_qt_SOURCES = \
   qt/test/test_main.cpp \
   qt/test/uritests.cpp \
   $(TEST_QT_H)
 if ENABLE_WALLET
-qt_test_test_truthcoin_qt_SOURCES += \
+qt_test_test_hivemind_qt_SOURCES += \
   qt/test/paymentservertests.cpp
 endif
 
-nodist_qt_test_test_truthcoin_qt_SOURCES = $(TEST_QT_MOC_CPP)
+nodist_qt_test_test_hivemind_qt_SOURCES = $(TEST_QT_MOC_CPP)
 
-qt_test_test_truthcoin_qt_LDADD = $(LIBTRUTHCOINQT) $(LIBTRUTHCOIN_SERVER)
+qt_test_test_hivemind_qt_LDADD = $(LIBHIVEMINDQT) $(LIBHIVEMIND_SERVER)
 if ENABLE_WALLET
-qt_test_test_truthcoin_qt_LDADD += $(LIBTRUTHCOIN_WALLET)
+qt_test_test_hivemind_qt_LDADD += $(LIBHIVEMIND_WALLET)
 endif
-qt_test_test_truthcoin_qt_LDADD += $(LIBTRUTHCOIN_CLI) $(LIBTRUTHCOIN_COMMON) $(LIBTRUTHCOIN_UTIL) $(LIBTRUTHCOIN_CRYPTO) $(LIBTRUTHCOIN_UNIVALUE) $(LIBLEVELDB) \
+qt_test_test_hivemind_qt_LDADD += $(LIBHIVEMIND_CLI) $(LIBHIVEMIND_COMMON) $(LIBHIVEMIND_UTIL) $(LIBHIVEMIND_CRYPTO) $(LIBHIVEMIND_UNIVALUE) $(LIBLEVELDB) \
   $(LIBMEMENV) $(BOOST_LIBS) $(QT_DBUS_LIBS) $(QT_TEST_LIBS) $(QT_LIBS) \
   $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) \
   $(LIBFDLIBM) $(LIBLINALG) $(LIBSECP256K1)
-qt_test_test_truthcoin_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+qt_test_test_hivemind_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-CLEAN_TRUTHCOIN_QT_TEST = $(TEST_QT_MOC_CPP) qt/test/*.gcda qt/test/*.gcno
+CLEAN_HIVEMIND_QT_TEST = $(TEST_QT_MOC_CPP) qt/test/*.gcda qt/test/*.gcno
 
-CLEANFILES += $(CLEAN_TRUTHCOIN_QT_TEST)
+CLEANFILES += $(CLEAN_HIVEMIND_QT_TEST)
 
-test_truthcoin_qt : qt/test/test_truthcoin-qt$(EXEEXT)
+test_hivemind_qt : qt/test/test_hivemind-qt$(EXEEXT)
 
-test_truthcoin_qt_check : qt/test/test_truthcoin-qt$(EXEEXT) FORCE
+test_hivemind_qt_check : qt/test/test_hivemind-qt$(EXEEXT) FORCE
 	$(MAKE) check-TESTS TESTS=$^
 
-test_truthcoin_qt_clean: FORCE
-	rm -f $(CLEAN_TRUTHCOIN_QT_TEST) $(qt_test_test_truthcoin_qt_OBJECTS)
+test_hivemind_qt_clean: FORCE
+	rm -f $(CLEAN_HIVEMIND_QT_TEST) $(qt_test_test_hivemind_qt_OBJECTS)

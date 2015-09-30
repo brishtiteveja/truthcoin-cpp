@@ -6,17 +6,17 @@ define(_CLIENT_VERSION_REVISION, 99)
 define(_CLIENT_VERSION_BUILD, 0)
 define(_CLIENT_VERSION_IS_RELEASE, false)
 define(_COPYRIGHT_YEAR, 2015)
-AC_INIT([Truthcoin Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@truthcoin.org],[truthcoin])
+AC_INIT([Hivemind Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[info@hivemind.org],[hivemind])
 AC_CONFIG_SRCDIR([src/main.cpp])
-AC_CONFIG_HEADERS([src/config/truthcoin-config.h])
+AC_CONFIG_HEADERS([src/config/hivemind-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
 AC_CANONICAL_HOST
 
-AH_TOP([#ifndef TRUTHCOIN_CONFIG_H])
-AH_TOP([#define TRUTHCOIN_CONFIG_H])
-AH_BOTTOM([#endif //TRUTHCOIN_CONFIG_H])
+AH_TOP([#ifndef HIVEMIND_CONFIG_H])
+AH_TOP([#define HIVEMIND_CONFIG_H])
+AH_BOTTOM([#endif //HIVEMIND_CONFIG_H])
 
 dnl faketime breaks configure and is only needed for make. Disable it here.
 unset FAKETIME
@@ -173,21 +173,21 @@ CPPFLAGS="$CPPFLAGS -DBOOST_SPIRIT_THREADSAFE -DHAVE_BUILD_INFO -D__STDC_FORMAT_
 
 AC_ARG_WITH([utils],
   [AS_HELP_STRING([--with-utils],
-  [build truthcoin-cli truthcoin-tx (default=yes)])],
-  [build_truthcoin_utils=$withval],
-  [build_truthcoin_utils=yes])
+  [build hivemind-cli hivemind-tx (default=yes)])],
+  [build_hivemind_utils=$withval],
+  [build_hivemind_utils=yes])
 
 AC_ARG_WITH([libs],
   [AS_HELP_STRING([--with-libs],
   [build libraries (default=yes)])],
-  [build_truthcoin_libs=$withval],
-  [build_truthcoin_libs=yes])
+  [build_hivemind_libs=$withval],
+  [build_hivemind_libs=yes])
 
 AC_ARG_WITH([daemon],
   [AS_HELP_STRING([--with-daemon],
-  [build truthcoind daemon (default=yes)])],
-  [build_truthcoind=$withval],
-  [build_truthcoind=yes])
+  [build hivemindd daemon (default=yes)])],
+  [build_hivemindd=$withval],
+  [build_hivemindd=yes])
 
 AC_LANG_PUSH([C++])
 
@@ -363,7 +363,7 @@ AC_C_BIGENDIAN([AC_MSG_ERROR("Big Endian not supported")])
 dnl Check for pthread compile/link requirements
 AX_PTHREAD
 
-# The following macro will add the necessary defines to truthcoin-config.h, but
+# The following macro will add the necessary defines to hivemind-config.h, but
 # they also need to be passed down to any subprojects. Pull the results out of
 # the cache and add them to CPPFLAGS.
 AC_SYS_LARGEFILE
@@ -506,7 +506,7 @@ AC_SUBST(LIBMEMENV)
 
 if test x$enable_wallet != xno; then
     dnl Check for libdb_cxx only if wallet enabled
-    TRUTHCOIN_FIND_BDB48
+    HIVEMIND_FIND_BDB48
 fi
 
 dnl Check for libminiupnpc (optional)
@@ -518,12 +518,12 @@ if test x$use_upnp != xno; then
   )
 fi
 
-TRUTHCOIN_QT_INIT
+HIVEMIND_QT_INIT
 
-dnl sets $truthcoin_enable_qt, $truthcoin_enable_qt_test, $truthcoin_enable_qt_dbus
-TRUTHCOIN_QT_CONFIGURE([$use_pkgconfig], [qt4])
+dnl sets $hivemind_enable_qt, $hivemind_enable_qt_test, $hivemind_enable_qt_dbus
+HIVEMIND_QT_CONFIGURE([$use_pkgconfig], [qt4])
 
-if test x$build_truthcoin_utils$build_truthcoind$truthcoin_enable_qt$use_tests = xnononono; then
+if test x$build_hivemind_utils$build_hivemindd$hivemind_enable_qt$use_tests = xnononono; then
     use_boost=no
 else
     use_boost=yes
@@ -681,9 +681,9 @@ if test x$use_pkgconfig = xyes; then
     [
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
-      TRUTHCOIN_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [TRUTHCOIN_QT_FAIL(libprotobuf not found)])])
+      HIVEMIND_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [HIVEMIND_QT_FAIL(libprotobuf not found)])])
       if test x$use_qr != xno; then
-        TRUTHCOIN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
+        HIVEMIND_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
       fi
     ]
   )
@@ -694,10 +694,10 @@ else
   AC_CHECK_HEADER([openssl/ssl.h],, AC_MSG_ERROR(libssl headers missing),)
   AC_CHECK_LIB([ssl],         [main],SSL_LIBS=-lssl, AC_MSG_ERROR(libssl missing))
 
-  TRUTHCOIN_QT_CHECK(AC_CHECK_LIB([protobuf] ,[main],[PROTOBUF_LIBS=-lprotobuf], TRUTHCOIN_QT_FAIL(libprotobuf not found)))
+  HIVEMIND_QT_CHECK(AC_CHECK_LIB([protobuf] ,[main],[PROTOBUF_LIBS=-lprotobuf], HIVEMIND_QT_FAIL(libprotobuf not found)))
   if test x$use_qr != xno; then
-    TRUTHCOIN_QT_CHECK([AC_CHECK_LIB([qrencode], [main],[QR_LIBS=-lqrencode], [have_qrencode=no])])
-    TRUTHCOIN_QT_CHECK([AC_CHECK_HEADER([qrencode.h],, have_qrencode=no)])
+    HIVEMIND_QT_CHECK([AC_CHECK_LIB([qrencode], [main],[QR_LIBS=-lqrencode], [have_qrencode=no])])
+    HIVEMIND_QT_CHECK([AC_CHECK_HEADER([qrencode.h],, have_qrencode=no)])
   fi
 fi
 
@@ -709,23 +709,23 @@ AC_CHECK_HEADER([openssl/ec.h],, AC_MSG_ERROR(OpenSSL ec header missing),)
 CFLAGS="$CFLAGS_TEMP"
 LIBS="$LIBS_TEMP"
 
-TRUTHCOIN_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
+HIVEMIND_QT_PATH_PROGS([PROTOC], [protoc],$protoc_bin_path)
 
-AC_MSG_CHECKING([whether to build truthcoind])
-AM_CONDITIONAL([BUILD_TRUTHCOIND], [test x$build_truthcoind = xyes])
-AC_MSG_RESULT($build_truthcoind)
+AC_MSG_CHECKING([whether to build hivemindd])
+AM_CONDITIONAL([BUILD_HIVEMINDD], [test x$build_hivemindd = xyes])
+AC_MSG_RESULT($build_hivemindd)
 
-AC_MSG_CHECKING([whether to build utils (truthcoin-cli truthcoin-tx)])
-AM_CONDITIONAL([BUILD_TRUTHCOIN_UTILS], [test x$build_truthcoin_utils = xyes])
-AC_MSG_RESULT($build_truthcoin_utils)
+AC_MSG_CHECKING([whether to build utils (hivemind-cli hivemind-tx)])
+AM_CONDITIONAL([BUILD_HIVEMIND_UTILS], [test x$build_hivemind_utils = xyes])
+AC_MSG_RESULT($build_hivemind_utils)
 
 AC_MSG_CHECKING([whether to build libraries])
-AM_CONDITIONAL([BUILD_TRUTHCOIN_LIBS], [test x$build_truthcoin_libs = xyes])
-if test x$build_truthcoin_libs = xyes; then
+AM_CONDITIONAL([BUILD_HIVEMIND_LIBS], [test x$build_hivemind_libs = xyes])
+if test x$build_hivemind_libs = xyes; then
   AC_DEFINE(HAVE_CONSENSUS_LIB, 1, [Define this symbol if the consensus lib has been built])
-  AC_CONFIG_FILES([libtruthcoinconsensus.pc:libtruthcoinconsensus.pc.in])
+  AC_CONFIG_FILES([libhivemindconsensus.pc:libhivemindconsensus.pc.in])
 fi
-AC_MSG_RESULT($build_truthcoin_libs)
+AC_MSG_RESULT($build_hivemind_libs)
 
 AC_LANG_POP
 
@@ -786,14 +786,14 @@ else
 fi
 
 dnl these are only used when qt is enabled
-if test x$truthcoin_enable_qt != xno; then
+if test x$hivemind_enable_qt != xno; then
   BUILD_QT=qt
   dnl enable dbus support
   AC_MSG_CHECKING([whether to build GUI with support for D-Bus])
-  if test x$truthcoin_enable_qt_dbus != xno; then
+  if test x$hivemind_enable_qt_dbus != xno; then
     AC_DEFINE([USE_DBUS],[1],[Define if dbus support should be compiled in])
   fi
-  AC_MSG_RESULT($truthcoin_enable_qt_dbus)
+  AC_MSG_RESULT($hivemind_enable_qt_dbus)
 
   dnl enable qr support
   AC_MSG_CHECKING([whether to build GUI with support for QR codes])
@@ -816,8 +816,8 @@ if test x$truthcoin_enable_qt != xno; then
     AC_MSG_WARN("xgettext is required to update qt translations")
   fi
 
-  AC_MSG_CHECKING([whether to build test_truthcoin-qt])
-  if test x$use_tests$truthcoin_enable_qt_test = xyesyes; then
+  AC_MSG_CHECKING([whether to build test_hivemind-qt])
+  if test x$use_tests$hivemind_enable_qt_test = xyesyes; then
     AC_MSG_RESULT([yes])
     BUILD_TEST_QT="test"
   else
@@ -825,7 +825,7 @@ if test x$truthcoin_enable_qt != xno; then
   fi
 fi
 
-AC_MSG_CHECKING([whether to build test_truthcoin])
+AC_MSG_CHECKING([whether to build test_hivemind])
 if test x$use_tests = xyes; then
   AC_MSG_RESULT([yes])
   BUILD_TEST="test"
@@ -840,7 +840,7 @@ else
   AC_MSG_RESULT([no])
 fi
 
-if test x$build_truthcoin_utils$build_truthcoin_libs$build_truthcoind$truthcoin_enable_qt$use_tests = xnonononono; then
+if test x$build_hivemind_utils$build_hivemind_libs$build_hivemindd$hivemind_enable_qt$use_tests = xnonononono; then
   AC_MSG_ERROR([No targets! Please specify at least one of: --with-utils --with-libs --with-daemon --with-gui or --enable-tests])
 fi
 
@@ -849,8 +849,8 @@ AM_CONDITIONAL([BUILD_DARWIN], [test x$BUILD_OS = xdarwin])
 AM_CONDITIONAL([TARGET_WINDOWS], [test x$TARGET_OS = xwindows])
 AM_CONDITIONAL([ENABLE_WALLET],[test x$enable_wallet = xyes])
 AM_CONDITIONAL([ENABLE_TESTS],[test x$use_tests = xyes])
-AM_CONDITIONAL([ENABLE_QT],[test x$truthcoin_enable_qt = xyes])
-AM_CONDITIONAL([ENABLE_QT_TESTS],[test x$use_tests$truthcoin_enable_qt_test = xyesyes])
+AM_CONDITIONAL([ENABLE_QT],[test x$hivemind_enable_qt = xyes])
+AM_CONDITIONAL([ENABLE_QT_TESTS],[test x$use_tests$hivemind_enable_qt_test = xyesyes])
 AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
 AM_CONDITIONAL([USE_COMPARISON_TOOL],[test x$use_comparison_tool != xno])
@@ -884,7 +884,7 @@ AC_SUBST(BUILD_TEST_QT)
 AC_SUBST(MINIUPNPC_CPPFLAGS)
 AC_SUBST(MINIUPNPC_LIBS)
 AC_CONFIG_FILES([Makefile src/Makefile share/setup.nsi share/qt/Info.plist src/test/buildenv.py])
-AC_CONFIG_FILES([qa/pull-tester/run-truthcoind-for-test.sh],[chmod +x qa/pull-tester/run-truthcoind-for-test.sh])
+AC_CONFIG_FILES([qa/pull-tester/run-hivemindd-for-test.sh],[chmod +x qa/pull-tester/run-hivemindd-for-test.sh])
 AC_CONFIG_FILES([qa/pull-tester/tests-config.sh],[chmod +x qa/pull-tester/tests-config.sh])
 
 dnl boost's m4 checks do something really nasty: they export these vars. As a

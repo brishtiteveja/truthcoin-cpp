@@ -1,10 +1,10 @@
 // Copyright (c) 2012 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_MRUSET_H
-#define TRUTHCOIN_MRUSET_H
+#ifndef HIVEMIND_MRUSET_H
+#define HIVEMIND_MRUSET_H
 
 #include <deque>
 #include <set>
@@ -67,4 +67,4 @@ public:
     }
 };
 
-#endif // TRUTHCOIN_MRUSET_H
+#endif // HIVEMIND_MRUSET_H

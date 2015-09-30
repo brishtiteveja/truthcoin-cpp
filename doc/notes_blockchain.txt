@@ -93,17 +93,17 @@ Example input scripts:
 
 
 
-Truthcoin Blockchain
+Hivemind Blockchain
 --------------------
 
 Bitcoin's block chain can be viewed as a ledger of actions on a dataset. The
 dataset is the set of all coin allocations to addresses and the actions are
 the transfers of coins from a subset of addresses to other addresses. 
 
-Truthcoin is a generalization of both the dataset and the set of actions.
+Hivemind is a generalization of both the dataset and the set of actions.
 
-Truthcoin's dataset consists of sets of:
-   1. cashcoin allocations to public addresses
+Hivemind's dataset consists of sets of:
+   1. bitcoin allocations to public addresses
    2. votecoin allocations to public addresses
    3. branches
    4. decisions within each branch
@@ -112,21 +112,21 @@ Truthcoin's dataset consists of sets of:
    7. ballots (votes on each decision, and hence market)
    8. outcomes of each decision (and hence market)
 
-Truthcoin's actions consists of:
-   1. all bitcoin-type transfers of cashcoins.
+Hivemind's actions consists of:
+   1. all bitcoin-type transfers of bitcoins.
    2. creation of branches (note: this is done in a very limited fashion)
    3. creation of decisions
    4. creation of markets
    5. creation of trades
    6. creation of vote ballots
-   7. publishing outcomes with transfers of cashcoins.
+   7. publishing outcomes with transfers of bitcoins.
    8. redistributions of votecoin allocations 
 
-Anyone with cashcoins may initiate any of the actions 1,3,4,5. Anyone with
+Anyone with bitcoins may initiate any of the actions 1,3,4,5. Anyone with
 votecoins will be obligated to initiate action 6. The miners will initiate
 7 and 8. 
 
-Each truthcoin-specific action is a bitcoin-like transaction where the output 
+Each hivemind-specific action is a bitcoin-like transaction where the output 
 script designates one of the actions to be taken. The format of the output
 script is simply:
  
@@ -140,7 +140,7 @@ If viewed as a stack operation, action_type and action_data are simply pushed
 onto the stack and then OP_MARKET acts as an operation to (1) do the action 
 specified by the action_type using action_data as inputs and (2) clear the 
 stack with a TRUE result. The action_type byte will specify one of the 
-truthcoin-specific actions 2-8 above.  The specific format for action_data is 
+hivemind-specific actions 2-8 above.  The specific format for action_data is 
 as follows.
 
 
@@ -210,7 +210,7 @@ Create Decision
 ---------------
 
   action_type = char        'D' (create_decision)
-  action_data = uint160     cashcoin public key
+  action_data = uint160     bitcoin public key
                 uint256     branchid
                 string      prompt
                 uint32      eventOverBy (block number)
@@ -222,7 +222,7 @@ Create Decision
   Note 1: The creator of the decision pays a listing fee according to the 
   branch parameters and will receive a portion of the trading fees of all
   markets on that decision. The outcome algorithm will allocate 25% of 
-  each market's trading fees across the cashcoin public keys the market's
+  each market's trading fees across the bitcoin public keys the market's
   decision list.
 
 
@@ -230,7 +230,7 @@ Create Market
 -------------
      
   action_type = char        'M' (create_market)
-  action_data = uint160     cashcoin public key
+  action_data = uint160     bitcoin public key
                 uint64      B (liquidity parameter)
                 uint64      tradingFee     
                 string      title
@@ -265,7 +265,7 @@ Create Trade
 ------------
 
   action_type = char        'T' (create_trade)
-  action_data = uint160     cashcoin public key
+  action_data = uint160     bitcoin public key
                 uint256     marketid
                 uint8       isbuy
                 uint64      number of shares

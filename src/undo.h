@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_UNDO_H
-#define TRUTHCOIN_UNDO_H
+#ifndef HIVEMIND_UNDO_H
+#define HIVEMIND_UNDO_H
 
 #include "compressor.h" 
 #include "primitives/transaction.h"
@@ -83,4 +83,4 @@ public:
     }
 };
 
-#endif // TRUTHCOIN_UNDO_H
+#endif // HIVEMIND_UNDO_H

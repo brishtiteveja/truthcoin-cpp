@@ -1,9 +1,9 @@
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_MARKETVIEWGRAPH_H
-#define TRUTHCOIN_QT_MARKETVIEWGRAPH_H
+#ifndef HIVEMIND_QT_MARKETVIEWGRAPH_H
+#define HIVEMIND_QT_MARKETVIEWGRAPH_H
 
 #include <stdint.h>
 #include <QWidget>
@@ -26,4 +26,4 @@ private:
     bool dataIsChanging;
 };
 
-#endif // TRUTHCOIN_QT_MARKETVIEWGRAPH_H
+#endif // HIVEMIND_QT_MARKETVIEWGRAPH_H

@@ -1,11 +1,11 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "walletframe.h"
 
-#include "truthcoingui.h"
+#include "hivemindgui.h"
 #include "walletview.h"
 
 #include <cstdio>
@@ -13,7 +13,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-WalletFrame::WalletFrame(TruthcoinGUI *_gui) :
+WalletFrame::WalletFrame(HivemindGUI *_gui) :
     QFrame(_gui),
     gui(_gui)
 {
@@ -44,7 +44,7 @@ bool WalletFrame::addWallet(const QString& name, WalletModel *walletModel)
         return false;
 
     WalletView *walletView = new WalletView(this);
-    walletView->setTruthcoinGUI(gui);
+    walletView->setHivemindGUI(gui);
     walletView->setClientModel(clientModel);
     walletView->setWalletModel(walletModel);
     walletView->showOutOfSyncWarning(bOutOfSync);
@@ -125,6 +125,13 @@ void WalletFrame::gotoBallotPage()
     QMap<QString, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
         i.value()->gotoBallotPage();
+}
+
+void WalletFrame::gotoDecisionPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoDecisionPage();
 }
 
 void WalletFrame::gotoMarketPage()

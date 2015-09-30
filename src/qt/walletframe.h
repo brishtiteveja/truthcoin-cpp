@@ -1,15 +1,15 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_QT_WALLETFRAME_H
-#define TRUTHCOIN_QT_WALLETFRAME_H
+#ifndef HIVEMIND_QT_WALLETFRAME_H
+#define HIVEMIND_QT_WALLETFRAME_H
 
 #include <QFrame>
 #include <QMap>
 
-class TruthcoinGUI;
+class HivemindGUI;
 class ClientModel;
 class SendCoinsRecipient;
 class WalletModel;
@@ -24,7 +24,7 @@ class WalletFrame : public QFrame
     Q_OBJECT
 
 public:
-    explicit WalletFrame(TruthcoinGUI *_gui = 0);
+    explicit WalletFrame(HivemindGUI *_gui = 0);
     ~WalletFrame();
 
     void setClientModel(ClientModel *clientModel);
@@ -40,7 +40,7 @@ public:
 
 private:
     QStackedWidget *walletStack;
-    TruthcoinGUI *gui;
+    HivemindGUI *gui;
     ClientModel *clientModel;
     QMap<QString, WalletView*> mapWalletViews;
 
@@ -55,7 +55,9 @@ public slots:
     void gotoHistoryPage();
     /** Switch to ballot page */
     void gotoBallotPage();
-    /** Switch to receive coins page */
+    /** Switch to decision page */
+    void gotoDecisionPage();
+    /** Switch to market page */
     void gotoMarketPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
@@ -84,4 +86,4 @@ public slots:
     void usedReceivingAddresses();
 };
 
-#endif // TRUTHCOIN_QT_WALLETFRAME_H
+#endif // HIVEMIND_QT_WALLETFRAME_H

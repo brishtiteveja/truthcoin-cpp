@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -85,13 +85,13 @@ Value getnewaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "getnewaddress ( \"account\" )\n"
-            "\nReturns a new Truthcoin address for receiving payments.\n"
+            "\nReturns a new Hivemind address for receiving payments.\n"
             "If 'account' is specified (recommended), it is added to the address book \n"
             "so payments received with the address will be credited to 'account'.\n"
             "\nArguments:\n"
             "1. \"account\"        (string, optional) The account name for the address to be linked to. if not provided, the default account \"\" is used. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created if there is no account by the given name.\n"
             "\nResult:\n"
-            "\"truthcoinaddress\"    (string) The new truthcoin address\n"
+            "\"hivemindaddress\"    (string) The new hivemind address\n"
             "\nExamples:\n"
             + HelpExampleCli("getnewaddress", "")
             + HelpExampleCli("getnewaddress", "\"\"")
@@ -115,11 +115,11 @@ Value getnewaddress(const Array& params, bool fHelp)
 
     pwalletMain->SetAddressBook(keyID, strAccount, "receive");
 
-    return CTruthcoinAddress(keyID).ToString();
+    return CHivemindAddress(keyID).ToString();
 }
 
 
-CTruthcoinAddress GetAccountAddress(string strAccount, bool bForceNew=false)
+CHivemindAddress GetAccountAddress(string strAccount, bool bForceNew=false)
 {
     CWalletDB walletdb(pwalletMain->strWalletFile);
 
@@ -153,7 +153,7 @@ CTruthcoinAddress GetAccountAddress(string strAccount, bool bForceNew=false)
         walletdb.WriteAccount(strAccount, account);
     }
 
-    return CTruthcoinAddress(account.vchPubKey.GetID());
+    return CHivemindAddress(account.vchPubKey.GetID());
 }
 
 Value getaccountaddress(const Array& params, bool fHelp)
@@ -161,11 +161,11 @@ Value getaccountaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "getaccountaddress \"account\"\n"
-            "\nReturns the current Truthcoin address for receiving payments to this account.\n"
+            "\nReturns the current Hivemind address for receiving payments to this account.\n"
             "\nArguments:\n"
             "1. \"account\"       (string, required) The account name for the address. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created and a new address created  if there is no account by the given name.\n"
             "\nResult:\n"
-            "\"truthcoinaddress\"   (string) The account truthcoin address\n"
+            "\"hivemindaddress\"   (string) The account hivemind address\n"
             "\nExamples:\n"
             + HelpExampleCli("getaccountaddress", "")
             + HelpExampleCli("getaccountaddress", "\"\"")
@@ -189,7 +189,7 @@ Value getrawchangeaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "getrawchangeaddress\n"
-            "\nReturns a new Truthcoin address, for receiving change.\n"
+            "\nReturns a new Hivemind address, for receiving change.\n"
             "This is for use with raw transactions, NOT normal use.\n"
             "\nResult:\n"
             "\"address\"    (string) The address\n"
@@ -210,7 +210,7 @@ Value getrawchangeaddress(const Array& params, bool fHelp)
 
     CKeyID keyID = vchPubKey.GetID();
 
-    return CTruthcoinAddress(keyID).ToString();
+    return CHivemindAddress(keyID).ToString();
 }
 
 
@@ -218,19 +218,19 @@ Value setaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "setaccount \"truthcoinaddress\" \"account\"\n"
+            "setaccount \"hivemindaddress\" \"account\"\n"
             "\nSets the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"truthcoinaddress\"  (string, required) The truthcoin address to be associated with an account.\n"
+            "1. \"hivemindaddress\"  (string, required) The hivemind address to be associated with an account.\n"
             "2. \"account\"         (string, required) The account to assign the address to.\n"
             "\nExamples:\n"
             + HelpExampleCli("setaccount", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\" \"tabby\"")
             + HelpExampleRpc("setaccount", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", \"tabby\"")
         );
 
-    CTruthcoinAddress address(params[0].get_str());
+    CHivemindAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Truthcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Hivemind address");
 
 
     string strAccount;
@@ -260,10 +260,10 @@ Value getaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "getaccount \"truthcoinaddress\"\n"
+            "getaccount \"hivemindaddress\"\n"
             "\nReturns the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"truthcoinaddress\"  (string, required) The truthcoin address for account lookup.\n"
+            "1. \"hivemindaddress\"  (string, required) The hivemind address for account lookup.\n"
             "\nResult:\n"
             "\"accountname\"        (string) the account address\n"
             "\nExamples:\n"
@@ -271,9 +271,9 @@ Value getaccount(const Array& params, bool fHelp)
             + HelpExampleRpc("getaccount", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\"")
         );
 
-    CTruthcoinAddress address(params[0].get_str());
+    CHivemindAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Truthcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Hivemind address");
 
     string strAccount;
     map<CTxDestination, CAddressBookData>::iterator mi = pwalletMain->mapAddressBook.find(address.Get());
@@ -293,7 +293,7 @@ Value getaddressesbyaccount(const Array& params, bool fHelp)
             "1. \"account\"  (string, required) The account name.\n"
             "\nResult:\n"
             "[                     (json array of string)\n"
-            "  \"truthcoinaddress\"  (string) a truthcoin address associated with the given account\n"
+            "  \"hivemindaddress\"  (string) a hivemind address associated with the given account\n"
             "  ,...\n"
             "]\n"
             "\nExamples:\n"
@@ -305,9 +305,9 @@ Value getaddressesbyaccount(const Array& params, bool fHelp)
 
     // Find all addresses that have the given account
     Array ret;
-    BOOST_FOREACH(const PAIRTYPE(CTruthcoinAddress, CAddressBookData)& item, pwalletMain->mapAddressBook)
+    BOOST_FOREACH(const PAIRTYPE(CHivemindAddress, CAddressBookData)& item, pwalletMain->mapAddressBook)
     {
-        const CTruthcoinAddress& address = item.first;
+        const CHivemindAddress& address = item.first;
         const string& strName = item.second.name;
         if (strName == strAccount)
             ret.push_back(address.ToString());
@@ -336,7 +336,7 @@ void SendMoney(
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
 
-    // Parse Truthcoin address
+    // Parse Hivemind address
     CScript scriptPubKey = GetScriptForDestination(address);
 
     // Create and send the transaction
@@ -372,11 +372,11 @@ Value sendtoaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendtoaddress \"truthcoinaddress\" amount ( \"comment\" \"comment-to\" )\n"
+            "sendtoaddress \"hivemindaddress\" amount ( \"comment\" \"comment-to\" )\n"
             "\nSend an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
-            "1. \"truthcoinaddress\"  (string, required) The truthcoin address to send to.\n"
+            "1. \"hivemindaddress\"  (string, required) The hivemind address to send to.\n"
             "2. \"amount\"      (numeric, required) The amount in btc to send. eg 0.1\n"
             "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
@@ -391,9 +391,9 @@ Value sendtoaddress(const Array& params, bool fHelp)
             + HelpExampleRpc("sendtoaddress", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, \"donation\", \"seans outpost\"")
         );
 
-    CTruthcoinAddress address(params[0].get_str());
+    CHivemindAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Truthcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Hivemind address");
 
     // Amount
     CAmount nAmount = AmountFromValue(params[1]);
@@ -425,7 +425,7 @@ Value listaddressgroupings(const Array& params, bool fHelp)
             "[\n"
             "  [\n"
             "    [\n"
-            "      \"truthcoinaddress\",     (string) The truthcoin address\n"
+            "      \"hivemindaddress\",     (string) The hivemind address\n"
             "      amount,                 (numeric) The amount in btc\n"
             "      \"account\"             (string, optional) The account\n"
             "    ]\n"
@@ -452,7 +452,7 @@ Value listaddressgroupings(const Array& params, bool fHelp)
         {
             bool is_votecoin = 0;
             string strAccount;
-            CTruthcoinAddress addr0(txdest);
+            CHivemindAddress addr0(txdest);
             LOCK(pwalletMain->cs_wallet);
             std::map<CTxDestination, CAddressBookData>::const_iterator addrit
                 = pwalletMain->mapAddressBook.find(addr0.Get());
@@ -468,7 +468,7 @@ Value listaddressgroupings(const Array& params, bool fHelp)
                     }
                 }
             }
-            CTruthcoinAddress addr;
+            CHivemindAddress addr;
             addr.is_votecoin = is_votecoin;
             if (!addr.Set(txdest))
                 continue;
@@ -489,11 +489,11 @@ Value signmessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw runtime_error(
-            "signmessage \"truthcoinaddress\" \"message\"\n"
+            "signmessage \"hivemindaddress\" \"message\"\n"
             "\nSign a message with the private key of an address"
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
-            "1. \"truthcoinaddress\"  (string, required) The truthcoin address to use for the private key.\n"
+            "1. \"hivemindaddress\"  (string, required) The hivemind address to use for the private key.\n"
             "2. \"message\"         (string, required) The message to create a signature of.\n"
             "\nResult:\n"
             "\"signature\"          (string) The signature of the message encoded in base 64\n"
@@ -513,7 +513,7 @@ Value signmessage(const Array& params, bool fHelp)
     string strAddress = params[0].get_str();
     string strMessage = params[1].get_str();
 
-    CTruthcoinAddress addr(strAddress);
+    CHivemindAddress addr(strAddress);
     if (!addr.IsValid())
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid address");
 
@@ -540,10 +540,10 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "getreceivedbyaddress \"truthcoinaddress\" ( minconf )\n"
-            "\nReturns the total amount received by the given truthcoinaddress in transactions with at least minconf confirmations.\n"
+            "getreceivedbyaddress \"hivemindaddress\" ( minconf )\n"
+            "\nReturns the total amount received by the given hivemindaddress in transactions with at least minconf confirmations.\n"
             "\nArguments:\n"
-            "1. \"truthcoinaddress\"  (string, required) The truthcoin address for transactions.\n"
+            "1. \"hivemindaddress\"  (string, required) The hivemind address for transactions.\n"
             "2. minconf             (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "\nResult:\n"
             "amount   (numeric) The total amount in btc received at this address.\n"
@@ -558,10 +558,10 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
             + HelpExampleRpc("getreceivedbyaddress", "\"1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ\", 6")
        );
 
-    // Truthcoin address
-    CTruthcoinAddress address = CTruthcoinAddress(params[0].get_str());
+    // Hivemind address
+    CHivemindAddress address = CHivemindAddress(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Truthcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Hivemind address");
     CScript scriptPubKey = GetScriptForDestination(address.Get());
     if (!IsMine(*pwalletMain,scriptPubKey))
         return (double)0.0;
@@ -828,13 +828,13 @@ Value sendfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 6)
         throw runtime_error(
-            "sendfrom \"fromaccount\" \"totruthcoinaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
-            "\nSent an amount from an account to a truthcoin address.\n"
+            "sendfrom \"fromaccount\" \"tohivemindaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
+            "\nSent an amount from an account to a hivemind address.\n"
             "The amount is a real and is rounded to the nearest 0.00000001."
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
             "1. \"fromaccount\"       (string, required) The name of the account to send funds from. May be the default account using \"\".\n"
-            "2. \"totruthcoinaddress\"  (string, required) The truthcoin address to send funds to.\n"
+            "2. \"tohivemindaddress\"  (string, required) The hivemind address to send funds to.\n"
             "3. amount                (numeric, required) The amount in btc. (transaction fee is added on top).\n"
             "4. minconf               (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"           (string, optional) A comment used to store what the transaction is for. \n"
@@ -854,9 +854,9 @@ Value sendfrom(const Array& params, bool fHelp)
         );
 
     string strAccount = AccountFromValue(params[0]);
-    CTruthcoinAddress address(params[1].get_str());
+    CHivemindAddress address(params[1].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Truthcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Hivemind address");
     CAmount nAmount = AmountFromValue(params[2]);
     int nMinDepth = 1;
     if (params.size() > 3)
@@ -893,7 +893,7 @@ Value sendmany(const Array& params, bool fHelp)
             "1. \"fromaccount\"         (string, required) The account to send the funds from, can be \"\" for the default account\n"
             "2. \"amounts\"             (string, required) A json object with addresses and amounts\n"
             "    {\n"
-            "      \"address\":amount   (numeric) The truthcoin address is the key, the numeric amount in btc is the value\n"
+            "      \"address\":amount   (numeric) The hivemind address is the key, the numeric amount in btc is the value\n"
             "      ,...\n"
             "    }\n"
             "3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
@@ -921,15 +921,15 @@ Value sendmany(const Array& params, bool fHelp)
     if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
         wtx.mapValue["comment"] = params[3].get_str();
 
-    set<CTruthcoinAddress> setAddress;
+    set<CHivemindAddress> setAddress;
     vector<pair<CScript, CAmount> > vecSend;
 
     CAmount totalAmount = 0;
     BOOST_FOREACH(const Pair& s, sendTo)
     {
-        CTruthcoinAddress address(s.name_);
+        CHivemindAddress address(s.name_);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid Truthcoin address: ")+s.name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid Hivemind address: ")+s.name_);
 
         if (setAddress.count(address))
             throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+s.name_);
@@ -973,20 +973,20 @@ Value addmultisigaddress(const Array& params, bool fHelp)
     {
         string msg = "addmultisigaddress nrequired [\"key\",...] ( \"account\" )\n"
             "\nAdd a nrequired-to-sign multisignature address to the wallet.\n"
-            "Each key is a Truthcoin address or hex-encoded public key.\n"
+            "Each key is a Hivemind address or hex-encoded public key.\n"
             "If 'account' is specified, assign address to that account.\n"
 
             "\nArguments:\n"
             "1. nrequired        (numeric, required) The number of required signatures out of the n keys or addresses.\n"
-            "2. \"keysobject\"   (string, required) A json array of truthcoin addresses or hex-encoded public keys\n"
+            "2. \"keysobject\"   (string, required) A json array of hivemind addresses or hex-encoded public keys\n"
             "     [\n"
-            "       \"address\"  (string) truthcoin address or hex-encoded public key\n"
+            "       \"address\"  (string) hivemind address or hex-encoded public key\n"
             "       ...,\n"
             "     ]\n"
             "3. \"account\"      (string, optional) An account to assign the addresses to.\n"
 
             "\nResult:\n"
-            "\"truthcoinaddress\"  (string) A truthcoin address associated with the keys.\n"
+            "\"hivemindaddress\"  (string) A hivemind address associated with the keys.\n"
 
             "\nExamples:\n"
             "\nAdd a multisig address from 2 addresses\n"
@@ -1007,7 +1007,7 @@ Value addmultisigaddress(const Array& params, bool fHelp)
     pwalletMain->AddCScript(inner);
 
     pwalletMain->SetAddressBook(innerID, strAccount, "send");
-    return CTruthcoinAddress(innerID).ToString();
+    return CHivemindAddress(innerID).ToString();
 }
 
 
@@ -1043,7 +1043,7 @@ Value ListReceived(const Array& params, bool fByAccounts)
             filter = filter | ISMINE_WATCH_ONLY;
 
     // Tally
-    map<CTruthcoinAddress, tallyitem> mapTally;
+    map<CHivemindAddress, tallyitem> mapTally;
     map<uint256, CWalletTx>::iterator it;
     for(it=pwalletMain->mapWallet.begin(); it != pwalletMain->mapWallet.end(); ++it)
     {
@@ -1078,11 +1078,11 @@ Value ListReceived(const Array& params, bool fByAccounts)
     // Reply
     Array ret;
     map<string, tallyitem> mapAccountTally;
-    BOOST_FOREACH(const PAIRTYPE(CTruthcoinAddress, CAddressBookData)& item, pwalletMain->mapAddressBook)
+    BOOST_FOREACH(const PAIRTYPE(CHivemindAddress, CAddressBookData)& item, pwalletMain->mapAddressBook)
     {
-        const CTruthcoinAddress& address = item.first;
+        const CHivemindAddress& address = item.first;
         const string& strAccount = item.second.name;
-        map<CTruthcoinAddress, tallyitem>::iterator it = mapTally.find(address);
+        map<CHivemindAddress, tallyitem>::iterator it = mapTally.find(address);
         if (it == mapTally.end() && !fIncludeEmpty)
             continue;
 
@@ -1209,7 +1209,7 @@ Value listreceivedbyaccount(const Array& params, bool fHelp)
 
 static void MaybePushAddress(Object & entry, const CTxDestination &dest)
 {
-    CTruthcoinAddress addr;
+    CHivemindAddress addr;
     if (addr.Set(dest))
         entry.push_back(Pair("address", addr.ToString()));
 }
@@ -1318,7 +1318,7 @@ Value listtransactions(const Array& params, bool fHelp)
             "  {\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the transaction. \n"
             "                                                It will be \"\" for the default account.\n"
-            "    \"address\":\"truthcoinaddress\",    (string) The truthcoin address of the transaction. Not present for \n"
+            "    \"address\":\"hivemindaddress\",    (string) The hivemind address of the transaction. Not present for \n"
             "                                                move transactions (category = move).\n"
             "    \"category\":\"send|receive|move\", (string) The transaction category. 'move' is a local (off blockchain)\n"
             "                                                transaction between accounts, and not associated with an address,\n"
@@ -1502,7 +1502,7 @@ Value listsinceblock(const Array& params, bool fHelp)
             "{\n"
             "  \"transactions\": [\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the transaction. Will be \"\" for the default account.\n"
-            "    \"address\":\"truthcoinaddress\",    (string) The truthcoin address of the transaction. Not present for move transactions (category = move).\n"
+            "    \"address\":\"hivemindaddress\",    (string) The hivemind address of the transaction. Not present for move transactions (category = move).\n"
             "    \"category\":\"send|receive\",     (string) The transaction category. 'send' has negative amounts, 'receive' has positive amounts.\n"
             "    \"amount\": x.xxx,          (numeric) The amount in btc. This is negative for the 'send' category, and for the 'move' category for moves \n"
             "                                          outbound. It is positive for the 'receive' category, and for the 'move' category for inbound funds.\n"
@@ -1596,7 +1596,7 @@ Value gettransaction(const Array& params, bool fHelp)
             "  \"details\" : [\n"
             "    {\n"
             "      \"account\" : \"accountname\",  (string) The account name involved in the transaction, can be \"\" for the default account.\n"
-            "      \"address\" : \"truthcoinaddress\",   (string) The truthcoin address involved in the transaction\n"
+            "      \"address\" : \"hivemindaddress\",   (string) The hivemind address involved in the transaction\n"
             "      \"category\" : \"send|receive\",    (string) The category, either 'send' or 'receive'\n"
             "      \"amount\" : x.xxx                  (numeric) The amount in btc\n"
             "      \"vout\" : n,                       (numeric) the vout value\n"
@@ -1713,7 +1713,7 @@ Value walletpassphrase(const Array& params, bool fHelp)
         throw runtime_error(
             "walletpassphrase \"passphrase\" timeout\n"
             "\nStores the wallet decryption key in memory for 'timeout' seconds.\n"
-            "This is needed prior to performing transactions related to private keys such as sending truthcoins\n"
+            "This is needed prior to performing transactions related to private keys such as sending hiveminds\n"
             "\nArguments:\n"
             "1. \"passphrase\"     (string, required) The wallet passphrase\n"
             "2. timeout            (numeric, required) The time to keep the decryption key in seconds.\n"
@@ -1853,10 +1853,10 @@ Value encryptwallet(const Array& params, bool fHelp)
             "\nExamples:\n"
             "\nEncrypt you wallet\n"
             + HelpExampleCli("encryptwallet", "\"my pass phrase\"") +
-            "\nNow set the passphrase to use the wallet, such as for signing or sending truthcoin\n"
+            "\nNow set the passphrase to use the wallet, such as for signing or sending hivemind\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\"") +
             "\nNow we can so something like sign\n"
-            + HelpExampleCli("signmessage", "\"truthcoinaddress\" \"test message\"") +
+            + HelpExampleCli("signmessage", "\"hivemindaddress\" \"test message\"") +
             "\nNow lock the wallet again by removing the passphrase\n"
             + HelpExampleCli("walletlock", "") +
             "\nAs a json rpc call\n"
@@ -1886,7 +1886,7 @@ Value encryptwallet(const Array& params, bool fHelp)
     // slack space in .dat files; that is bad if the old data is
     // unencrypted private keys. So:
     StartShutdown();
-    return "wallet encrypted; Truthcoin server stopping, restart to run with encrypted wallet. The keypool has been flushed, you need to make a new backup.";
+    return "wallet encrypted; Hivemind server stopping, restart to run with encrypted wallet. The keypool has been flushed, you need to make a new backup.";
 }
 
 Value lockunspent(const Array& params, bool fHelp)
@@ -1896,7 +1896,7 @@ Value lockunspent(const Array& params, bool fHelp)
             "lockunspent unlock [{\"txid\":\"txid\",\"vout\":n},...]\n"
             "\nUpdates list of temporarily unspendable outputs.\n"
             "Temporarily lock (unlock=false) or unlock (unlock=true) specified transaction outputs.\n"
-            "A locked transaction output will not be chosen by automatic coin selection, when spending truthcoins.\n"
+            "A locked transaction output will not be chosen by automatic coin selection, when spending hiveminds.\n"
             "Locks are stored in memory only. Nodes start with zero locked outputs, and the locked output list\n"
             "is always cleared (by virtue of process exit) when a node stops or fails.\n"
             "Also see the listunspent call\n"
@@ -2019,7 +2019,7 @@ Value settxfee(const Array& params, bool fHelp)
             "settxfee amount\n"
             "\nSet the transaction fee per kB.\n"
             "\nArguments:\n"
-            "1. amount         (numeric, required) The transaction fee in CSH/kB rounded to the nearest 0.00000001\n"
+            "1. amount         (numeric, required) The transaction fee in BTC/kB rounded to the nearest 0.00000001\n"
             "\nResult\n"
             "true|false        (boolean) Returns true if successful\n"
             "\nExamples:\n"
@@ -2045,8 +2045,8 @@ Value getwalletinfo(const Array& params, bool fHelp)
             "\nResult:\n"
             "{\n"
             "  \"walletversion\": xxxxx,     (numeric) the wallet version\n"
-            "  \"balance\": xxxxxxx,         (numeric) the total confirmed truthcoin balance of the wallet\n"
-            "  \"unconfirmed_balance\": xxx, (numeric) the total unconfirmed truthcoin balance of the wallet\n"
+            "  \"balance\": xxxxxxx,         (numeric) the total confirmed hivemind balance of the wallet\n"
+            "  \"unconfirmed_balance\": xxx, (numeric) the total unconfirmed hivemind balance of the wallet\n"
             "  \"immature_balance\": xxxxxx, (numeric) the total immature balance of the wallet\n"
             "  \"txcount\": xxxxxxx,         (numeric) the total number of transactions in the wallet\n"
             "  \"keypoololdest\": xxxxxx,    (numeric) the timestamp (seconds since GMT epoch) of the oldest pre-generated key in the key pool\n"
@@ -2131,6 +2131,8 @@ Value listbranches(const Array &params, bool fHelp)
         item.push_back(Pair("ballottime", (int)obj->ballotTime));
         item.push_back(Pair("unsealtime", (int)obj->unsealTime));
         item.push_back(Pair("consensusthreshold", ValueFromAmount(obj->consensusThreshold)));
+        item.push_back(Pair("alpha", ValueFromAmount(obj->alpha)));
+        item.push_back(Pair("tol", ValueFromAmount(obj->tol)));
         array.push_back(item);
     }
     entry.push_back(Pair("decisions", array));
@@ -2171,7 +2173,7 @@ Value listdecisions(const Array &params, bool fHelp)
         Object item;
         item.push_back(Pair("decisionid", obj->GetHash().ToString()));
         item.push_back(Pair("txid", obj->txid.ToString()));
-        CTruthcoinAddress addr;
+        CHivemindAddress addr;
         if (addr.Set(obj->keyID))
             item.push_back(Pair("keyID", addr.ToString()));
         item.push_back(Pair("branchid", obj->branchid.ToString()));
@@ -2221,7 +2223,7 @@ Value listmarkets(const Array &params, bool fHelp)
         Object item;
         item.push_back(Pair("marketid", obj->GetHash().ToString()));
         item.push_back(Pair("txid", obj->txid.ToString()));
-        CTruthcoinAddress addr;
+        CHivemindAddress addr;
         if (addr.Set(obj->keyID))
             item.push_back(Pair("keyID", addr.ToString()));
         item.push_back(Pair("B", ValueFromAmount(obj->B)));
@@ -2315,7 +2317,7 @@ Value listtrades(const Array& params, bool fHelp)
         Object item;
         item.push_back(Pair("tradeid", obj->GetHash().ToString()));
         item.push_back(Pair("txid", obj->txid.ToString()));
-        CTruthcoinAddress addr;
+        CHivemindAddress addr;
         if (addr.Set(obj->keyID))
             item.push_back(Pair("keyID", addr.ToString()));
         item.push_back(Pair("marketid", obj->marketid.ToString()));
@@ -2406,9 +2408,11 @@ Value createbranch(const Array& params, bool fHelp)
         "\n8. tau                 (block number < 65536)"
         "\n9. ballottime          (block number < 65536)"
         "\n10. unsealtime         (block number < 65536)"
-        "\n11. consensusthreshold (numeric)";
+        "\n11. consensusthreshold (numeric)"
+        "\n12. alpha (numeric)"
+        "\n13. tol (numeric)";
 
-    if (fHelp || (params.size() != 11))
+    if (fHelp || (params.size() != 13))
         throw runtime_error(strHelp);
 
     if (!pmarkettree) {
@@ -2430,6 +2434,8 @@ Value createbranch(const Array& params, bool fHelp)
     obj.ballotTime = (uint16_t)params[8].get_int();
     obj.unsealTime = (uint16_t)params[9].get_int();
     obj.consensusThreshold = uint64FromValue(params[10], false);
+    obj.alpha = uint64FromValue(params[11], false);
+    obj.tol = uint64FromValue(params[12], false);
 
     // double-check object is not a duplicate
     uint256 objid = obj.GetHash();
@@ -2507,10 +2513,10 @@ Value createdecision(const Array& params, bool fHelp)
     EnsureWalletIsUnlocked();
 
     struct marketDecision obj;
-    CTruthcoinAddress address(params[0].get_str());
+    CHivemindAddress address(params[0].get_str());
     if (!address.IsValid())
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY,
-            "Invalid Truthcoin address");
+            "Invalid Hivemind address");
     address.GetKeyID(obj.keyID);
     obj.branchid.SetHex(params[1].get_str());
     obj.prompt = params[2].get_str();
@@ -2598,7 +2604,8 @@ Value createmarket(const Array& params, bool fHelp)
         "\n7. description         (string)"
         "\n8. tags[,...]          (comma-separated list of strings)"
         "\n9. maturation          (block number)"
-        "\n10. tx PoW             (numeric)"
+        "\n10. tx PoW hash id     (numeric)"
+        "\n11. tx PoW difficulty  (numeric)"
         "\nEach decisionid is a hash of a decision optionally followed by a function code."
         "\nThe available function codes are"
         "\n    :X1   X, identity [default]"
@@ -2606,7 +2613,7 @@ Value createmarket(const Array& params, bool fHelp)
         "\n    :X3   X^3"
         "\n    :LNX  LN(X)";
 
-    if (fHelp || (params.size() != 10))
+    if (fHelp || (params.size() != 11))
         throw runtime_error(strHelp);
 
     if (!pmarkettree) {
@@ -2616,9 +2623,9 @@ Value createmarket(const Array& params, bool fHelp)
 
     EnsureWalletIsUnlocked();
 
-    CTruthcoinAddress address(params[0].get_str());
+    CHivemindAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Truthcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Hivemind address");
     struct marketMarket obj;
     address.GetKeyID(obj.keyID);
     uint32_t nstates = 1;
@@ -2665,7 +2672,8 @@ Value createmarket(const Array& params, bool fHelp)
     obj.description = params[6].get_str();
     obj.tags = params[7].get_str();
     obj.maturation = (uint32_t)params[8].get_int();
-    obj.txPoW = (uint32_t)params[9].get_int();
+    obj.txPoWh = (uint32_t)params[9].get_int();
+    obj.txPoWd = (uint32_t)params[10].get_int();
     double capitalrequired = marketAccountValue(1e-8*obj.B, nstates);
     obj.account = rounduint64(capitalrequired * COIN);
 
@@ -2747,9 +2755,9 @@ Value createtrade(const Array& params, bool fHelp)
     EnsureWalletIsUnlocked();
 
     marketTrade obj;
-    CTruthcoinAddress address(params[0].get_str());
+    CHivemindAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Truthcoin address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Hivemind address");
     address.GetKeyID(obj.keyID);
     obj.marketid.SetHex(params[1].get_str());
 
@@ -2872,15 +2880,16 @@ Value createtrade(const Array& params, bool fHelp)
 
 Value createvote(const Array& params, bool fHelp)
 {
-    string strHelp = 
-        "createvote branchid height NA decisionid,vote [...]"
+    string strHelp =
+        "createvote address branchid height NA decisionid,vote [...]"
         "\nCreates a new vote for the outcomeid."
-        "\n1. branchid            (u256 string)"
-        "\n2. height              (numeric)"
-        "\n3. NA                  (numeric)"
-        "\n4. decisionid,vote     (u256 string, numeric).";
+        "\n1. votecoin_address    (base58 address)"
+        "\n2. branchid            (u256 string)"
+        "\n3. height              (numeric)"
+        "\n4. NA                  (numeric)"
+        "\n5. decisionid,vote     (u256 string, numeric).";
 
-    if (fHelp || (params.size() < 4))
+    if (fHelp || (params.size() < 5))
         throw runtime_error(strHelp);
 
     if (!pmarkettree) {
@@ -2891,31 +2900,43 @@ Value createvote(const Array& params, bool fHelp)
     EnsureWalletIsUnlocked();
 
     marketVote obj;
-    obj.branchid.SetHex(params[0].get_str());
-    obj.height = params[1].get_int();
-    obj.NA = uint64FromValue(params[2], false);
+
+    CHivemindAddress address;
+    address.is_votecoin = 1;
+    address.SetString(params[0].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Votecoin address");
+    address.GetKeyID(obj.keyID);
+    obj.branchid.SetHex(params[1].get_str());
+    obj.height = params[2].get_int();
+    obj.NA = uint64FromValue(params[3], false);
 
     marketBranch *branch = pmarkettree->GetBranch(obj.branchid);
     if (!branch) {
         string strError = std::string("Error: branchid ")
-            + obj.branchid.ToString() + " does not exist!"; 
+            + obj.branchid.ToString() + " does not exist!";
         throw JSONRPCError(RPC_WALLET_ERROR, strError.c_str());
     }
 
-    if (obj.height % branch->tau != 0) {
+    uint32_t tau = branch->tau;
+
+    /* branch no longer needed */
+    delete branch;
+
+    if (obj.height % tau != 0) {
         string strError = std::string("Error: Invalid height ")
-            + " for the branch's tau!"; 
+            + " for the branch's tau!";
         throw JSONRPCError(RPC_WALLET_ERROR, strError.c_str());
     }
 
     vector<uint256> decisionIDs;
     vector<uint64_t> decisionVotes;
-    for(uint32_t i=3; i < params.size(); i++) {
+    for(uint32_t i=4; i < params.size(); i++) {
         string str = params[i].get_str();
         size_t separator = str.find(",");
         if (separator == std::string::npos) {
             string strError = std::string("Error: decisionid,vote ")
-                + str + " is not in correct form!"; 
+                + str + " is not in correct form!";
             throw JSONRPCError(RPC_WALLET_ERROR, strError.c_str());
         }
         std::string vote = str.substr(separator+1);
@@ -2925,31 +2946,6 @@ Value createvote(const Array& params, bool fHelp)
         obj.decisionIDs.push_back(decisionid);
         obj.decisionVotes.push_back(rounduint64(atof(vote.c_str())* COIN));
     }
-
-#if 0
-    std::map<uint32_t, marketBallot *>::const_iterator bait
-        = branch->ballots.find(obj.height);
-    marketBallot *ballot = NULL;
-    if (bait == branch->ballots.end()) {
-        ballot = new marketBallot;
-        ballot->height = obj.height;
-        branch->ballots[obj.height] = ballot;
-    } else
-        ballot = bait->second;
-
-    /* branch no longer needed */
-    delete branch;
-
-    // double-check object is not a duplicate
-    uint256 objid = obj.GetHash();
-    std::map<uint256, marketVote *>::const_iterator vit
-        = ballot->votes.find(objid);
-    if (vit != ballot->votes.end()) {
-        string strError = std::string("Error: voteid ")
-            + objid.ToString() + " already exists!"; 
-        throw JSONRPCError(RPC_WALLET_ERROR, strError.c_str());
-    }
-#endif
 
     // ensure unlocked wallet
     string strError;
@@ -2973,7 +2969,7 @@ Value createvote(const Array& params, bool fHelp)
     CWalletTx wtx;
     CTxDestination txDestChange;
     if (!pwalletMain->CreateTransaction(scriptPubKey, strAccount, nAmount, wtx,
-        reservekey, nFeeRequired, strError, txDestChange)) 
+        reservekey, nFeeRequired, strError, txDestChange))
     {
         if (nFeeRequired > pwalletMain->GetBalance())
             strError = strprintf(
@@ -2988,11 +2984,9 @@ Value createvote(const Array& params, bool fHelp)
 
     Object entry;
     entry.push_back(Pair("txid", wtx.GetHash().ToString()));
-#if 0
-    entry.push_back(Pair("voteid", objid.ToString()));
-#endif
+    entry.push_back(Pair("voteid", obj.GetHash().ToString()));
     return entry;
-};
+}
 
 Value getbranch(const Array &params, bool fHelp)
 {
@@ -3068,7 +3062,7 @@ Value getdecision(const Array &params, bool fHelp)
     Object entry;
     entry.push_back(Pair("decisionid", id.ToString()));
     entry.push_back(Pair("txid", obj->txid.ToString()));
-    CTruthcoinAddress addr;
+    CHivemindAddress addr;
     if (addr.Set(obj->keyID))
         entry.push_back(Pair("keyID", addr.ToString()));
     entry.push_back(Pair("branchid", obj->branchid.ToString()));
@@ -3121,7 +3115,7 @@ Value getmarket(const Array &params, bool fHelp)
     Object entry;
     entry.push_back(Pair("marketid", id.ToString()));
     entry.push_back(Pair("txid", obj->txid.ToString()));
-    CTruthcoinAddress addr;
+    CHivemindAddress addr;
     if (addr.Set(obj->keyID))
         entry.push_back(Pair("keyID", addr.ToString()));
     entry.push_back(Pair("B", ValueFromAmount(obj->B)));
@@ -3131,7 +3125,8 @@ Value getmarket(const Array &params, bool fHelp)
     entry.push_back(Pair("description", obj->description));
     entry.push_back(Pair("tags", obj->tags));
     entry.push_back(Pair("maturation", (int)obj->maturation));
-    entry.push_back(Pair("txPoW", (int)obj->txPoW));
+    entry.push_back(Pair("txPoWh", (int)obj->txPoWh));
+    entry.push_back(Pair("txPoWd", (int)obj->txPoWd));
     Array array;
     for(uint32_t i=0; i < obj->decisionIDs.size(); i++) {
         string str = obj->decisionIDs[i].ToString();
@@ -3395,7 +3390,7 @@ Value getballot(const Array &params, bool fHelp)
         Object item;
         item.push_back(Pair("decisionid", obj->GetHash().ToString()));
         item.push_back(Pair("txid", obj->txid.ToString()));
-        CTruthcoinAddress addr;
+        CHivemindAddress addr;
         if (addr.Set(obj->keyID))
             item.push_back(Pair("keyID", addr.ToString()));
         item.push_back(Pair("branchid", obj->branchid.ToString()));

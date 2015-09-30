@@ -1,14 +1,14 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_COMPAT_H
-#define TRUTHCOIN_COMPAT_H
+#ifndef HIVEMIND_COMPAT_H
+#define HIVEMIND_COMPAT_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/truthcoin-config.h"
+#include "config/hivemind-config.h"
 #endif
 
 #ifdef WIN32
@@ -93,4 +93,4 @@ typedef u_int SOCKET;
 size_t strnlen( const char *start, size_t max_len);
 #endif // HAVE_DECL_STRNLEN
 
-#endif // TRUTHCOIN_COMPAT_H
+#endif // HIVEMIND_COMPAT_H

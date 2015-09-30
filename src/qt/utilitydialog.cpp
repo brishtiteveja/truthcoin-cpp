@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 
 #include "ui_helpmessagedialog.h"
 
-#include "truthcoingui.h"
+#include "hivemindgui.h"
 #include "clientmodel.h"
 #include "guiutil.h"
 
@@ -32,7 +32,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
     ui->setupUi(this);
     GUIUtil::restoreWindowGeometry("nHelpMessageDialogWindow", this->size(), this);
 
-    QString version = tr("Truthcoin Core") + " " + tr("version") + " " + QString::fromStdString(FormatFullVersion());
+    QString version = tr("Hivemind Core") + " " + tr("version") + " " + QString::fromStdString(FormatFullVersion());
     /* On x86 add a bit specifier to the version so that users can distinguish between
      * 32 and 64 bit builds. On other architectures, 32/64 bit may be more ambigious.
      */
@@ -44,7 +44,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
 
     if (about)
     {
-        setWindowTitle(tr("About Truthcoin Core"));
+        setWindowTitle(tr("About Hivemind Core"));
 
         /// HTML-format the license message from the core
         QString licenseInfo = QString::fromStdString(LicenseInfo());
@@ -68,7 +68,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
         cursor.insertText(version);
         cursor.insertBlock();
         cursor.insertText(tr("Usage:") + '\n' +
-            "  truthcoin-qt [" + tr("command-line options") + "]\n");
+            "  hivemind-qt [" + tr("command-line options") + "]\n");
 
         cursor.insertBlock();
         QTextTableFormat tf;
@@ -80,7 +80,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
         tf.setColumnWidthConstraints(widths);
         QTextTable *table = cursor.insertTable(2, 2, tf);
 
-        QString coreOptions = QString::fromStdString(HelpMessage(HMM_TRUTHCOIN_QT));
+        QString coreOptions = QString::fromStdString(HelpMessage(HMM_HIVEMIND_QT));
         bool first = true;
         QTextCharFormat bold;
         bold.setFontWeight(QFont::Bold);
@@ -176,12 +176,12 @@ ShutdownWindow::ShutdownWindow(QWidget *parent, Qt::WindowFlags f):
 {
     QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(new QLabel(
-        tr("Truthcoin Core is shutting down...") + "<br /><br />" +
+        tr("Hivemind Core is shutting down...") + "<br /><br />" +
         tr("Do not shut down the computer until this window disappears.")));
     setLayout(layout);
 }
 
-void ShutdownWindow::showShutdownWindow(TruthcoinGUI *window)
+void ShutdownWindow::showShutdownWindow(HivemindGUI *window)
 {
     if (!window)
         return;

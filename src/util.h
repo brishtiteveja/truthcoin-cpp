@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,11 +8,11 @@
  * Server/client environment: argument handling, config file parsing,
  * logging, thread wrappers
  */
-#ifndef TRUTHCOIN_UTIL_H
-#define TRUTHCOIN_UTIL_H
+#ifndef HIVEMIND_UTIL_H
+#define HIVEMIND_UTIL_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/truthcoin-config.h"
+#include "config/hivemind-config.h"
 #endif
 
 #include "compat.h"
@@ -176,7 +176,7 @@ void RenameThread(const char* name);
  */
 template <typename Callable> void LoopForever(const char* name,  Callable func, int64_t msecs)
 {
-    std::string s = strprintf("truthcoin-%s", name);
+    std::string s = strprintf("hivemind-%s", name);
     RenameThread(s.c_str());
     LogPrintf("%s thread start\n", name);
     try
@@ -207,7 +207,7 @@ template <typename Callable> void LoopForever(const char* name,  Callable func, 
  */
 template <typename Callable> void TraceThread(const char* name,  Callable func)
 {
-    std::string s = strprintf("truthcoin-%s", name);
+    std::string s = strprintf("hivemind-%s", name);
     RenameThread(s.c_str());
     try
     {
@@ -230,4 +230,4 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
     }
 }
 
-#endif // TRUTHCOIN_UTIL_H
+#endif // HIVEMIND_UTIL_H

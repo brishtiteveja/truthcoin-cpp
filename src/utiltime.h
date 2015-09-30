@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_UTILTIME_H
-#define TRUTHCOIN_UTILTIME_H
+#ifndef HIVEMIND_UTILTIME_H
+#define HIVEMIND_UTILTIME_H
 
 #include <stdint.h>
 #include <string>
@@ -18,4 +18,4 @@ void MilliSleep(int64_t n);
 
 std::string DateTimeStrFormat(const char* pszFormat, int64_t nTime);
 
-#endif // TRUTHCOIN_UTILTIME_H
+#endif // HIVEMIND_UTILTIME_H

@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -280,6 +280,13 @@ bool CMarketTreeDB::WriteMarketIndex(const std::vector<std::pair<uint256, const 
            batch.Write(make_pair(make_pair('d',ptr->branchid),objid), value);
         }
         else
+        if (obj->marketop == 'L') {
+           const marketStealVote *ptr = (const marketStealVote *) obj;
+           pair<marketStealVote,uint256> value = make_pair(*ptr, obj->txid);
+           batch.Write(key, value);
+           batch.Write(make_pair(make_pair(make_pair('l',ptr->branchid),ptr->height),objid), value);
+        }
+        else
         if (obj->marketop == 'M') {
            const marketMarket *ptr = (const marketMarket *) obj;
            pair<marketMarket,uint256> value = make_pair(*ptr, obj->txid);
@@ -491,6 +498,38 @@ CMarketTreeDB::GetSealedVote(const uint256 &objid)
     return NULL;
 }
 
+marketStealVote *
+CMarketTreeDB::GetStealVote(const uint256 &objid)
+{
+    pair<char,uint256> idx = make_pair('L', objid);
+    ostringstream ss;
+    ::Serialize(ss, idx, SER_DISK, CLIENT_VERSION);
+    boost::scoped_ptr<leveldb::Iterator> pcursor(NewIterator());
+    pcursor->Seek(ss.str());
+    if (pcursor->Valid()) {
+        try {
+            leveldb::Slice slKey = pcursor->key();
+            CDataStream ssKey(slKey.data(), slKey.data()+slKey.size(), SER_DISK, CLIENT_VERSION);
+
+            pair<char,uint256> key;
+            ssKey >> key;
+
+            if (key == idx) {
+                leveldb::Slice slValue = pcursor->value();
+                CDataStream ssValue(slValue.data(), slValue.data()+slValue.size(), SER_DISK, CLIENT_VERSION);
+
+                marketStealVote *obj = new marketStealVote;
+                ssValue >> *obj;
+                ssValue >> obj->txid;
+                return obj;
+            }
+        } catch (const std::exception& e) {
+            error("%s: %s", __func__, e.what());
+        }
+    }
+    return NULL;
+}
+
 marketTrade *
 CMarketTreeDB::GetTrade(const uint256 &objid)
 {
@@ -686,6 +725,82 @@ CMarketTreeDB::GetOutcomes(const uint256 & /* branchid */ id)
             CDataStream ssValue(slValue.data(), slValue.data()+slValue.size(), SER_DISK, CLIENT_VERSION);
 
             marketOutcome *obj = new marketOutcome;
+            ssValue >> *obj;
+            ssValue >> obj->txid;
+            vec.push_back(obj);
+        } catch (const std::exception& e) {
+            error("%s: %s", __func__, e.what());
+            break;
+        }
+    }
+    return vec;
+}
+
+vector<marketSealedVote *>
+CMarketTreeDB::GetSealedVotes(const uint256 & /* branchid */ id, uint32_t height)
+{
+    const char marketop = 's';
+    ostringstream ss;
+    ::Serialize(ss, make_pair(make_pair(make_pair(marketop, id), height), uint256()), SER_DISK, CLIENT_VERSION);
+
+    vector<marketSealedVote *> vec;
+    boost::scoped_ptr<leveldb::Iterator> pcursor(NewIterator());
+    for(pcursor->Seek(ss.str()); pcursor->Valid(); pcursor->Next()) {
+        boost::this_thread::interruption_point();
+        try {
+            leveldb::Slice slKey = pcursor->key();
+            CDataStream ssKey(slKey.data(), slKey.data()+slKey.size(), SER_DISK, CLIENT_VERSION);
+            pair<pair<char,uint256>,uint32_t> key;
+            ssKey >> key;
+            if (key.first.first != marketop)
+                break;
+            if (key.first.second != id)
+                break;
+            if (key.second != height)
+                break;
+
+            leveldb::Slice slValue = pcursor->value();
+            CDataStream ssValue(slValue.data(), slValue.data()+slValue.size(), SER_DISK, CLIENT_VERSION);
+
+            marketSealedVote *obj = new marketSealedVote;
+            ssValue >> *obj;
+            ssValue >> obj->txid;
+            vec.push_back(obj);
+        } catch (const std::exception& e) {
+            error("%s: %s", __func__, e.what());
+            break;
+        }
+    }
+    return vec;
+}
+
+vector<marketStealVote *>
+CMarketTreeDB::GetStealVotes(const uint256 & /* branchid */ id, uint32_t height)
+{
+    const char marketop = 'l';
+    ostringstream ss;
+    ::Serialize(ss, make_pair(make_pair(make_pair(marketop, id), height), uint256()), SER_DISK, CLIENT_VERSION);
+
+    vector<marketStealVote *> vec;
+    boost::scoped_ptr<leveldb::Iterator> pcursor(NewIterator());
+    for(pcursor->Seek(ss.str()); pcursor->Valid(); pcursor->Next()) {
+        boost::this_thread::interruption_point();
+        try {
+            leveldb::Slice slKey = pcursor->key();
+            CDataStream ssKey(slKey.data(), slKey.data()+slKey.size(), SER_DISK, CLIENT_VERSION);
+            pair<pair<char,uint256>,uint32_t> key;
+            ssKey >> key;
+            if (key.first.first != marketop)
+                break;
+            if (key.first.second != id)
+                break;
+            if (key.second != height)
+                break;
+
+            leveldb::Slice slValue = pcursor->value();
+            CDataStream ssValue(slValue.data(), slValue.data()+slValue.size(), SER_DISK, CLIENT_VERSION);
+
+            marketStealVote *obj = new marketStealVote;
             ssValue >> *obj;
             ssValue >> obj->txid;
             vec.push_back(obj);

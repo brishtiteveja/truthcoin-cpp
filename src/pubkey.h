@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_PUBKEY_H
-#define TRUTHCOIN_PUBKEY_H
+#ifndef HIVEMIND_PUBKEY_H
+#define HIVEMIND_PUBKEY_H
 
 #include "hash.h"
 #include "serialize.h"
@@ -204,4 +204,4 @@ struct CExtPubKey {
     bool Derive(CExtPubKey& out, unsigned int nChild) const;
 };
 
-#endif // TRUTHCOIN_PUBKEY_H
+#endif // HIVEMIND_PUBKEY_H

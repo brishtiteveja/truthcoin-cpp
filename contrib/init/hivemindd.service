@@ -1,0 +1,22 @@
+[Unit]
+Description=Hivemind's distributed currency daemon
+After=network.target
+
+[Service]
+User=hivemind
+Group=hivemind
+
+Type=forking
+PIDFile=/var/lib/hivemindd/hivemindd.pid
+ExecStart=/usr/bin/hivemindd -daemon -pid=/var/lib/hivemindd/hivemindd.pid \
+-conf=/etc/hivemind/hivemind.conf -datadir=/var/lib/hivemindd -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

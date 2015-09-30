@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -31,7 +31,7 @@ extern CMarketTreeDB *pmarkettree;
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// TruthcoinMiner
+// HivemindMiner
 //
 
 CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
@@ -55,8 +55,8 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
     outcome->branchid = branch->GetHash();
     outcome->nDecisions = 0;
     outcome->NA = 2016; /* if conflicts, to be changed (TODO) */
-    outcome->alpha = 0.10; /* should be a branch parameter  */
-    outcome->tol = 0.10; /* should be a branch parameter  */
+    outcome->alpha = branch->alpha;
+    outcome->tol = branch->tol;
 
     /* populate the decisions */
     vector<marketDecision *> decisions = pmarkettree->GetDecisions(branch->GetHash());
@@ -566,7 +566,7 @@ static bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& rese
     {
         LOCK(cs_main);
         if (pblock->hashPrevBlock != chainActive.Tip()->GetBlockHash())
-            return error("TruthcoinMiner : generated block is stale");
+            return error("HivemindMiner : generated block is stale");
     }
 
     // Remove key from key pool
@@ -581,16 +581,16 @@ static bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& rese
     // Process this block the same as if we had received it from another node
     CValidationState state;
     if (!ProcessNewBlock(state, NULL, pblock))
-        return error("TruthcoinMiner : ProcessNewBlock, block not accepted");
+        return error("HivemindMiner : ProcessNewBlock, block not accepted");
 
     return true;
 }
 
-void static TruthcoinMiner(CWallet *pwallet)
+void static HivemindMiner(CWallet *pwallet)
 {
-    LogPrintf("TruthcoinMiner started\n");
+    LogPrintf("HivemindMiner started\n");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("truthcoin-miner");
+    RenameThread("hivemind-miner");
 
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
@@ -614,13 +614,13 @@ void static TruthcoinMiner(CWallet *pwallet)
             auto_ptr<CBlockTemplate> pblocktemplate(CreateNewBlockWithKey(reservekey));
             if (!pblocktemplate.get())
             {
-                LogPrintf("Error in TruthcoinMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                LogPrintf("Error in HivemindMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
                 return;
             }
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-            LogPrintf("Running TruthcoinMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
+            LogPrintf("Running HivemindMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
                 ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             //
@@ -646,7 +646,7 @@ void static TruthcoinMiner(CWallet *pwallet)
                         assert(hash == pblock->GetHash());
 
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                        LogPrintf("TruthcoinMiner:\n");
+                        LogPrintf("HivemindMiner:\n");
                         LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex(), hashTarget.GetHex());
                         ProcessBlockFound(pblock, *pwallet, reservekey);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
@@ -712,12 +712,12 @@ void static TruthcoinMiner(CWallet *pwallet)
     }
     catch (const boost::thread_interrupted&)
     {
-        LogPrintf("TruthcoinMiner terminated\n");
+        LogPrintf("HivemindMiner terminated\n");
         throw;
     }
 }
 
-void GenerateTruthcoins(bool fGenerate, CWallet* pwallet, int nThreads)
+void GenerateHiveminds(bool fGenerate, CWallet* pwallet, int nThreads)
 {
     static boost::thread_group* minerThreads = NULL;
 
@@ -741,7 +741,7 @@ void GenerateTruthcoins(bool fGenerate, CWallet* pwallet, int nThreads)
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++)
-        minerThreads->create_thread(boost::bind(&TruthcoinMiner, pwallet));
+        minerThreads->create_thread(boost::bind(&HivemindMiner, pwallet));
 }
 
 #endif // ENABLE_WALLET

@@ -1,17 +1,17 @@
 // Copyright (c) 2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_CHAINPARAMSBASE_H
-#define TRUTHCOIN_CHAINPARAMSBASE_H
+#ifndef HIVEMIND_CHAINPARAMSBASE_H
+#define HIVEMIND_CHAINPARAMSBASE_H
 
 #include <string>
 #include <vector>
 
 /**
- * CBaseChainParams defines the base parameters (shared between truthcoin-cli and truthcoind)
- * of a given instance of the Truthcoin system.
+ * CBaseChainParams defines the base parameters (shared between hivemind-cli and hivemindd)
+ * of a given instance of the Hivemind system.
  */
 class CBaseChainParams
 {
@@ -62,4 +62,4 @@ bool SelectBaseParamsFromCommandLine();
  */
 bool AreBaseParamsConfigured();
 
-#endif // TRUTHCOIN_CHAINPARAMSBASE_H
+#endif // HIVEMIND_CHAINPARAMSBASE_H

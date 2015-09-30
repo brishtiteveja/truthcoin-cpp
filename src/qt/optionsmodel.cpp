@@ -1,15 +1,15 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/truthcoin-config.h"
+#include "config/hivemind-config.h"
 #endif
 
 #include "optionsmodel.h"
 
-#include "truthcoinunits.h"
+#include "hivemindunits.h"
 #include "guiutil.h"
 
 #include "amount.h"
@@ -59,7 +59,7 @@ void OptionsModel::Init()
 
     // Display
     if (!settings.contains("nDisplayUnit"))
-        settings.setValue("nDisplayUnit", TruthcoinUnits::CSH);
+        settings.setValue("nDisplayUnit", HivemindUnits::BTC);
     nDisplayUnit = settings.value("nDisplayUnit").toInt();
 
     if (!settings.contains("strThirdPartyTxUrls"))

@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TRUTHCOIN_SYNC_H
-#define TRUTHCOIN_SYNC_H
+#ifndef HIVEMIND_SYNC_H
+#define HIVEMIND_SYNC_H
 
 #include "threadsafety.h"
 
@@ -272,4 +272,4 @@ public:
     }
 };
 
-#endif // TRUTHCOIN_SYNC_H
+#endif // HIVEMIND_SYNC_H

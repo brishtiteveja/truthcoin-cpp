@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -231,7 +231,7 @@ Value getaddednodeinfo(const Array& params, bool fHelp)
             "    \"connected\" : true|false,          (boolean) If connected\n"
             "    \"addresses\" : [\n"
             "       {\n"
-            "         \"address\" : \"192.168.0.201:59533\",  (string) The truthcoin server host and port\n"
+            "         \"address\" : \"192.168.0.201:59533\",  (string) The hivemind server host and port\n"
             "         \"connected\" : \"outbound\"           (string) connection, inbound or outbound\n"
             "       }\n"
             "       ,...\n"

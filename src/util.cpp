@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/truthcoin-config.h"
+#include "config/hivemind-config.h"
 #endif
 
 #include "util.h"
@@ -353,7 +353,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "truthcoin";
+    const char* pszModule = "hivemind";
 #endif
     if (pex)
         return strprintf(
@@ -374,13 +374,13 @@ void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Truthcoin
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\Truthcoin
-    // Mac: ~/Library/Application Support/Truthcoin
-    // Unix: ~/.truthcoin
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Hivemind
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\Hivemind
+    // Mac: ~/Library/Application Support/Hivemind
+    // Unix: ~/.hivemind
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "Truthcoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Hivemind";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -392,10 +392,10 @@ boost::filesystem::path GetDefaultDataDir()
     // Mac
     pathRet /= "Library/Application Support";
     TryCreateDirectory(pathRet);
-    return pathRet / "Truthcoin";
+    return pathRet / "Hivemind";
 #else
     // Unix
-    return pathRet / ".truthcoin";
+    return pathRet / ".hivemind";
 #endif
 #endif
 }
@@ -442,7 +442,7 @@ void ClearDatadirCache()
 
 boost::filesystem::path GetConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-conf", "truthcoin.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-conf", "hivemind.conf"));
     if (!pathConfigFile.is_complete())
         pathConfigFile = GetDataDir(false) / pathConfigFile;
 
@@ -454,14 +454,14 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 {
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good())
-        return; // No truthcoin.conf file is OK
+        return; // No hivemind.conf file is OK
 
     set<string> setOptions;
     setOptions.insert("*");
 
     for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it)
     {
-        // Don't overwrite existing settings so command line settings override truthcoin.conf
+        // Don't overwrite existing settings so command line settings override hivemind.conf
         string strKey = string("-") + it->string_key;
         if (mapSettingsRet.count(strKey) == 0)
         {
@@ -478,7 +478,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 #ifndef WIN32
 boost::filesystem::path GetPidFile()
 {
-    boost::filesystem::path pathPidFile(GetArg("-pid", "truthcoind.pid"));
+    boost::filesystem::path pathPidFile(GetArg("-pid", "hivemindd.pid"));
     if (!pathPidFile.is_complete()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }

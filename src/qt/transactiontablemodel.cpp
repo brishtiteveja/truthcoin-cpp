@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2015 The Truthcoin Core developers
+// Copyright (c) 2015 The Hivemind Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -228,7 +228,7 @@ TransactionTableModel::TransactionTableModel(CWallet* wallet, WalletModel *paren
         priv(new TransactionTablePriv(wallet, this)),
         fProcessingQueuedTransactions(false)
 {
-    columns << QString() << QString() << tr("Date") << tr("Type") << tr("Address") << TruthcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
+    columns << QString() << QString() << tr("Date") << tr("Type") << tr("Address") << HivemindUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
     priv->refreshWallet();
 
     connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
@@ -245,7 +245,7 @@ TransactionTableModel::~TransactionTableModel()
 /** Updates the column title to "Amount (DisplayUnit)" and emits headerDataChanged() signal for table headers to react. */
 void TransactionTableModel::updateAmountColumnTitle()
 {
-    columns[Amount] = TruthcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
+    columns[Amount] = HivemindUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
     emit headerDataChanged(Qt::Horizontal,Amount,Amount);
 }
 
@@ -429,9 +429,9 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     return QVariant();
 }
 
-QString TransactionTableModel::formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed, TruthcoinUnits::SeparatorStyle separators) const
+QString TransactionTableModel::formatTxAmount(const TransactionRecord *wtx, bool showUnconfirmed, HivemindUnits::SeparatorStyle separators) const
 {
-    QString str = TruthcoinUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit + wtx->debit, false, separators);
+    QString str = HivemindUnits::format(walletModel->getOptionsModel()->getDisplayUnit(), wtx->credit + wtx->debit, false, separators);
     if(showUnconfirmed)
     {
         if(!wtx->status.countsForBalance)
@@ -532,7 +532,7 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         case ToAddress:
             return formatTxToAddress(rec, false);
         case Amount:
-            return formatTxAmount(rec, true, TruthcoinUnits::separatorAlways);
+            return formatTxAmount(rec, true, HivemindUnits::separatorAlways);
         }
         break;
     case Qt::EditRole:
@@ -596,7 +596,7 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
         return rec->status.countsForBalance;
     case FormattedAmountRole:
         // Used for copy/export, so don't include separators
-        return formatTxAmount(rec, false, TruthcoinUnits::separatorNever);
+        return formatTxAmount(rec, false, HivemindUnits::separatorNever);
     case StatusRole:
         return rec->status.status;
     }
