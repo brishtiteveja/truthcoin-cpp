@@ -122,7 +122,7 @@ void BallotVoteWindow::currentRowChanged(const QModelIndex &curr, const QModelIn
         return;
 
     int row = proxyModel->mapToSource(curr).row();
-    const marketVote *vote = tableModel->index(row);
+    const marketRevealVote *vote = tableModel->index(row);
     ballotView->onVoteChange(vote);
 }
 

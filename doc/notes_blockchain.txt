@@ -1,6 +1,6 @@
 
 Bitcoin Blockchain
-------------------
+==================
 
 The bitcoin block-chain format is:
 
@@ -94,7 +94,7 @@ Example input scripts:
 
 
 Hivemind Blockchain
---------------------
+==================
 
 Bitcoin's block chain can be viewed as a ledger of actions on a dataset. The
 dataset is the set of all coin allocations to addresses and the actions are
@@ -109,8 +109,10 @@ Hivemind's dataset consists of sets of:
    4. decisions within each branch
    5. markets across a subset of decisions
    6. trades in each market
-   7. ballots (votes on each decision, and hence market)
-   8. outcomes of each decision (and hence market)
+   7. sealed votes in each {branch, tau multiple}
+   8. steal votes in each {branch, tau multiple}
+   9. revealed votes in each {branch, tau multiple}
+  10. outcomes of each decision (and hence market)
 
 Hivemind's actions consists of:
    1. all bitcoin-type transfers of bitcoins.
@@ -118,13 +120,15 @@ Hivemind's actions consists of:
    3. creation of decisions
    4. creation of markets
    5. creation of trades
-   6. creation of vote ballots
-   7. publishing outcomes with transfers of bitcoins.
-   8. redistributions of votecoin allocations 
+   6. creation of sealed votes
+   7. creation of steal votes
+   8. creation of reveal votes
+   9. publishing outcomes with transfers of bitcoins.
+  10. redistributions of votecoin allocations 
 
 Anyone with bitcoins may initiate any of the actions 1,3,4,5. Anyone with
-votecoins will be obligated to initiate action 6. The miners will initiate
-7 and 8. 
+votecoins will be obligated to initiate actions 6,8. The miners will initiate
+9 and 10.
 
 Each hivemind-specific action is a bitcoin-like transaction where the output 
 script designates one of the actions to be taken. The format of the output
@@ -146,9 +150,9 @@ as follows.
 
 
 Create Branch
--------------
+------------------
 
-  action_type = char        'B' (create_branch)
+  action_type = char        'B' (createbranch)
   action_data = string      name
                 string      description
                 uint64      baseListingFee
@@ -160,10 +164,12 @@ Create Branch
                 uint16      ballotTime (in block numbers)
                 uint16      unsealTime (in block numbers)
                 uint32      consensusThreshold
+                uint64      alpha (for smoothed reputation)
+                uint64      tol (for binary decisions)
 
   Note 1: Each branch has its own set of votecoins. When a new branch is created,
   it is simply a many-address-to-many-address votecoin transaction along with a
-  single create_branch action in the output list. The input votecoins will no
+  single createbranch action in the output list. The input votecoins will no
   longer be a part of their previous branches and the output votecoins will now
   be a part of the new branch.
 
@@ -207,9 +213,9 @@ Create Branch
  
 
 Create Decision
----------------
+------------------
 
-  action_type = char        'D' (create_decision)
+  action_type = char        'D' (createdecision)
   action_data = uint160     bitcoin public key
                 uint256     branchid
                 string      prompt
@@ -227,20 +233,23 @@ Create Decision
 
 
 Create Market
--------------
+------------------
      
-  action_type = char        'M' (create_market)
+  action_type = char        'M' (createmarket)
   action_data = uint160     bitcoin public key
                 uint64      B (liquidity parameter)
                 uint64      tradingFee     
+                uint64      maxCommission
                 string      title
                 string      description
                 string      tags (comma-separated strings)
                 uint32      maturation (block number)
+                uint256     branchid
                 varint      number of decisionids
                 {uint256}+  decisionids
                 {uint8}+    decisionFunctionids
-                uint64      initial account value
+                uint32      txPoWh transaction proof-of-work hashid
+                uint32      txPoWd transaction proof-of-work difficulty level
      
 
   Note 1: The market will be dependent on the outcome of each decision
@@ -257,14 +266,30 @@ Create Market
      X3                                    X*X*X
      LNX1                                  LN(X)
 
-  Note 3: TODO: B and initial account value
+  Note 3: Liquidity Sensitivity.
+  The market author purchases an initial minShares shares in each of the
+  N states. Those minShares will never be sold (money to be returned to the
+  author upon market conclusion). The number of minShares is derived from
+  the maxCommission parameter
+    minShares = B log N / maxCommission.
+  Before the shares are purchased the account value is
+    B log sum exp(0/B)
+  After the shares are purchased the account value is
+    B log sum exp(minShares /B)
+  The initial purchase of minShares in each state then costs
+         = B log sum exp(minShares / B)               - B log sum exp(0/B)
+         = B log [N exp(B log N / maxCommission / B)] - B log N
+         = B log [exp(log N / maxCommission)]
+         = B log [N / maxCommission]
+         = minShares
+  A zero maxCommission will designate the market to be "non-LS".
 
 
 
 Create Trade
-------------
+------------------
 
-  action_type = char        'T' (create_trade)
+  action_type = char        'T' (createtrade)
   action_data = uint160     bitcoin public key
                 uint256     marketid
                 uint8       isbuy
@@ -273,25 +298,53 @@ Create Trade
                 uint32      decision state
                 uint32      nonce
 
-  Note 1: TODO
 
 
-
-Create Vote
------------
+Create Reveal Vote
+------------------
      
-  action_type = char        'V' (create_voteballot)
-  action_data = uint160     votecoin public key
+  action_type = char        'R' (createrevealvote)
+  action_data = uint256     branchid
+                uint32      height
+                uint256     voteid
                 varint      ndecisionids
                 {uint256}+  decisionids
                 {uint64}+   votes
+                uint160     votecoin public key
 
+  Note 1: The voteid is a previously submitted sealed vote.
+
+  Note 2: voteid must match the hash of the outcome with zeros in 
+  place of the voteid.
+
+
+Create Sealed Vote
+------------------
+
+  action_type = char        'S' (createsealedvote)
+  action_data = uint256     branchid
+                uint32      height
+                uint256     voteid
+
+  Note: voteid is the hash of the createrevealvote outcome with
+  zeros in place of the voteid.
+
+
+Create Steal Vote
+------------------
+
+  action_type = char        'L' (createstealvote)
+  action_data = uint256     branchid
+                uint32      height
+                uint256     voteid
+
+  Note 1: The voteid is a previously submitted sealed vote.
      
 
 Create Outcome
---------------
+------------------
 
-  action_type = char        'O' (publish_outcomes)
+  action_type = char        'O' (createoutcomes)
   action_data =   
                 TODO
      
@@ -299,18 +352,3 @@ Create Outcome
   action_data = varint      noutputs
                 {output}+   output array (pay-to-pubkey-hash)
      
-
-
-
-
-Additional
---------------
-
-In order to avoid possible censorship by a miner, some of the actions have the
-option to be done in a multi-step process. For the actions involving strings 
-(create_branch, create_decision, create_market), any empty string field can be
-filled in by the owner at any time afterward by creating a TODO...  
-
-A create_voteballot  TODO...
- 
-

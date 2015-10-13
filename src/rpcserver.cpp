@@ -369,9 +369,10 @@ static const CRPCCommand vRPCCommands[] =
     { "market",             "createdecision",         &createdecision,         false,     false,      true },
     { "market",             "createmarket",           &createmarket,           false,     false,      true },
     { "market",             "createtrade",            &createtrade,            false,     false,      true },
-    { "market",             "createvote",             &createvote,             false,     false,      true },
+    { "market",             "createsealedvote",       &createsealedvote,       false,     false,      true },
+    { "market",             "createstealvote",        &createstealvote ,       false,     false,      true },
+    { "market",             "createrevealvote",       &createrevealvote,       false,     false,      true },
 
-    { "market", "getcreatemarketcapitalrequired", &getcreatemarketcapitalrequired, false, false,      true },
     { "market", "getcreatetradecapitalrequired",  &getcreatetradecapitalrequired, false,  false,      true },
 };
 

@@ -72,7 +72,6 @@ struct marketTrade : public marketObj {
     uint64_t price;
     uint32_t decisionState;
     uint32_t nonce;
-    uint32_t blockNum;
 
     marketTrade(void) : marketObj() { marketop = 'T'; } 
     virtual ~marketTrade(void) { } 
@@ -129,7 +128,6 @@ struct marketMarket : public marketObj {
     uint256 branchid;
     vector<uint256> decisionIDs;
     vector<uint8_t> decisionFunctionIDs;
-    uint64_t account;
     uint32_t txPoWh; /* hash function id */
     uint32_t txPoWd; /* difficulty */
 
@@ -159,9 +157,40 @@ struct marketMarket : public marketObj {
     string ToString(void) const;
 };
 
-void marketNShares(const vector<marketTrade *> &trades, double &nShares0, double &nShares1);
-double marketAccountValue(double B, double nShares0, double nShares1);
-double marketAccountValue(double B, uint32_t nstates);
+/* query the number of states in the market */
+uint32_t marketNStates(const marketMarket *);
+/* query the nShares in each state from the set of trades */
+int marketNShares(const vector<marketTrade *> &trades, uint32_t nStates, double *nShares);
+/* query the account value when given the nshares in each state */
+double marketAccountValue(double maxCommission, double B, uint32_t nStates, const double *nShares);
+
+struct marketRevealVote : public marketObj {
+    uint256 branchid;
+    uint32_t height; /* a multiple of tau */
+    uint256 voteid; /* the sealed vote id */
+    vector<uint256> decisionIDs;
+    vector<uint64_t> decisionVotes;
+    uint64_t NA;
+    CKeyID keyID;
+
+    marketRevealVote(void) : marketObj() { marketop = 'R'; } 
+    virtual ~marketRevealVote(void) { } 
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(marketop);
+        READWRITE(branchid);
+        READWRITE(height);
+        READWRITE(decisionIDs);
+        READWRITE(decisionVotes);
+        READWRITE(NA);
+        READWRITE(keyID);
+    }
+
+    string ToString(void) const;
+};
 
 struct marketSealedVote : public marketObj {
     uint256 branchid;
@@ -186,9 +215,8 @@ struct marketSealedVote : public marketObj {
 
 struct marketStealVote : public marketObj {
     uint256 branchid;
-    uint32_t height;
-    CKeyID victimKeyID;
-    CKeyID keyID;
+    uint32_t height; /* a multiple of tau */
+    uint256 voteid; /* the vote to be stolen */
 
     marketStealVote(void) : marketObj() { marketop = 'L'; } 
     virtual ~marketStealVote(void) { } 
@@ -200,35 +228,7 @@ struct marketStealVote : public marketObj {
         READWRITE(marketop);
         READWRITE(branchid);
         READWRITE(height);
-        READWRITE(victimKeyID);
-        READWRITE(keyID);
-    }
-
-    string ToString(void) const;
-};
-
-struct marketVote : public marketObj {
-    uint256 branchid;
-    uint32_t height; /* a multiple of tau */
-    vector<uint256> decisionIDs;
-    vector<uint64_t> decisionVotes;
-    uint64_t NA;
-    CKeyID keyID;
-
-    marketVote(void) : marketObj() { marketop = 'V'; } 
-    virtual ~marketVote(void) { } 
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(marketop);
-        READWRITE(branchid);
-        READWRITE(height);
-        READWRITE(decisionIDs);
-        READWRITE(decisionVotes);
-        READWRITE(NA);
-        READWRITE(keyID);
+        READWRITE(voteid);
     }
 
     string ToString(void) const;
@@ -261,7 +261,7 @@ struct marketOutcome : public marketObj {
     vector<uint64_t> voteMatrix; /* [nVoters][nDecisions] */
     /* params */
     uint64_t NA;
-    uint64_t alpha;
+    uint64_t alpha; /* for smoothed rep */
     uint64_t tol;
     CTransaction tx; /* transaction */
 
@@ -323,7 +323,7 @@ struct marketBranch : public marketObj {
     uint16_t ballotTime;
     uint16_t unsealTime;
     uint64_t consensusThreshold;
-    uint64_t alpha;
+    uint64_t alpha; /* for smoothed rep */
     uint64_t tol;
 
     marketBranch(void) : marketObj() { marketop = 'B'; } 

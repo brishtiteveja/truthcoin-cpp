@@ -954,7 +954,7 @@ void DecisionView::updateCreateTradeCLI(void)
     if (!createTradeCLI || !tradeShares || !tradePrice)
         return;
 
-    QString marketid = marketTabLabels[8].text();
+    QString marketid = marketTabLabels[10].text();
 
     QString cli("hivemind-cli createtrade");
     cli += QString(" ") + ((tradeAddress->text().size())? tradeAddress->text(): QString("&lt;address&gt;"));
@@ -1567,7 +1567,7 @@ void DecisionView::onCreateTradeClicked(void)
     extern Value createtrade(const Array &params, bool fHelp);
 
     std::string address = (tradeAddress->text().size())? tradeAddress->text().toStdString(): "<address>";
-    std::string marketid = (marketTabLabels[8].text().size())? marketTabLabels[8].text().toStdString(): "<marketid>";
+    std::string marketid = (marketTabLabels[10].text().size())? marketTabLabels[10].text().toStdString(): "<marketid>";
     std::string buy_or_sell = (tradeBuyRadioButton->isChecked())? "buy": "sell";
     double number_shares = atof( tradeShares->text().toStdString().c_str() );
     double price = atof( tradePrice->text().toStdString().c_str() );

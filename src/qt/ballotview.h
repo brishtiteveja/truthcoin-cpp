@@ -20,8 +20,8 @@ QT_END_NAMESPACE
 class marketBranch;
 class marketDecision;
 class marketOutcome;
+class marketRevealVote;
 class marketSealedVote;
-class marketVote;
 class BallotBallotWindow;
 class BallotBranchWindow;
 class BallotOutcomeWindow;
@@ -52,7 +52,7 @@ public:
     void onBranchChange(const marketBranch *);
     void onOutcomeChange(const marketOutcome *);
     void onSealedVoteChange(const marketSealedVote *);
-    void onVoteChange(const marketVote *);
+    void onVoteChange(const marketRevealVote *);
 
 private:
     void initSelectBranchTab(QWidget *);
@@ -94,7 +94,7 @@ private:
     std::vector<double> sealedVoteVotes;
 
     BallotVoteWindow *voteWindow;
-    const marketVote *vote;
+    const marketRevealVote *vote;
     QLabel voteTabLabels[BALLOTVOTE_NLABLES];
 
     /* create tab variables */

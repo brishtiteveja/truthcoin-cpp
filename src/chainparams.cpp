@@ -150,7 +150,7 @@ if (SHORT_TAU_TESTING) {
 if (SHORT_TAU_TESTING) {
         genesis.nTime    = 0x5572fec9;
         genesis.nBits    = 0x1d00ffff;
-        genesis.nNonce   = 0x01451609;
+        genesis.nNonce   = 0x0145160c;
 } else {
         genesis.nTime    = 0x5517ec26;
         genesis.nBits    = 0x1d00ffff;
@@ -165,7 +165,7 @@ if (SHORT_TAU_TESTING) {
 
 if (SHORT_TAU_TESTING) {
         assert(genesis.hashMerkleRoot == uint256S("0x84468287c97d192c4e5d957964f802cd51ded59b714c2ddb7348edf4f4c45fa5"));
-        assert(hashGenesisBlock == uint256S("0xf4fe00a122af44c6288987581e987da59b58cd3f1bcff83c105d9955c32eda11"));
+        assert(hashGenesisBlock == uint256S("0xbbaf560c1381592e96286e62df302b09f6557284d4c2181f830e2cd3905b4c16"));
 } else {
         assert(genesis.hashMerkleRoot == uint256S("0x22070acaf5bd2762a487ffc4ec34289c4a52add700561abd96fdabd446b1730c"));
         assert(hashGenesisBlock == uint256S("0x000000006249a3761ba3be5307773df2d7a1c3214a381c96876e098997110fc1"));

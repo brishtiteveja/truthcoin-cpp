@@ -39,22 +39,22 @@ public:
     CWallet *wallet;
     BallotVoteTableModel *parent;
 
-    /* Local cache of Votes */
-    QList<const marketVote *> cached;
+    /* Local cache of RevealVotes */
+    QList<const marketRevealVote *> cached;
 
     int size()
     {
         return cached.size();
     }
 
-    const marketVote *index(int idx)
+    const marketRevealVote *index(int idx)
     {
         if(idx >= 0 && idx < cached.size())
             return cached[idx];
         return 0;
     }
 
-    QString describe(const marketVote *vote, int unit)
+    QString describe(const marketRevealVote *vote, int unit)
     {
         return QString();
     }
@@ -93,7 +93,7 @@ QVariant BallotVoteTableModel::data(const QModelIndex &index, int role) const
 {
     if(!index.isValid())
         return QVariant();
-    const marketVote *vote = (const marketVote *) index.internalPointer();
+    const marketRevealVote *vote = (const marketRevealVote *) index.internalPointer();
 
     switch(role)
     {
@@ -142,7 +142,7 @@ QVariant BallotVoteTableModel::headerData(int section, Qt::Orientation orientati
     return QVariant();
 }
 
-const marketVote *BallotVoteTableModel::index(int row) const
+const marketRevealVote *BallotVoteTableModel::index(int row) const
 {
     return priv->index(row);
 }
@@ -150,7 +150,7 @@ const marketVote *BallotVoteTableModel::index(int row) const
 QModelIndex BallotVoteTableModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    const marketVote *vote = priv->index(row);
+    const marketRevealVote *vote = priv->index(row);
     if (vote)
         return createIndex(row, column, (void *)vote);
     return QModelIndex();
@@ -183,7 +183,7 @@ void BallotVoteTableModel::onBranchChange(const marketBranch *branch)
 
 #if 0
     /* insert into cache */
-    vector<marketVote *> vec = pmarkettree->GetVotes(branch->GetHash(), blocknum);
+    vector<marketRevealVote *> vec = pmarkettree->GetRevealVotes(branch->GetHash(), blocknum);
     if (vec.size()) {
         beginInsertRows(QModelIndex(), 0, vec.size()-1);
         for(uint32_t i=0; i < vec.size(); i++) {
@@ -195,14 +195,14 @@ void BallotVoteTableModel::onBranchChange(const marketBranch *branch)
 #endif
 }
 
-QString formatHeight(const marketVote *vote)
+QString formatHeight(const marketRevealVote *vote)
 {
     char tmp[32];
     snprintf(tmp, sizeof(tmp), "%u", vote->nHeight);
     return QString(tmp);
 }
 
-QString formatAddress(const marketVote *vote)
+QString formatAddress(const marketRevealVote *vote)
 {
     CHivemindAddress addr;
     if (addr.Set(vote->keyID))
@@ -210,7 +210,7 @@ QString formatAddress(const marketVote *vote)
     return QString("Address");
 }
 
-QString formatHash(const marketVote *vote)
+QString formatHash(const marketRevealVote *vote)
 {
     return QString::fromStdString(vote->GetHash().ToString());
 }

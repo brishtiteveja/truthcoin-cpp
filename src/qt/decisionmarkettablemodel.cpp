@@ -318,13 +318,6 @@ QString formatDecisionFunctionIDs(const marketMarket *market)
     return QString("");
 }
 
-QString formatAccountValue(const marketMarket *market)
-{
-    char tmp[32];
-    snprintf(tmp, sizeof(tmp), "%.8f", market->account*1e-8);
-    return QString(tmp);
-}
-
 QString formatTxPoWh(const marketMarket *market)
 {
     char tmp[32];

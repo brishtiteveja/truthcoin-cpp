@@ -245,9 +245,10 @@ extern json_spirit::Value createbranch(const json_spirit::Array& params, bool fH
 extern json_spirit::Value createdecision(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value createmarket(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value createtrade(const json_spirit::Array& params, bool fHelp);
-extern json_spirit::Value createvote(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value createsealedvote(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value createstealvote(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value createrevealvote(const json_spirit::Array& params, bool fHelp);
 
-extern json_spirit::Value getcreatemarketcapitalrequired(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value getcreatetradecapitalrequired(const json_spirit::Array& params, bool fHelp);
 
 // in rest.cpp

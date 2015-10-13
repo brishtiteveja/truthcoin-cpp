@@ -80,19 +80,19 @@ public:
     marketDecision *GetDecision(const uint256 &);
     marketMarket *GetMarket(const uint256 &);
     marketOutcome *GetOutcome(const uint256 &);
+    marketRevealVote *GetRevealVote(const uint256 &);
     marketSealedVote *GetSealedVote(const uint256 &);
     marketStealVote *GetStealVote(const uint256 &);
     marketTrade *GetTrade(const uint256 &);
-    marketVote *GetVote(const uint256 &);
 
     vector<marketBranch *> GetBranches(void);
     vector<marketDecision *> GetDecisions(const uint256 &);
     vector<marketMarket *> GetMarkets(const uint256 &);
     vector<marketOutcome *> GetOutcomes(const uint256 &);
+    vector<marketRevealVote *> GetRevealVotes(const uint256 &, uint32_t);
     vector<marketSealedVote *> GetSealedVotes(const uint256 &, uint32_t);
     vector<marketStealVote *> GetStealVotes(const uint256 &, uint32_t);
     vector<marketTrade *> GetTrades(const uint256 &);
-    vector<marketVote *> GetVotes(const uint256 &, uint32_t);
 };
 
 #endif // HIVEMIND_TXDB_H

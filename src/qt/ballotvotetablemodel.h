@@ -9,7 +9,7 @@
 #include <QStringList>
 
 class marketBranch;
-class marketVote;
+class marketRevealVote;
 class BallotVoteTablePriv;
 class WalletModel;
 class CWallet;
@@ -39,7 +39,7 @@ public:
     int columnCount(const QModelIndex &) const;
     QVariant data(const QModelIndex &, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    const marketVote *index(int row) const;
+    const marketRevealVote *index(int row) const;
     QModelIndex index(int row, int column, const QModelIndex& parent=QModelIndex()) const;
     Qt::ItemFlags flags(const QModelIndex &) const;
     void onBranchChange(const marketBranch *);
@@ -54,8 +54,8 @@ public slots:
     friend class BallotVoteTablePriv;
 };
 
-QString formatHeight(const marketVote *);
-QString formatAddress(const marketVote *);
-QString formatHash(const marketVote *);
+QString formatHeight(const marketRevealVote *);
+QString formatAddress(const marketRevealVote *);
+QString formatHash(const marketRevealVote *);
 
 #endif // HIVEMIND_QT_BALLOTVOTETABLEMODEL_H

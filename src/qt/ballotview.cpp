@@ -648,7 +648,7 @@ void BallotView::onSealedVoteChange(const marketSealedVote *sealedVote)
 
 }
 
-void BallotView::onVoteChange(const marketVote *vote)
+void BallotView::onVoteChange(const marketRevealVote *vote)
 {
 
 }

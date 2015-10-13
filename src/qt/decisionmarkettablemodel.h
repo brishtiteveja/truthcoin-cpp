@@ -80,7 +80,6 @@ QString formatTags(const marketMarket *);
 QString formatMaturation(const marketMarket *);
 QString formatDecisionIDs(const marketMarket *);
 QString formatDecisionFunctionIDs(const marketMarket *);
-QString formatAccountValue(const marketMarket *);
 QString formatTxPoWh(const marketMarket *);
 QString formatTxPoWd(const marketMarket *);
 QString formatHash(const marketMarket *);

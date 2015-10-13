@@ -15,6 +15,8 @@
 
 #if defined(i386) || defined(i486) || \
 	defined(intel) || defined(x86) || defined(i86pc) || \
+	defined(__i386__) || defined(__i486__) || defined(__i586__) || \
+	defined(__i686__) || defined(__x86_64__) || defined(_X86_) || \
 	defined(__alpha) || defined(__osf__)
 #define __LITTLE_ENDIAN
 #endif
@@ -30,6 +32,8 @@
 #define __HIp(x) *(int*)x
 #define __LOp(x) *(1+(int*)x)
 #endif
+
+#undef __P
 
 #ifdef __STDC__
 #define	__P(p)	p

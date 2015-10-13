@@ -34,14 +34,14 @@ uint256 marketObj::GetHash(void) const
     if (marketop == 'O')
        ret = SerializeHash(*(marketOutcome *) this);
     else
+    if (marketop == 'R')
+       ret = SerializeHash(*(marketRevealVote *) this);
+    else
     if (marketop == 'S')
        ret = SerializeHash(*(marketSealedVote *) this);
     else
     if (marketop == 'T')
        ret = SerializeHash(*(marketTrade *) this);
-    else
-    if (marketop == 'V')
-       ret = SerializeHash(*(marketVote *) this);
     return ret;
 }
 
@@ -63,14 +63,14 @@ CScript marketObj::GetScript(void) const
     if (marketop == 'O')
        ((marketOutcome *) this)->Serialize(ds, nType, nVersion);
     else
+    if (marketop == 'R')
+       ((marketRevealVote *) this)->Serialize(ds, nType, nVersion);
+    else
     if (marketop == 'S')
        ((marketSealedVote *) this)->Serialize(ds, nType, nVersion);
     else
     if (marketop == 'T')
        ((marketTrade *) this)->Serialize(ds, nType, nVersion);
-    else
-    if (marketop == 'V')
-       ((marketVote *) this)->Serialize(ds, nType, nVersion);
     CScript script;
     script << vector<unsigned char>(ds.begin(), ds.end()) << OP_MARKET;
     return script;
@@ -118,6 +118,12 @@ marketObj *marketObjCtr(const CScript &script)
         return obj;
     }
     else
+    if (*vch0 == 'R') {
+        marketRevealVote *obj = new marketRevealVote;
+        obj->Unserialize(ds, nType, nVersion);
+        return obj;
+    }
+    else
     if (*vch0 == 'S') {
         marketSealedVote *obj = new marketSealedVote;
         obj->Unserialize(ds, nType, nVersion);
@@ -126,12 +132,6 @@ marketObj *marketObjCtr(const CScript &script)
     else
     if (*vch0 == 'T') {
         marketTrade *obj = new marketTrade;
-        obj->Unserialize(ds, nType, nVersion);
-        return obj;
-    }
-    else
-    if (*vch0 == 'V') {
-        marketVote *obj = new marketVote;
         obj->Unserialize(ds, nType, nVersion);
         return obj;
     }
@@ -209,7 +209,6 @@ string marketMarket::ToString(void) const
             str << decisionFunctionIDToString(decisionFunctionIDs[i]);
     }
     str << endl;
-    str << "account=" << account/1e8 << endl;
     str << "txPoWh=" << txPoWh << endl;
     str << "txPoWd=" << txPoWd << endl;
     return str.str();
@@ -230,31 +229,87 @@ string marketTrade::ToString(void) const
     return str.str();
 }
 
-void marketNShares(const vector<marketTrade *> &trades, double &nShares0, double &nShares1)
+uint32_t marketNStates(const marketMarket *market)
 {
-    nShares0 = 0.0;
-    nShares1 = 0.0;
+    if (!market)
+        return 0; /* error */
+
+    uint32_t nStates = 1;
+    for(uint32_t i=0; i < market->decisionIDs.size(); i++)
+        nStates *= 2;
+    return nStates;
+}
+
+int marketNShares(const vector<marketTrade *> &trades, uint32_t nStates,
+    double *nShares)
+{
+    if (nShares)
+        return -1; /* error */
+
+    for(uint32_t i=0; i < nStates; i++)
+        nShares[i] = 0.0;
+
     for(uint32_t i=0; i < trades.size(); i++) {
         const marketTrade *trade = trades[i];
-        if (trade->decisionState == 0)
-            nShares0 += (trade->isBuy)? trade->nShares: -trade->nShares;
-        else
-            nShares1 += (trade->isBuy)? trade->nShares: -trade->nShares;
+        uint32_t state = trade->decisionState;
+        if (state < nStates)
+           nShares[state] += (trade->isBuy)? trade->nShares: -trade->nShares;
     }
-    nShares0 *= 1e-8;
-    nShares1 *= 1e-8;
+
+    for(uint32_t i=0; i < nStates; i++)
+        nShares[i] *= 1e-8;
+
+    return 0;
 }
 
-double marketAccountValue(double B, double nShares0, double nShares1)
+/* markets with liquidity sensitivity (LS):
+ * The market author purchases an initial minShares shares in each of the
+ * N states. Those minShares will never be sold (money to be returned to the
+ * author upon market conclusion). The number of minShares is derived from 
+ * the maxCommission parameter
+ *   minShares = B log N / maxCommission.
+ * Before the shares are purchased the account value is
+ *   B log sum exp(0/B)
+ * After the shares are purchased the account value is
+ *   B log sum exp(minShares /B)
+ * The initial purchase of minShares in each state then costs 
+ *        = B log sum exp(minShares / B)               - B log sum exp(0/B)
+ *        = B log [N exp(B log N / maxCommission / B)] - B log N
+ *        = B log [exp(log N / maxCommission)]
+ *        = B log [N / maxCommission]
+ *        = minShares
+ * 
+ * Note: maxCommission must be greater than zero. A zero maxCommission will
+ * designate the market to be "non-LS".
+ */
+double marketAccountValue(double maxCommission, double B, uint32_t nStates,
+   const double *nShares)
 {
-    if ((nShares0 == 0.0) && (nShares1 == 0.0))
-        return B * FDLIBM_log(2.0);
-    return B * (FDLIBM_log(FDLIBM_exp(nShares0/B) + FDLIBM_exp(nShares1/B)));
-}
+    /* non-LS */
+    if (maxCommission == 0.0) {
+        double sumExp = 0.0;
+        for(uint32_t i=0; i < nStates; i++) {
+            double nSharesi = (nShares)? nShares[i]: 0.0;
+            if (nSharesi == 0.0)
+                continue;
+            sumExp += FDLIBM_exp(nSharesi / B);
+        }
+        return B * FDLIBM_log(sumExp);
+    }
 
-double marketAccountValue(double B, uint32_t nstates)
-{
-    return B * FDLIBM_log((double)nstates);
+    /* LS */
+    double minShares = B * FDLIBM_log(nStates) / maxCommission;
+    double sumShares = 0.0;
+    for(uint32_t i=0; i < nStates; i++)
+        sumShares += (nShares)? nShares[i]: minShares;
+    B *= sumShares / (nStates * minShares);
+
+    double sumExp = 0.0;
+    for(uint32_t i=0; i < nStates; i++) {
+        double nSharesi = (nShares)? nShares[i]: minShares;
+        sumExp += FDLIBM_exp(nSharesi / B);
+    }
+    return B * FDLIBM_log(sumExp);
 }
 
 string marketOutcome::ToString(void) const
@@ -432,6 +487,30 @@ int marketOutcome::calc(void)
     return 0;
 }
 
+string marketRevealVote::ToString(void) const
+{
+    stringstream str;
+
+    str << "marketop=" << marketop << endl;
+    str << "hHeight=" << nHeight << endl;
+    str << "txid=" << txid.GetHex() << endl;
+    str << "branchid=" << branchid.ToString() << endl;
+    str << "height=" << height << endl;
+    str << "voteid=" << voteid.ToString() << endl;
+    str << "NA=" << NA/1e8 << endl;
+
+    str << "votes=";
+    for(uint32_t i=0; i < decisionIDs.size(); i++) {
+        if (i) str << ",";
+        str << decisionIDs[i].ToString() + ":";
+        if (i < decisionVotes.size())
+            str << decisionVotes[i] / 1e8;
+    }
+    str << endl;
+
+    return str.str();
+}
+
 string marketSealedVote::ToString(void) const
 {
     stringstream str;
@@ -452,31 +531,7 @@ string marketStealVote::ToString(void) const
     str << "marketop=" << marketop << endl;
     str << "hHeight=" << nHeight << endl;
     str << "txid=" << txid.GetHex() << endl;
-    str << "victimKeyID=" << victimKeyID.ToString() << endl;
-    str << "keyID=" << keyID.ToString() << endl;
-
-    return str.str();
-}
-
-string marketVote::ToString(void) const
-{
-    stringstream str;
-
-    str << "marketop=" << marketop << endl;
-    str << "hHeight=" << nHeight << endl;
-    str << "txid=" << txid.GetHex() << endl;
-    str << "branchid=" << branchid.ToString() << endl;
-    str << "height=" << height << endl;
-    str << "NA=" << NA/1e8 << endl;
-
-    str << "votes=";
-    for(uint32_t i=0; i < decisionIDs.size(); i++) {
-        if (i) str << ",";
-        str << decisionIDs[i].ToString() + ":";
-        if (i < decisionVotes.size())
-            str << decisionVotes[i] / 1e8;
-    }
-    str << endl;
+    str << "voteid=" << voteid.GetHex() << endl;
 
     return str.str();
 }

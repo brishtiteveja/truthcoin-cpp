@@ -239,7 +239,7 @@ bool CScript::IsMarketScript(vector<unsigned char> &hashBytes) const
     if (!obj)
        return ret;
 
-    if (obj->marketop == 'B') {
+    if (obj->marketop == 'B') { /* branch */
        ret = true;
     }
     else
@@ -250,29 +250,33 @@ bool CScript::IsMarketScript(vector<unsigned char> &hashBytes) const
        ret = true;
     }
     else
-    if (obj->marketop == 'M') {
+    if (obj->marketop == 'L') { /* steal vote */
+       ret = true;
+    }
+    else
+    if (obj->marketop == 'M') { /* market */
        marketMarket *ptr = (marketMarket *) obj; 
        hashBytes = vector<unsigned char> (ptr->keyID.begin(), ptr->keyID.end());
        delete ptr;
        ret = true;
     }
     else
-    if (obj->marketop == 'O') {
+    if (obj->marketop == 'O') { /* outcome */
        ret = true;
     }
     else
-    if (obj->marketop == 'S') {
+    if (obj->marketop == 'R') { /* reveal vote */
        ret = true;
     }
     else
-    if (obj->marketop == 'T') {
+    if (obj->marketop == 'S') { /* sealed vote */
+       ret = true;
+    }
+    else
+    if (obj->marketop == 'T') { /* trade */
        marketTrade *ptr = (marketTrade *) obj; 
        hashBytes = vector<unsigned char> (ptr->keyID.begin(), ptr->keyID.end());
        delete ptr;
-       ret = true;
-    }
-    else
-    if (obj->marketop == 'V') {
        ret = true;
     }
 

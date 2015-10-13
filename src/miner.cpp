@@ -43,10 +43,10 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
         return CTransaction();
 
     /* retrieve the votes for this height */
-    vector<marketVote *> vec = pmarkettree->GetVotes(branch->GetHash(), height);
+    vector<marketRevealVote *> vec = pmarkettree->GetRevealVotes(branch->GetHash(), height);
 
     /* index the ballot's votes via their keyIDs */
-    std::map<CKeyID, const marketVote *> votes;
+    std::map<CKeyID, const marketRevealVote *> votes;
     for(size_t i=0; i < vec.size(); i++)
        votes[vec[i]->keyID] = vec[i];
 
@@ -113,10 +113,10 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
         CKeyID keyID(u);
         outcome->voterIDs.push_back(keyID);
         outcome->oldRep.push_back(tx.vout[i].nValue);
-        std::map<CKeyID, const marketVote *>::const_iterator vit
+        std::map<CKeyID, const marketRevealVote *>::const_iterator vit
             = votes.find(keyID);
         if ((!rc) && (vit != votes.end())) {
-            const marketVote *vote = vit->second;
+            const marketRevealVote *vote = vit->second;
             const vector<uint256> &decisionIDs = vote->decisionIDs;
             const vector<uint64_t> &decisionVotes = vote->decisionVotes;
             if (decisionIDs.size() == decisionVotes.size()) {

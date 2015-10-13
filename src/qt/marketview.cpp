@@ -39,10 +39,12 @@ using namespace json_spirit;
 const int col0 = 0;
 const int col1 = 1;
 
+#if 0
 static QString formatUint256(const uint256 &hash)
 {
     return QString::fromStdString(hash.ToString());
 }
+#endif
 
 MarketView::MarketView(QWidget *parent)
     : QWidget(parent),
