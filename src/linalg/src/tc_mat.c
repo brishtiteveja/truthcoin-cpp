@@ -17,7 +17,7 @@
  ****************************************************************************/
 
 struct tc_mat *
-tc_mat_ctr(uint32_t nr_, uint32_t nc_) 
+tc_mat_ctr(uint32_t nr_, uint32_t nc_)
 {
     struct tc_mat *A = (struct tc_mat *) malloc(sizeof(struct tc_mat));
     memset(A, 0, sizeof(struct tc_mat));
@@ -25,7 +25,7 @@ tc_mat_ctr(uint32_t nr_, uint32_t nc_)
     return A;
 }
 
-void 
+void
 tc_mat_dtr(struct tc_mat *A)
 {
     if (!A)
@@ -120,8 +120,8 @@ tc_mat_transpose(struct tc_mat *B, const struct tc_mat *A)
         return;
     if (A == B) {
         struct tc_mat *b = tc_mat_ctr(A->nc, A->nr);
-        for(uint32_t i=0; i < A->nr; i++) 
-            for(uint32_t j=0; j < A->nc; j++) 
+        for(uint32_t i=0; i < A->nr; i++)
+            for(uint32_t j=0; j < A->nc; j++)
                 b->a[j][i] = A->a[i][j];
         tc_mat_copy(B, b);
         tc_mat_dtr(b);
@@ -129,8 +129,8 @@ tc_mat_transpose(struct tc_mat *B, const struct tc_mat *A)
     }
     if ((B->nr != A->nc) || (B->nc != A->nr))
         tc_mat_resize(B, A->nc, A->nr);
-    for(uint32_t i=0; i < A->nr; i++) 
-        for(uint32_t j=0; j < A->nc; j++) 
+    for(uint32_t i=0; i < A->nr; i++)
+        for(uint32_t j=0; j < A->nc; j++)
             B->a[j][i] = A->a[i][j];
 }
 
@@ -198,20 +198,20 @@ tc_mat_mult_scalar(struct tc_mat *C, double a, const struct tc_mat *B)
 }
 
 /* Householder Reduction to Bidiagonal Form
- * Input m x n matrix A 
- * Output: m x n matrix  U, products of Householder matrices 
+ * Input m x n matrix A
+ * Output: m x n matrix  U, products of Householder matrices
  *         m x n matrix  B, bidiagonal
  *         m x n matrix  V, products of Householder matrices
  *   such that A = U B V^T
  *
  * A Householder matrix P is a reflection transformation of the form
- * I - tau u u^T where tau = 2 / (u^T u). P is orthonormal since 
+ * I - tau u u^T where tau = 2 / (u^T u). P is orthonormal since
  *        P^T P = (I - tau u u^T)^T (I - tau u u^T)
  *              = (I - tau u u^T)   (I - tau u u^T)
  *              =  I - 2 tau u u^T + tau^2 u (u^T u) u^T
  *              =  I - 2 tau u u^T + tau^2 u (2 / tau) u^T
- *              =  I                                 
- * Products of orthonomal matrices are orthonormal so U and V will be 
+ *              =  I
+ * Products of orthonomal matrices are orthonormal so U and V will be
  * orthonormal.
  *
  * B is constructed via the algorithm
@@ -219,7 +219,7 @@ tc_mat_mult_scalar(struct tc_mat *C, double a, const struct tc_mat *B)
  *   2.  U <-- I  m x n
  *   3.  V <-- I  n x n
  *   4.  For k = 1, ..., n
- *       a. construct a Householder matrix P such that 
+ *       a. construct a Householder matrix P such that
  *             i. P is the identity on the first k-1 components, and
  *            ii. the k-th column of P B is zero below the diagonal.
  *       b.  B <--- P B
@@ -227,20 +227,20 @@ tc_mat_mult_scalar(struct tc_mat *C, double a, const struct tc_mat *B)
  *       d.  If k < n - 2, increment k and repeat steps a-c for the
  *              operation from the right (the row of B P will be zero
  *              to the right of the superdiagonal).
- *   
- *  Step 4a(i) is equivalent to setting the first k-1 components of u 
+ *
+ *  Step 4a(i) is equivalent to setting the first k-1 components of u
  *  to be zero. Let v be the k-th column of P B. Since
  *      P v = (I - tau u u^T) v
  *          = (I - tau u u^T) v
  *          = v - tau (u^T v) u   (Eq. 1)
  *  we have that step 4a(ii) is equivalent to setting u to be an appropriate
- *  scalar multiple of v for all components above k.  The previous steps 
- *  would have zeroed out the first k-2 components of v. Let 
+ *  scalar multiple of v for all components above k.  The previous steps
+ *  would have zeroed out the first k-2 components of v. Let
  *     b^2 = Sum_{i>=k} (v_i)^2
- *  and choose the sign of b to ensure s = v_k - b is nonzero. Set u = v/s 
+ *  and choose the sign of b to ensure s = v_k - b is nonzero. Set u = v/s
  *  on all components larger than k and set u_k = 1. Then
- *    tau = 2 / (u^T u) 
- *        = 2 / (1 + (b^2 - (v_k)^2) / s^2 ) 
+ *    tau = 2 / (u^T u)
+ *        = 2 / (1 + (b^2 - (v_k)^2) / s^2 )
  *        = (2 s) / (s + (b^2 - (v_k)^2) / s)
  *        = (2 s) / (s - (b + v_k))
  *        = (2 s) / ((v_k - b) - (b + v_k))
@@ -250,30 +250,30 @@ tc_mat_mult_scalar(struct tc_mat *C, double a, const struct tc_mat *B)
  *    u^T v = v_k + (b^2 - (v_k)^2) / s
  *          = v_k - (b   +  v_k)
  *          = b
- *  meaning that Eq 1 is simply 
- *      P v = v - (-s/b) (b) u 
+ *  meaning that Eq 1 is simply
+ *      P v = v - (-s/b) (b) u
  *          = v + s u
  *  and so P v is zero on all components larger than k.
- *  
+ *
  *  Side note on efficiency 1 (not implemented):
- *    Step c produces U and V as products of Housholder matrices. The actual 
- *    computation of these products is not the most computationally efficient 
+ *    Step c produces U and V as products of Housholder matrices. The actual
+ *    computation of these products is not the most computationally efficient
  *    method. A Housholder matrix acts on a vector v as
- *          P v = (I - tau u u^T) v 
+ *          P v = (I - tau u u^T) v
  *              =  v - tau u (v^T u)^T  (Eq. 2)
- *    Thus if we've recorded all u's and tau's, we can find U, the product of 
+ *    Thus if we've recorded all u's and tau's, we can find U, the product of
  *    all the P's, by sequentially applying Eq 2 to the components e1, e2, etc.
  *
  *  Side note on efficiency 2 (not implemented):
  *    Since each iteration of B leads to known places where its terms have zeros,
  *    all matrix multiplications involving B can be restricted to the nonzero
  *    terms.
- * 
+ *
  *  Side note on efficiency 3 (not implemented):
  *    Since the u's have more zeros in each iteration, the collection of u's
- *    can be stored in the original matrix A (and hence B) so long as the 
+ *    can be stored in the original matrix A (and hence B) so long as the
  *    Side note on efficiency #2 was implemented.
- */  
+ */
 int
 tc_mat_bidiag_decomp(
     const struct tc_mat *A,
@@ -357,15 +357,15 @@ tc_mat_bidiag_decomp(
 
 /* tc_mat_eigenvalues
  * only implmented for 2x2 matrices
- * Input: 2 x 2 matrix A 
+ * Input: 2 x 2 matrix A
  * Output: 2 x 1 matrix E of eigenvalues
- * 
- * If we set A = [ a b ] 
+ *
+ * If we set A = [ a b ]
  *               [ c d ]
  * Then
  *  0 = det(A - x I)
  *    = (a - x)(d - x) - bc
- *    = x^2 - (a + d) x + (ad - bc) 
+ *    = x^2 - (a + d) x + (ad - bc)
  */
 int
 tc_mat_eigenvalues(struct tc_mat *E, const struct tc_mat *A)
@@ -374,7 +374,7 @@ tc_mat_eigenvalues(struct tc_mat *E, const struct tc_mat *A)
         return -1;
     if ((A->nr != 2) || (A->nc != 2))
         return -1;
-    if (E->nr != A->nr) 
+    if (E->nr != A->nr)
         tc_mat_resize(E, A->nr, 1);
     double a = A->a[0][0];
     double b = A->a[1][0];
@@ -389,10 +389,10 @@ tc_mat_eigenvalues(struct tc_mat *E, const struct tc_mat *A)
 }
 
 
-/* Wilkinson Shift                 
- * Input: m x 2 matrix A 
+/* Wilkinson Shift
+ * Input: m x 2 matrix A
  * Output: the Wilkinson shift
- * 
+ *
  * ei= trailing 2x2 matrix of D^T D */
 double
 tc_mat_wilkinson_shift(const struct tc_mat *A)
@@ -449,12 +449,12 @@ tc_mat_svd(
         }
         return 0;
     }
-    /* Step1: A = U D V where D is bi-diagonal 
+    /* Step1: A = U D V where D is bi-diagonal
      *            A is nr x nc
      *            U is nr x nr
      *            D is nr x nc
      *            V is nc x nc
-     * 
+     *
      *    If A was not a square matrix, change U and D
      *            U  nr x nc
      *            D  nc x nc
@@ -493,23 +493,23 @@ tc_mat_svd(
             threshold = fabs(D->a[i][i+1]);
     threshold *= 1e-12;
     const double zero_threshold = 0.1 * threshold;
-    /* Always reindex the components so that 
-     * D so that has the form 
-     *     [D1, 0] where D1 is diagonal and 
-     *     [ 0,D2]       D2 is bidiagonal   
-     * Let i0 be the starting index of D2     
+    /* Always reindex the components so that
+     * D so that has the form
+     *     [D1, 0] where D1 is diagonal and
+     *     [ 0,D2]       D2 is bidiagonal
+     * Let i0 be the starting index of D2
      */
     uint32_t i0 = 0;
     for(uint32_t I=0; I < max_iterations; I++)
     {
-        /* For any zeros on the diagonal, apply a series of 
+        /* For any zeros on the diagonal, apply a series of
          * Givens rotations to also zero out its off-diagonal
          * term.  Then move this component into D1.
          */
         for(uint32_t i1=i0; i1 < D->nr; i1++) {
             if (fabs(D->a[i1][i1]) > zero_threshold)
                 continue;
-            if ((i1+1 == D->nr) && fabs(D->a[i1-1][i1]) > zero_threshold) 
+            if ((i1+1 == D->nr) && fabs(D->a[i1-1][i1]) > zero_threshold)
                 continue;
             if ((i1+1 < D->nr) && (fabs(D->a[i1][i1+1]) > zero_threshold)) {
                 for(uint32_t i=i1; i+1 < D->nr; i++) {
@@ -626,7 +626,7 @@ tc_mat_svd(
         double alpha = D->a[i0][i0] * D->a[i0][i0] - mu;
         double beta = D->a[i0][i0] * D->a[i0][i0+1];
         /* Apply Givens rotations G from i0 to the bottom,
-         * chasing the nonzero element until off the matrix                     
+         * chasing the nonzero element until off the matrix
          */
         for(uint32_t i=i0; i < i1; i++) {
             /* D V = (D G) (G^T V)  */
@@ -645,7 +645,7 @@ tc_mat_svd(
                 V->a[i+0][j] = a*c - b*s;
                 V->a[i+1][j] = a*s + b*c;
             }
-            /* U D = (U G) (G^T D) */ 
+            /* U D = (U G) (G^T D) */
             alpha = D->a[i+0][i];
             beta = D->a[i+1][i];
             gamma = sqrt(alpha*alpha + beta*beta);
@@ -672,7 +672,7 @@ tc_mat_svd(
         }
     }
     /* now swap components to order the diagonal terms
-     * from largest to smallest 
+     * from largest to smallest
      */
     for(uint32_t i=0; i+1 < D->nr; i++) {
         double largest = fabs(D->a[i][i]);
@@ -696,15 +696,15 @@ tc_mat_svd(
             D->a[i][i] = D->a[largest_i][largest_i];
             D->a[largest_i][largest_i] = tmp;
         }
-        if (D->a[i][i] < 0) { 
+        if (D->a[i][i] < 0) {
             D->a[i][i] = -D->a[i][i];
             for(uint32_t j=0; j < D->nr; j++)
                 V->a[i][j] = -V->a[i][j];
         }
     }
     /* just to be sure, zero out all off-diagonal terms of D */
-    for(uint32_t i=0; i < D->nr; i++) 
-        for(uint32_t j=0; j < D->nc; j++) 
+    for(uint32_t i=0; i < D->nr; i++)
+        for(uint32_t j=0; j < D->nc; j++)
             if (i != j)
                 D->a[i][j] = 0.0;
     /* transpose V */
@@ -804,7 +804,7 @@ tc_wgt_median(const struct tc_mat *wgt, const struct tc_mat *A, uint32_t j,
         nwgts++;
     }
     double mid_wgts = sum_wgts / 2.0;
-    if (nwgts == 0) 
+    if (nwgts == 0)
         return 0.0;
 
     /* iterate through the sorted values until mid_wgts is passed */
@@ -963,7 +963,7 @@ tc_vote_print_cols(const struct tc_vote *ptr)
         "Partic Col", "AuthorBonus", "Decision Fin" };
 
     for(uint32_t i=0; i < TC_VOTE_NCOLS; i++) {
-        printf(" %12s", hdrs[i]);  
+        printf(" %12s", hdrs[i]);
         for(uint32_t j=0; j < ptr->nc; j++)
             if (ptr->cvecs[i]->a[0][j] != ptr->NA)
                 printf(" %12.8f", ptr->cvecs[i]->a[0][j]);
@@ -979,14 +979,14 @@ static int
 tc_vote_print_rows(const struct tc_vote *ptr)
 {
     const char *hdrs[TC_VOTE_NROWS] = { "OldRep", "ThisRep", "SmoothRep",
-        "NARow", "Partic Row", "RelativePart", "RowBonus" }; 
+        "NARow", "Partic Row", "RelativePart", "RowBonus" };
 
     for(uint32_t j=0; j < TC_VOTE_NROWS; j++)
-        printf(" %12s", hdrs[j]);  
+        printf(" %12s", hdrs[j]);
     printf("\n");
 
     for(uint32_t i=0; i < ptr->nr; i++) {
-        for(uint32_t j=0; j < TC_VOTE_NROWS; j++) 
+        for(uint32_t j=0; j < TC_VOTE_NROWS; j++)
             if (ptr->rvecs[j]->a[i][0] != ptr->NA)
                 printf(" %12.8f", ptr->rvecs[j]->a[i][0]);
             else
@@ -1012,7 +1012,7 @@ tc_vote_print(const struct tc_vote *ptr)
 }
 
 #undef METHOD1
-#define METHOD5
+#define METHOD5 /* Change to 6? */
 int
 tc_vote_proc(struct tc_vote *vote)
 {
@@ -1038,8 +1038,8 @@ tc_vote_proc(struct tc_vote *vote)
                 fM->a[i][j] = prelim_outcome;
     }
 
-    /* loadings: 
-     * scores: 
+    /* loadings:
+     * scores:
      */
     struct tc_mat *scores = tc_mat_ctr(0, 0);
     int rc = tc_wgt_prin_comp(wgt, fM, firstloading, scores);
@@ -1049,7 +1049,7 @@ tc_vote_proc(struct tc_vote *vote)
         return rc;
     }
     tc_mat_transpose(firstloading, firstloading);
-    
+
     /* wgtT: transpose of wgt */
     struct tc_mat *wgtT = tc_mat_ctr(0, 0);
     tc_mat_transpose(wgtT, wgt);
@@ -1072,14 +1072,6 @@ tc_vote_proc(struct tc_vote *vote)
     tc_mat_copy(scores1, scores);
     for(uint32_t i=0; i < scores1->nr; i++)
         scores1->a[i][0] += min_score;
-#ifdef METHOD1
-    struct tc_mat *scores1T = tc_mat_ctr(0, 0);
-    tc_mat_transpose(scores1T, scores1);
-    struct tc_mat *v1 = tc_mat_ctr(0, 0);
-    tc_mat_mult(v1, scores1T, fM);
-    tc_wgt_normalize(v1);
-    tc_mat_sub(v1, v1, wgtT_fM);
-#endif
 
     /* scores2: scores adjusted by subtracting max{scores} */
     double max_score = scores->a[0][0];
@@ -1090,19 +1082,11 @@ tc_vote_proc(struct tc_vote *vote)
     tc_mat_copy(scores2, scores);
     for(uint32_t i=0; i < scores2->nr; i++)
         scores2->a[i][0] = max_score - scores2->a[i][0];
-#ifdef METHOD1
-    struct tc_mat *scores2T = tc_mat_ctr(0, 0);
-    tc_mat_transpose(scores2T, scores2);
-    struct tc_mat *v2 = tc_mat_ctr(0, 0);
-    tc_mat_mult(v2, scores2T, fM);
-    tc_wgt_normalize(v2);
-    tc_mat_sub(v2, v2, wgtT_fM);
-#endif
 
 #ifdef METHOD5
     /* distance */
     struct tc_mat *dist = tc_mat_ctr(0, 0);
-    tc_mat_copy(dist, fM); 
+    tc_mat_copy(dist, fM);
     for(uint32_t j=0; j < dist->nc; j++) {
         double val = 0.0;
         if (isbin->a[0][j] != 0.0)
@@ -1112,7 +1096,7 @@ tc_vote_proc(struct tc_vote *vote)
             val = wgtT_fM->a[0][j];
         for(uint32_t i=0; i < dist->nr; i++)
             dist->a[i][j] = fabs(dist->a[i][j] - val);
-       
+
     }
     /* mainstream = 1/dissent */
     struct tc_mat *mainstream = tc_mat_ctr(firstloading->nc, 1);
@@ -1138,11 +1122,11 @@ tc_vote_proc(struct tc_vote *vote)
     tc_wgt_normalize(compliance);
 
     struct tc_mat *v1 = tc_mat_ctr(0, 0);
-    tc_mat_copy(v1, scores1); 
+    tc_mat_copy(v1, scores1);
     tc_wgt_normalize(v1);
     tc_mat_sub(v1, v1, compliance);
     struct tc_mat *v2 = tc_mat_ctr(0, 0);
-    tc_mat_copy(v2, scores2); 
+    tc_mat_copy(v2, scores2);
     tc_wgt_normalize(v2);
     tc_mat_sub(v2, v2, compliance);
 
@@ -1174,7 +1158,7 @@ tc_vote_proc(struct tc_vote *vote)
     /* smoothedrep: smoothed with previous oldrep   */
     /* smoothedrep: (1-alpha) oldrep + alpha * smoothedrep */
     for(uint32_t i=0; i < wgt->nr; i++)
-        nwgt->a[i][0] = (1.0 - vote->alpha) * wgt->a[i][0] 
+        nwgt->a[i][0] = (1.0 - vote->alpha) * wgt->a[i][0]
                          + vote->alpha * twgt->a[i][0];
 
     /* outcome (raw) */
@@ -1263,14 +1247,8 @@ tc_vote_proc(struct tc_vote *vote)
     tc_mat_dtr(partic_rel_col);
 
     tc_mat_dtr(v2);
-#ifdef METHOD1
-    tc_mat_dtr(scores2T);
-#endif
     tc_mat_dtr(scores2);
     tc_mat_dtr(v1);
-#ifdef METHOD1
-    tc_mat_dtr(scores1T);
-#endif
     tc_mat_dtr(scores1);
     tc_mat_dtr(wgtT_fM);
     tc_mat_dtr(wgtT);
