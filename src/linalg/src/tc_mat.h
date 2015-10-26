@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2015 The Hivemind Core developers
  * Distributed under the MIT software license, see the accompanying
  * file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -71,4 +71,3 @@ int tc_vote_proc(struct tc_vote *);
 
 
 #endif /* HIVEMIND_LINALG_MAT_H */
-

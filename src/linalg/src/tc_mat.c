@@ -788,7 +788,7 @@ tc_wgt_median(const struct tc_mat *wgt, const struct tc_mat *A, uint32_t j,
     double NA)
 {
     if (!wgt || !A || !A->nr || !A->nc
-            || (wgt->nr != A->nr) || (j >= A->nc))
+        || (wgt->nr != A->nr) || (j >= A->nc))
         return 0.0;
 
     struct vecdouble *v = (struct vecdouble *)
@@ -804,7 +804,9 @@ tc_wgt_median(const struct tc_mat *wgt, const struct tc_mat *A, uint32_t j,
         nwgts++;
     }
     double mid_wgts = sum_wgts / 2.0;
-    if (nwgts == 0)
+
+    /* Is there a median to look for? */
+    if (nwgts <= 2)
         return 0.0;
 
     /* iterate through the sorted values until mid_wgts is passed */
@@ -1011,8 +1013,7 @@ tc_vote_print(const struct tc_vote *ptr)
     return 0;
 }
 
-#undef METHOD1
-#define METHOD5 /* Change to 6? */
+#define METHOD6
 int
 tc_vote_proc(struct tc_vote *vote)
 {
@@ -1083,7 +1084,42 @@ tc_vote_proc(struct tc_vote *vote)
     for(uint32_t i=0; i < scores2->nr; i++)
         scores2->a[i][0] = max_score - scores2->a[i][0];
 
-#ifdef METHOD5
+#ifdef METHOD6
+    double median_factor_1 = tc_wgt_median(wgt, scores1, 0, vote->NA);
+    double median_factor_2 = tc_wgt_median(wgt, scores2, 0, vote->NA);
+
+    if (median_factor_1 > 0.0) {
+        /* above-median weights are adjusted to below median */
+        for(uint32_t i=0; i < scores1->nr; i++)
+          if (scores1->a[i][0] > median_factor_1) {
+              double reflection = scores1->a[i][0] - median_factor_1;
+              scores1->a[i][0] = scores1->a[i][0] - (reflection * 0.5);
+          }
+    } else {
+        /* just use old rep */
+        tc_mat_copy(twgt, wgt);
+    }
+
+    if (median_factor_2 > 0.0) {
+        /* above-median weights are adjusted to below median */
+        for(uint32_t i=0; i < scores2->nr; i++)
+          if (scores2->a[i][0] > median_factor_2) {
+              double reflection = scores2->a[i][0] - median_factor_2;
+              scores2->a[i][0] = scores2->a[i][0] - (reflection * 0.5);
+          }
+    } else {
+        /* just use old rep */
+        tc_mat_copy(twgt, wgt);
+    }
+
+    /* outcome (raw) */
+    struct tc_mat *decraw = vote->cvecs[TC_VOTE_DECISIONS_RAW];
+    for(uint32_t j=0; j < fM->nc; j++) {
+        decraw->a[0][j] = (isbin->a[0][j] != 0.0)?
+            tc_wgt_mean(nwgt, fM, j, vote->NA):
+            tc_wgt_median(nwgt, fM, j, vote->NA);
+    }
+
     /* distance */
     struct tc_mat *dist = tc_mat_ctr(0, 0);
     tc_mat_copy(dist, fM);
@@ -1098,6 +1134,7 @@ tc_vote_proc(struct tc_vote *vote)
             dist->a[i][j] = fabs(dist->a[i][j] - val);
 
     }
+
     /* mainstream = 1/dissent */
     struct tc_mat *mainstream = tc_mat_ctr(firstloading->nc, 1);
     for(uint32_t j=0; j < firstloading->nc; j++) {
@@ -1107,7 +1144,9 @@ tc_vote_proc(struct tc_vote *vote)
         else
             mainstream->a[j][0] = 1.0/fabs(value);
     }
+
     tc_wgt_normalize(mainstream);
+
     /* noncompliance = distance * mainstream^T */
     struct tc_mat *noncompliance = tc_mat_ctr(0, 0);
     tc_mat_mult(noncompliance, dist, mainstream);
@@ -1142,16 +1181,7 @@ tc_vote_proc(struct tc_vote *vote)
         tc_mat_copy(twgt, scores1);
     else
         tc_mat_copy(twgt, scores2);
-    double median_factor = tc_wgt_median(wgt, twgt, 0, vote->NA);
-    if (median_factor > 0.0) {
-        /* above-median weights are knocked down to median */
-        for(uint32_t i=0; i < wgt->nr; i++)
-            if (twgt->a[i][0] > median_factor)
-                twgt->a[i][0] = median_factor;
-    } else {
-        /* just use old rep */
-        tc_mat_copy(twgt, wgt);
-    }
+
     /* normalized */
     tc_wgt_normalize(twgt);
 
@@ -1160,14 +1190,6 @@ tc_vote_proc(struct tc_vote *vote)
     for(uint32_t i=0; i < wgt->nr; i++)
         nwgt->a[i][0] = (1.0 - vote->alpha) * wgt->a[i][0]
                          + vote->alpha * twgt->a[i][0];
-
-    /* outcome (raw) */
-    struct tc_mat *decraw = vote->cvecs[TC_VOTE_DECISIONS_RAW];
-    for(uint32_t j=0; j < fM->nc; j++) {
-        decraw->a[0][j] = (isbin->a[0][j] != 0.0)?
-            tc_wgt_mean(nwgt, fM, j, vote->NA):
-            tc_wgt_median(nwgt, fM, j, vote->NA);
-    }
 
     /* outcome (final) */
     struct tc_mat *decfin = vote->cvecs[TC_VOTE_DECISIONS_FINAL];
