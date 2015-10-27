@@ -1166,11 +1166,11 @@ tc_vote_proc(struct tc_vote *vote)
     tc_wgt_normalize(compliance);
 
     struct tc_mat *v1 = tc_mat_ctr(0, 0);
-    tc_mat_copy(v1, scores1);
+    tc_mat_copy(v1, new_scores_1);
     tc_wgt_normalize(v1);
     tc_mat_sub(v1, v1, compliance);
     struct tc_mat *v2 = tc_mat_ctr(0, 0);
-    tc_mat_copy(v2, scores2);
+    tc_mat_copy(v2, new_scores_2);
     tc_wgt_normalize(v2);
     tc_mat_sub(v2, v2, compliance);
 
@@ -1183,9 +1183,9 @@ tc_vote_proc(struct tc_vote *vote)
     /* twgt: reputation vector of this round of votes  */
     /* twgt = (||v1|| < ||v2||)? score1: score2          */
     if (tc_mat_norm(v1) <= tc_mat_norm(v2))
-        tc_mat_copy(twgt, scores1);
+        tc_mat_copy(twgt, new_scores_1);
     else
-        tc_mat_copy(twgt, scores2);
+        tc_mat_copy(twgt, new_scores_2);
 
     /* normalized */
     tc_wgt_normalize(twgt);
@@ -1275,8 +1275,10 @@ tc_vote_proc(struct tc_vote *vote)
 
     tc_mat_dtr(v2);
     tc_mat_dtr(scores2);
+    tc_mat_dtr(new_scores_2);
     tc_mat_dtr(v1);
     tc_mat_dtr(scores1);
+    tc_mat_dtr(new_scores_1);
     tc_mat_dtr(wgtT_fM);
     tc_mat_dtr(wgtT);
     tc_mat_dtr(scores);
