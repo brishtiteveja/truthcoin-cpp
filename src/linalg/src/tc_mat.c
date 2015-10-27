@@ -1084,34 +1084,39 @@ tc_vote_proc(struct tc_vote *vote)
     for(uint32_t i=0; i < scores2->nr; i++)
         scores2->a[i][0] = max_score - scores2->a[i][0];
 
-#ifdef METHOD6
+    /* Median factors for both choices */
     double median_factor_1 = tc_wgt_median(wgt, scores1, 0, vote->NA);
     double median_factor_2 = tc_wgt_median(wgt, scores2, 0, vote->NA);
 
+    /* Adjust scores1 */
+    struct tc_mat *new_scores_1 = tc_mat_ctr(0, 0);
+    tc_mat_copy(new_scores_1, scores1);
     if (median_factor_1 > 0.0) {
         /* above-median weights are adjusted to below median */
         for(uint32_t i=0; i < scores1->nr; i++)
           if (scores1->a[i][0] > median_factor_1) {
-              double reflection = scores1->a[i][0] - median_factor_1;
-              scores1->a[i][0] = scores1->a[i][0] - (reflection * 0.5);
+              double excessive = scores1->a[i][0] - median_factor_1;
+              new_scores_1->a[i][0] = scores1->a[i][0] - (excessive * 0.5);
+          } else {
+            new_scores_1->a[i][0] = scores1->a[i][0];
           }
-    } else {
-        /* just use old rep */
-        tc_mat_copy(twgt, wgt);
     }
 
+    /* Adjust scores2 */
+    struct tc_mat *new_scores_2 = tc_mat_ctr(0, 0);
+    tc_mat_copy(new_scores_2, scores2);
     if (median_factor_2 > 0.0) {
         /* above-median weights are adjusted to below median */
         for(uint32_t i=0; i < scores2->nr; i++)
           if (scores2->a[i][0] > median_factor_2) {
-              double reflection = scores2->a[i][0] - median_factor_2;
-              scores2->a[i][0] = scores2->a[i][0] - (reflection * 0.5);
+              double excessive = scores2->a[i][0] - median_factor_2;
+              new_scores_2->a[i][0] = scores2->a[i][0] - (excessive * 0.5);
+          } else {
+            new_scores_2->a[i][0] = scores2->a[i][0];
           }
-    } else {
-        /* just use old rep */
-        tc_mat_copy(twgt, wgt);
     }
 
+#ifdef METHOD6
     /* outcome (raw) */
     struct tc_mat *decraw = vote->cvecs[TC_VOTE_DECISIONS_RAW];
     for(uint32_t j=0; j < fM->nc; j++) {
