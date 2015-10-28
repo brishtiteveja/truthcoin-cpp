@@ -1274,11 +1274,11 @@ tc_vote_proc(struct tc_vote *vote)
     tc_mat_dtr(partic_rel_col);
 
     tc_mat_dtr(v2);
-    tc_mat_dtr(scores2);
-    tc_mat_dtr(new_scores_2);
     tc_mat_dtr(v1);
-    tc_mat_dtr(scores1);
+    tc_mat_dtr(new_scores_2);
     tc_mat_dtr(new_scores_1);
+    tc_mat_dtr(scores2);
+    tc_mat_dtr(scores1);
     tc_mat_dtr(wgtT_fM);
     tc_mat_dtr(wgtT);
     tc_mat_dtr(scores);
@@ -1286,4 +1286,3 @@ tc_vote_proc(struct tc_vote *vote)
 
     return rc;
 }
-
