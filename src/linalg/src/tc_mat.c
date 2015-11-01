@@ -1082,7 +1082,7 @@ tc_vote_proc(struct tc_vote *vote)
 
     /* Rep matrix to be manipulated by method 6 */
     struct tc_mat *new_rep = tc_mat_ctr(0, 0);
-    tc_mat_copy(new_rep, wgt);
+    tc_mat_copy(new_rep, twgt);
 
     /* If there wasn't a perfect consensus, perform method 6 */
     if (sum_first_fabs != 0) {
