@@ -1070,10 +1070,6 @@ tc_vote_proc(struct tc_vote *vote)
             tc_wgt_median(nwgt, fM, j, vote->NA);
     }
 
-    /* Rep matrix to be manipulated by method 6 */
-    struct tc_mat *new_rep = tc_mat_ctr(0, 0);
-    tc_mat_copy(new_rep, wgt);
-
     /* Calculate sum of first score's absolute values */
     double sum_first_fabs = 0.0;
     for(uint32_t i=0; i < scores->nr; i++) {
@@ -1084,7 +1080,9 @@ tc_vote_proc(struct tc_vote *vote)
         }
     }
 
-    printf("Sum of first score %f\n", sum_first_fabs);
+    /* Rep matrix to be manipulated by method 6 */
+    struct tc_mat *new_rep = tc_mat_ctr(0, 0);
+    tc_mat_copy(new_rep, wgt);
 
     /* If there wasn't a perfect consensus, perform method 6 */
     if (sum_first_fabs != 0) {
@@ -1196,15 +1194,14 @@ tc_vote_proc(struct tc_vote *vote)
         tc_mat_dtr(dist);
 #endif
 
-        /* twgt: reputation vector of this round of votes  */
-        /* twgt = (||v1|| < ||v2||)? score1: score2          */
+        /* new_rep = (||v1|| < ||v2||)? score1: score2 */
         if (tc_mat_norm(v1) <= tc_mat_norm(v2))
-            tc_mat_copy(twgt, new_scores_1);
+            tc_mat_copy(new_rep, new_scores_1);
         else
-            tc_mat_copy(twgt, new_scores_2);
+            tc_mat_copy(new_rep, new_scores_2);
 
         /* normalized */
-        tc_wgt_normalize(twgt);
+        tc_wgt_normalize(new_rep);
 
         tc_mat_dtr(v2);
         tc_mat_dtr(v1);
@@ -1218,7 +1215,7 @@ tc_vote_proc(struct tc_vote *vote)
     /* smoothedrep: (1-alpha) oldrep + alpha * smoothedrep */
     for(uint32_t i=0; i < wgt->nr; i++)
         nwgt->a[i][0] = (1.0 - vote->alpha) * wgt->a[i][0]
-                         + vote->alpha * twgt->a[i][0];
+                         + vote->alpha * new_rep->a[i][0];
 
     /* outcome (final) */
     struct tc_mat *decfin = vote->cvecs[TC_VOTE_DECISIONS_FINAL];
