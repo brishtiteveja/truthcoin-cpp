@@ -1062,14 +1062,6 @@ tc_vote_proc(struct tc_vote *vote)
         if (isbin->a[0][j] == 0.0)
             wgtT_fM->a[0][j] = tc_wgt_median(wgt, fM, j, vote->NA);
 
-    /* outcome (raw) */
-    struct tc_mat *decraw = vote->cvecs[TC_VOTE_DECISIONS_RAW];
-    for(uint32_t j=0; j < fM->nc; j++) {
-        decraw->a[0][j] = (isbin->a[0][j] != 0.0)?
-            tc_wgt_mean(nwgt, fM, j, vote->NA):
-            tc_wgt_median(nwgt, fM, j, vote->NA);
-    }
-
     /* Calculate sum of first score's absolute values */
     double sum_first_fabs = 0.0;
     for(uint32_t i=0; i < scores->nr; i++) {
@@ -1080,12 +1072,10 @@ tc_vote_proc(struct tc_vote *vote)
         }
     }
 
-    /* Rep matrix to be manipulated by method 6 */
-    struct tc_mat *new_rep = tc_mat_ctr(0, 0);
-    tc_mat_copy(new_rep, twgt);
-
-    /* If there wasn't a perfect consensus, perform method 6 */
-    if (sum_first_fabs != 0) {
+    /* If perfect consensus, use old weights. Otherwise, calculate new */
+    if (!sum_first_fabs != 0) {
+        tc_mat_copy(twgt, wgt);
+    } else {
         /* scores1: scores adjusted by adding min{scores} */
         double min_score = scores->a[0][0];
         for(uint32_t i=1; i < scores->nr; i++)
@@ -1112,7 +1102,7 @@ tc_vote_proc(struct tc_vote *vote)
         double median_factor_1 = tc_wgt_median(wgt, scores1, 0, vote->NA);
         double median_factor_2 = tc_wgt_median(wgt, scores2, 0, vote->NA);
 
-        /* Adjust scores1 */
+        /* Use median as new upper limit, shift excessive values */
         struct tc_mat *new_scores_1 = tc_mat_ctr(0, 0);
         tc_mat_copy(new_scores_1, scores1);
         if (median_factor_1 > 0.0) {
@@ -1126,7 +1116,7 @@ tc_vote_proc(struct tc_vote *vote)
               }
         }
 
-        /* Adjust scores2 */
+        /* Use median as new upper limit, shift excessive values */
         struct tc_mat *new_scores_2 = tc_mat_ctr(0, 0);
         tc_mat_copy(new_scores_2, scores2);
         if (median_factor_2 > 0.0) {
@@ -1193,15 +1183,14 @@ tc_vote_proc(struct tc_vote *vote)
         tc_mat_dtr(mainstream);
         tc_mat_dtr(dist);
 #endif
-
-        /* new_rep = (||v1|| < ||v2||)? score1: score2 */
+        /* twgt = (||v1|| < ||v2||)? score1: score2 */
         if (tc_mat_norm(v1) <= tc_mat_norm(v2))
-            tc_mat_copy(new_rep, new_scores_1);
+            tc_mat_copy(twgt, new_scores_1);
         else
-            tc_mat_copy(new_rep, new_scores_2);
+            tc_mat_copy(twgt, new_scores_2);
 
         /* normalized */
-        tc_wgt_normalize(new_rep);
+        tc_wgt_normalize(twgt);
 
         tc_mat_dtr(v2);
         tc_mat_dtr(v1);
@@ -1215,7 +1204,15 @@ tc_vote_proc(struct tc_vote *vote)
     /* smoothedrep: (1-alpha) oldrep + alpha * smoothedrep */
     for(uint32_t i=0; i < wgt->nr; i++)
         nwgt->a[i][0] = (1.0 - vote->alpha) * wgt->a[i][0]
-                         + vote->alpha * new_rep->a[i][0];
+                         + vote->alpha * twgt->a[i][0];
+
+    /* outcome (raw) */
+    struct tc_mat *decraw = vote->cvecs[TC_VOTE_DECISIONS_RAW];
+    for(uint32_t j=0; j < fM->nc; j++) {
+        decraw->a[0][j] = (isbin->a[0][j] != 0.0)?
+            tc_wgt_mean(nwgt, fM, j, vote->NA):
+            tc_wgt_median(nwgt, fM, j, vote->NA);
+    }
 
     /* outcome (final) */
     struct tc_mat *decfin = vote->cvecs[TC_VOTE_DECISIONS_FINAL];
