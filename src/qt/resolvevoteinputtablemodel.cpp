@@ -10,7 +10,7 @@ extern "C" {
 }
 #include "resolvevotedialog.h"
 #include "resolvevoteinputtablemodel.h"
-
+#include <iostream>
 
 ResolveVoteInputTableModel::ResolveVoteInputTableModel()
     : QAbstractTableModel(0),
@@ -158,9 +158,14 @@ bool ResolveVoteInputTableModel::setData(const QModelIndex &index, const QVarian
     if (!index.isValid())
         return false;
 
-    const char *str = value.toString().toStdString().c_str();
-    if (!str)
+    const char *str;
+
+    if(value.isNull()) {
+        std::cout << "FALSE\n\n";
         return false;
+    } else {
+        str = value.toString().toStdString().c_str();
+    }
 
     bool isNA = (strstr(str, "NA"))? true: false;
     double dvalue = atof(str);
