@@ -77,6 +77,11 @@ Makefile
 hivemind-qt
 Hivemind-Qt.app
 
+# build-aux folders
+src/fdlibm/build-aux/*
+src/secp256k1/build-aux/*
+src/linalg/build-aux/*
+
 # Unit-tests
 Makefile.test
 hivemind-qt_test
