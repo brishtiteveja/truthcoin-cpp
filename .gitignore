@@ -118,3 +118,5 @@ qa/pull-tester/test.*/*
 /doc/doxygen/
 
 libhivemindconsensus.pc
+src/fdlibm/libfdlibm.pc
+src/linalg/liblinalg.pc
