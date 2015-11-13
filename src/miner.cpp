@@ -4,6 +4,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <vector>
+#include <map>
+
 #include "miner.h"
 
 #include "amount.h"
@@ -34,86 +37,126 @@ extern CMarketTreeDB *pmarkettree;
 // HivemindMiner
 //
 
+// getOutcomeTx
+// for a given branch...
+// calc_rep_tx:
+//    for a given tau, the miner calcs reputation transactions at
+//        height n*tau + ballotTime + unsealTime
+//    it considers all decisions in that branch ending in 
+//        heights ((n-1)*tau, n*tau]
+//    it considers all sealed votes submitted for those decisions in 
+//        heights (n*tau, n*tau+ballotTime]
+//    it considers all revealed votes submitted for those decisions in 
+//        heights (n*tau+ballotTime, n*tau+ballotTime+unsealTime]
+// calc_coin_tx:
+//    any market with max { maturation, decisionID[].eventOverBy}
+//        at this height,
+//      1) all trade payouts are calculated, and
+//      2) the market author fee is calculated.
+//
 CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
 {
-    if (!branch)
-        return CTransaction();
+    /* the transaction to return */
+    CMutableTransaction mtx;
 
-    if (height % branch->tau != 0)
-        return CTransaction();
+    if (!branch)
+        return mtx;
+
+    uint64_t defaultNA = 2016;
+    uint32_t maxDecisionHeight = height - branch->ballotTime - branch->unsealTime;
+    uint32_t minDecisionHeight = maxDecisionHeight - branch->tau;
+
+    /* decisions: needed by both calc_rep_tx and calc_coin_tx */
+    vector<marketDecision *> decisions = pmarkettree->GetDecisions(branch->GetHash());
+    map<uint256,const marketDecision *> decisionMap;
+    for(size_t i=0; i < decisions.size(); i++)
+        decisionMap[ decisions[i]->GetHash() ] = decisions[i];
+
+    /* outcomes: needed by both calc_rep_tx and calc_coin_tx */
+    vector<marketOutcome *> outcomes = pmarkettree->GetOutcomes(branch->GetHash());
+
+    /* outcome for this height */
+    struct marketOutcome *outcome = NULL;
+
+    if (height <= branch->ballotTime + branch->unsealTime)
+        goto calc_coin_tx;
+
+    if ((height - branch->ballotTime - branch->unsealTime) % branch->tau != 0)
+        goto calc_coin_tx;
+
+    /* calc_rep_tx: */
+    {
+    /* previous rep tx */
+    CTransaction preptx;
+    uint32_t prev_outcome_height = 0;
+    for(size_t i=0; i < outcomes.size(); i++) {
+        if (outcomes[i]->nHeight < prev_outcome_height)
+            continue;
+        if (outcomes[i]->tx.vout.empty())
+            continue;
+        prev_outcome_height = outcomes[i]->nHeight;
+        preptx = outcomes[i]->tx; 
+    }
+    if (!prev_outcome_height) {
+        uint256 hashBlock;
+        GetTransaction(branch->txid, preptx, hashBlock, true);
+    }
 
     /* retrieve the votes for this height */
-    vector<marketRevealVote *> vec = pmarkettree->GetRevealVotes(branch->GetHash(), height);
-
     /* index the ballot's votes via their keyIDs */
-    std::map<CKeyID, const marketRevealVote *> votes;
-    for(size_t i=0; i < vec.size(); i++)
-       votes[vec[i]->keyID] = vec[i];
+    vector<marketRevealVote *> revealvotes = pmarkettree->GetRevealVotes(branch->GetHash(), height);
+    map<CKeyID, const marketRevealVote *> votes;
+    for(size_t i=0; i < revealvotes.size(); i++)
+       votes[ revealvotes[i]->keyID ] = revealvotes[i];
 
-    /* create new outcome */
-    struct marketOutcome *outcome = new marketOutcome;
+    /* create new outcome and populate */
+    outcome = new marketOutcome;
     outcome->branchid = branch->GetHash();
     outcome->nDecisions = 0;
-    outcome->NA = 2016; /* if conflicts, to be changed (TODO) */
+    outcome->NA = defaultNA; /* if conflicts, to be changed (TODO) */
     outcome->alpha = branch->alpha;
     outcome->tol = branch->tol;
-
-    /* populate the decisions */
-    vector<marketDecision *> decisions = pmarkettree->GetDecisions(branch->GetHash());
     for(size_t i=0; i < decisions.size(); i++) {
         const marketDecision *decision = decisions[i];
-        uint32_t blocknum = decision->eventOverBy + branch->ballotTime
-            + branch->unsealTime;
-        if (!((height - branch->tau <= blocknum) && (blocknum < height)))
+        if (decision->eventOverBy <= minDecisionHeight)
+            continue;
+        if (decision->eventOverBy > maxDecisionHeight)
             continue;
         outcome->nDecisions++;
         outcome->decisionIDs.push_back(decision->GetHash());
         outcome->isScaled.push_back(decision->isScaled);
     }
     if (outcome->nDecisions)
-        return CTransaction();
-
-    /* populate the voters and their votes */
+        goto end_rep_tx;
     outcome->voteMatrix.clear();
     outcome->voteMatrix.resize(votes.size()*outcome->nDecisions, outcome->NA);
-    vector<marketOutcome *> outcomes = pmarkettree->GetOutcomes(branch->GetHash());
-    CTransaction tx;
-    if (outcomes.size()) {
-        /* get the votecoins from the last outcome */
-        const marketOutcome *poutcome = NULL;
-        for(size_t i=0; i < outcomes.size(); i++)
-            if ((!poutcome) || (outcomes[i]->nHeight > poutcome->nHeight))
-                poutcome = outcomes[i];
-        /* tx = poutcome->tx; */
-    }
-    else {
-        /* get the votecoins from the genesis block */
-        uint256 hashBlock;
-        GetTransaction(branch->txid, tx, hashBlock, true);
-    }
-    for(uint32_t i=0; i < tx.vout.size(); i++) {
+    for(uint32_t i=0; i < preptx.vout.size(); i++) {
         uint160 u;
         vector<vector<unsigned char> > vSolutions;
         txnouttype whichType;
-        int rc = (Solver(tx.vout[i].scriptPubKey, whichType, vSolutions))? 0: -1;
+        int rc = (Solver(preptx.vout[i].scriptPubKey, whichType, vSolutions))? 0: -1;
         if (rc) {
             if (whichType == TX_PUBKEY) {
+
                 CPubKey pubKey(vSolutions[0]);
                 if (pubKey.IsValid())
                    u = Hash160(pubKey.begin(), pubKey.end());
                 else
                    rc = -1;
-            } else if (whichType == TX_PUBKEYHASH)
+            }
+            else
+            if (whichType == TX_PUBKEYHASH)
                 u = uint160(vSolutions[0]);
-            else if (whichType == TX_SCRIPTHASH)
+            else
+            if (whichType == TX_SCRIPTHASH)
                 u = uint160(vSolutions[0]);
             else 
                 rc = -1;
         }
         CKeyID keyID(u);
         outcome->voterIDs.push_back(keyID);
-        outcome->oldRep.push_back(tx.vout[i].nValue);
-        std::map<CKeyID, const marketRevealVote *>::const_iterator vit
+        outcome->oldRep.push_back(preptx.vout[i].nValue);
+        map<CKeyID, const marketRevealVote *>::const_iterator vit
             = votes.find(keyID);
         if ((!rc) && (vit != votes.end())) {
             const marketRevealVote *vote = vit->second;
@@ -132,34 +175,171 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
         }
         outcome->nVoters++;
     }
-    if (outcome->nVoters)
-        return CTransaction();
+    if (!outcome->nVoters) /* if a branch is dead */
+        goto end_rep_tx;
 
-    /* calculate the result */
-    int rc = outcome->calc();
-    if (rc < 0) /* something is wrong */
-        return CTransaction();
+    /* calculate the new reputations */
+    if (outcome->calc() < 0)
+        goto end_rep_tx; /* something is wrong */
 
-    /* create the transaction to redistribute votecoins */
-    CMutableTransaction mtx;
-    for(uint32_t i=0; i < tx.vout.size(); i++) {
+    /* create new reputation tx and append to mtx */
+    for(uint32_t i=0; i < preptx.vout.size(); i++) {
         CKeyID keyID = outcome->voterIDs[i];
         CScript script;
         script << OP_DUP << OP_HASH160 << ToByteVector(keyID) << OP_EQUALVERIFY << OP_CHECKSIG;
-        mtx.vin.push_back(CTxIn(COutPoint(tx.GetHash(),i)));
+        mtx.vin.push_back(CTxIn(COutPoint(preptx.GetHash(),i)));
         mtx.vout.push_back(CTxOut(outcome->smoothedRep[i], script));
     }
-    /* outcome->tx = mtx; */
+    outcome->tx = mtx;
 
     /* clean up */
-    for(size_t i=0; i < vec.size(); i++)
-        delete vec[i];
+    end_rep_tx:
+    for(size_t i=0; i < revealvotes.size(); i++)
+        delete revealvotes[i];
+    }
+
+
+    calc_coin_tx:
+    {
+    /* find which markets have just ended */
+    uint32_t nmarketsended = 0;
+    vector<marketMarket *> markets = pmarkettree->GetMarkets(branch->GetHash());
+    uint8_t *marketneedscalc = NULL;
+    if (markets.empty())
+        goto end_coin_tx;
+    marketneedscalc = new uint8_t [markets.size()];
+    memset(marketneedscalc, 0, markets.size());
+    for(size_t i=0; i < markets.size(); i++) {
+        const marketMarket *market = markets[i];
+        if (market->maturation == height) {
+            marketneedscalc[i] = 1;
+            nmarketsended++;
+        }
+        else
+        if (market->maturation < height) {
+            for(size_t i=0; i < market->decisionIDs.size(); i++) {
+                map<uint256,const marketDecision *>::const_iterator it
+                    = decisionMap.find(market->decisionIDs[i]);
+                if (it == decisionMap.end())
+                    continue;
+                if (it->second->eventOverBy <= minDecisionHeight)
+                    continue;
+                if (it->second->eventOverBy > maxDecisionHeight)
+                    continue;
+                marketneedscalc[i] = 1;
+                nmarketsended++;
+                break;
+            }
+        }
+    }
+    if (!nmarketsended)
+        goto end_coin_tx;
+
+    for(uint32_t i=0; i < markets.size(); i++) {
+        if (!marketneedscalc[i])
+            continue;
+        /* populate the market's decisionsFinal and isScaled arrays */
+        vector<uint64_t> decisionsFinals;
+        vector<uint64_t> isScaleds;
+        vector<uint64_t> mins;
+        vector<uint64_t> maxs;
+        for(size_t j=0; j < markets[i]->decisionIDs.size(); j++) {
+            map<uint256,const marketDecision *>::const_iterator it
+                = decisionMap.find(markets[i]->decisionIDs[j]);
+            uint64_t decisionFinal = defaultNA;
+            uint64_t min = 0;
+            uint64_t max = 0;
+            uint8_t isScaled = 0;
+            if (it != decisionMap.end()) {
+                min = it->second->min;
+                max = it->second->max;
+                /* get the outcome for this decision */
+                const marketOutcome *doutcome = NULL;
+                if ((it->second->eventOverBy <= minDecisionHeight)
+                    && (it->second->eventOverBy > maxDecisionHeight)
+                    && (outcome))
+                {
+                    doutcome = outcome;
+                }
+                else
+                {
+                    for(size_t k=0; k < outcomes.size(); k++) {
+                        if (it->second->eventOverBy > outcomes[k]->nHeight
+                            + branch->ballotTime + branch->unsealTime)
+                            continue;
+                        if (it->second->eventOverBy > outcomes[k]->nHeight
+                            + branch->ballotTime + branch->unsealTime - branch->tau)
+                            continue;
+
+                        doutcome = outcome;
+                        break;
+                    }
+                }
+                /* find the decisionFinal in this outcome */
+                if (doutcome) {
+                    for(size_t k=0; k < outcome->decisionIDs.size(); i++) {
+                        if (doutcome->decisionIDs[k] != markets[i]->decisionIDs[j])
+                            continue;
+                        decisionFinal = doutcome->decisionsFinal[k];
+                        isScaled = doutcome->isScaled[k];
+                        break;
+                    }
+                }
+            }
+            decisionsFinals.push_back(decisionFinal);
+            isScaleds.push_back(isScaled);
+            mins.push_back(min);
+            maxs.push_back(max);
+        }
+        /* the trades */
+        vector<marketTrade *> trades = pmarkettree->GetTrades(markets[i]->GetHash());
+        for(uint32_t j=0; j < trades.size(); j++) {
+            if (!trades[j]->isBuy)
+                continue;
+            /* TODO: lookup and skip if previously sold */
+            uint64_t nShares = trades[j]->nShares;
+            uint32_t decisionState = trades[j]->decisionState;
+            /* iterate through all decisions */
+            double payout = 1.0;
+            for(uint32_t k=0; k < decisionsFinals.size(); k++) {
+                uint8_t state = (decisionState >> k) & 1;
+                if (isScaleds[k]) {
+                    if ((state == 0) && (maxs[k] > mins[k]))
+                        payout *= (maxs[k] - decisionsFinals[k]) / (maxs[k] - mins[k]);
+                    else
+                    if ((state == 1) && (maxs[k] > mins[k]))
+                        payout *= (decisionsFinals[k] - mins[k]) / (maxs[k] - mins[k]);
+                }
+                else
+                if ((state == 0) && (decisionsFinals[k] > 0.5*1e8))
+                    { payout = 0; break; }
+                else
+                if ((state == 1) && (decisionsFinals[k] < 0.5*1e8))
+                    { payout = 0; break; }
+            }
+            if (payout > 0.0) {
+                CScript script;
+                script << OP_DUP << OP_HASH160 << ToByteVector(trades[j]->keyID) << OP_EQUALVERIFY << OP_CHECKSIG;
+                mtx.vout.push_back(CTxOut(nShares*payout, script));
+            }
+            delete trades[j];
+        }
+    }
+
+    /* clean up */
+    end_coin_tx:
+    for(size_t i=0; i < markets.size(); i++)
+        delete markets[i];
+    if (marketneedscalc)
+        delete [] marketneedscalc;
+    }
 
     for(size_t i=0; i < decisions.size(); i++)
         delete decisions[i];
-
     for(size_t i=0; i < outcomes.size(); i++)
         delete outcomes[i];
+    if (outcome)
+        delete outcome;
 
     return mtx;
 }
