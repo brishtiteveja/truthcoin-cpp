@@ -1163,7 +1163,7 @@ void BallotView::updateCreateSealedVoteScrollArea(void)
             snprintf(tmp, sizeof(tmp), "%.8f", 0.5e-8*(obj->min + obj->max));
             QLineEdit *lineedit = new QLineEdit();
             lineedit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-            lineedit->setValidator( new QDoubleValidator(1e-8*obj->min, 1e-8*obj->max, 8) );
+            lineedit->setValidator( new QDoubleValidator(1e-8*obj->min, 1e-8*obj->max, 8. this) );
             lineedit->setText( QString(tmp) );
             lineedit->setMinimumWidth(100);
             sealedVoteLayout->addWidget(lineedit, row, col5);
