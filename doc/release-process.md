@@ -2,7 +2,7 @@ Release Process
 ====================
 
 * update translations (ping wumpus, Diapolo or tcatm on IRC)
-* see https://github.com/psztorc/hivemind-cpp/blob/master/doc/translation_process.md#syncing-with-transifex
+* see https://github.com/bitcoin-hivemind/hivemind/blob/master/doc/translation_process.md#syncing-with-transifex
 
 * * *
 
@@ -33,7 +33,7 @@ Release Process
   
 	export SIGNER=(your gitian key, ie bluematt, sipa, etc)
 	export VERSION=(new version, e.g. 0.8.0)
-	pushd ./hivemind-cpp
+	pushd ./hivemind
 	git checkout t${VERSION}
 	popd
 	pushd ./gitian-builder
@@ -54,20 +54,20 @@ Release Process
 
   By default, gitian will fetch source files as needed. For offline builds, they can be fetched ahead of time:
 
-	make -C ../hivemind-cpp/depends download SOURCES_PATH=`pwd`/cache/common
+	make -C ../hivemind/depends download SOURCES_PATH=`pwd`/cache/common
 
   Only missing files will be fetched, so this is safe to re-run for each build.
 
 ###Build Hivemind Core for Linux, Windows, and OS X:
   
-	./bin/gbuild --commit hivemind-cpp=t${VERSION} ../hivemind-cpp/contrib/gitian-descriptors/gitian-linux.yml
-	./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../hivemind-cpp/contrib/gitian-descriptors/gitian-linux.yml
+	./bin/gbuild --commit hivemind=t${VERSION} ../hivemind/contrib/gitian-descriptors/gitian-linux.yml
+	./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../hivemind/contrib/gitian-descriptors/gitian-linux.yml
 	mv build/out/hivemind-*.tar.gz build/out/src/hivemind-*.tar.gz ../
-	./bin/gbuild --commit hivemind-cpp=t${VERSION} ../hivemind-cpp/contrib/gitian-descriptors/gitian-win.yml
-	./bin/gsign --signer $SIGNER --release ${VERSION}-win --destination ../gitian.sigs/ ../hivemind-cpp/contrib/gitian-descriptors/gitian-win.yml
+	./bin/gbuild --commit hivemind=t${VERSION} ../hivemind/contrib/gitian-descriptors/gitian-win.yml
+	./bin/gsign --signer $SIGNER --release ${VERSION}-win --destination ../gitian.sigs/ ../hivemind/contrib/gitian-descriptors/gitian-win.yml
 	mv build/out/hivemind-*.zip build/out/hivemind-*.exe ../
-	./bin/gbuild --commit hivemind-cpp=t${VERSION} ../hivemind-cpp/contrib/gitian-descriptors/gitian-osx.yml
-	./bin/gsign --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../hivemind-cpp/contrib/gitian-descriptors/gitian-osx.yml
+	./bin/gbuild --commit hivemind=t${VERSION} ../hivemind/contrib/gitian-descriptors/gitian-osx.yml
+	./bin/gsign --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../hivemind/contrib/gitian-descriptors/gitian-osx.yml
 	mv build/out/hivemind-*-unsigned.tar.gz inputs/hivemind-osx-unsigned.tar.gz
 	mv build/out/hivemind-*.tar.gz build/out/hivemind-*.dmg ../
 	popd
