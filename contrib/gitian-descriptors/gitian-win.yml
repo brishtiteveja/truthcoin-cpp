@@ -20,8 +20,8 @@ packages:
 - "zip"
 reference_datetime: "2013-06-01 00:00:00"
 remotes:
-- "url": "https://github.com/psztorc/truthcoin-cpp"
-  "dir": "truthcoin-cpp"
+- "url": "https://github.com/bitcoin-hivemind/hivemind"
+  "dir": "hivemind"
 files: []
 script: |
   WRAP_DIR=$HOME/wrapped
@@ -65,17 +65,17 @@ script: |
   done
   export PATH=${WRAP_DIR}:${PATH}
 
-  cd truthcoin-cpp
+  cd hivemind
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do
-    make ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
+    make -j 3 ${MAKEOPTS} -C ${BASEPREFIX} HOST="${i}"
   done
 
   # Create the release tarball using (arbitrarily) the first host
   ./autogen.sh
   ./configure --prefix=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`
-  make dist
+  make -j 3 dist
   SOURCEDIST=`echo hivemind-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
 
@@ -97,7 +97,7 @@ script: |
     tar --strip-components=1 -xf ../$SOURCEDIST
 
     ./configure --prefix=${BASEPREFIX}/${i} --bindir=${INSTALLPATH}/bin --includedir=${INSTALLPATH}/include --libdir=${INSTALLPATH}/lib --disable-ccache --disable-maintainer-mode --disable-dependency-tracking ${CONFIGFLAGS}
-    make ${MAKEOPTS}
+    make -j 3 ${MAKEOPTS}
     make deploy
     make install-strip
     cp -f hivemind-*setup*.exe $OUTDIR/

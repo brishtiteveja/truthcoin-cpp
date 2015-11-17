@@ -238,12 +238,12 @@ void ResolveVoteDialog::setModel(WalletModel *model)
         inputTableView->setModel(inputTableModel);
         inputTableView->setAlternatingRowColors(true);
         inputTableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    
+
 #if QT_VERSION >= 0x050000
         QHeaderView *hHeader = inputTableView->horizontalHeader();
         hHeader->sectionResizeMode(QHeaderView::Fixed);
         hHeader->setDefaultSectionSize(100);
-    
+
         QHeaderView *vHeader = inputTableView->verticalHeader();
         vHeader->sectionResizeMode(QHeaderView::Fixed);
         vHeader->setDefaultSectionSize(20);
@@ -256,12 +256,12 @@ void ResolveVoteDialog::setModel(WalletModel *model)
         colTableView->setModel(colTableModel);
         colTableView->setAlternatingRowColors(true);
         colTableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    
+
 #if QT_VERSION >= 0x050000
         QHeaderView *hHeader = inputTableView->horizontalHeader();
         hHeader->sectionResizeMode(QHeaderView::Fixed);
         hHeader->setDefaultSectionSize(100);
-    
+
         QHeaderView *vHeader = colTableView->verticalHeader();
         vHeader->sectionResizeMode(QHeaderView::Fixed);
         vHeader->setDefaultSectionSize(20);
@@ -274,12 +274,12 @@ void ResolveVoteDialog::setModel(WalletModel *model)
         rowTableView->setModel(rowTableModel);
         rowTableView->setAlternatingRowColors(true);
         rowTableView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    
+
 #if QT_VERSION >= 0x050000
         QHeaderView *hHeader = inputTableView->horizontalHeader();
         hHeader->sectionResizeMode(QHeaderView::Fixed);
         hHeader->setDefaultSectionSize(100);
-    
+
         QHeaderView *vHeader = rowTableView->verticalHeader();
         vHeader->sectionResizeMode(QHeaderView::Fixed);
         vHeader->setDefaultSectionSize(20);
@@ -337,7 +337,7 @@ bool ResolveVoteDialog::eventFilter(QObject *obj, QEvent *event)
                 QStringList lines = text.split("\n");
                 QItemSelectionModel *selection = tableView->selectionModel();
                 QModelIndexList indexes = selection->selectedIndexes();
-                if (indexes.size() && indexes.at(0).isValid()) { 
+                if (indexes.size() && indexes.at(0).isValid()) {
                     int row = indexes.at(0).row();
                     int col = indexes.at(0).column();
                     for(int i=0; i < lines.size(); i++) {
@@ -353,17 +353,17 @@ bool ResolveVoteDialog::eventFilter(QObject *obj, QEvent *event)
                             if (col + j == 0) { /* Old Rep */
                                 if ((row+i >= 3) && (row+i-3 < (int)vote->nr))
                                     vote->rvecs[TC_VOTE_OLD_REP]->a[row+i-3][0] = dvalue;
-                            } 
+                            }
                             else
                             if (row + i == 0) /* Binary/Scalar */
                                 vote->cvecs[TC_VOTE_IS_BINARY]->a[0][col+j-1]
                                     = (dvalue < 0.5)? 0.0: 1.0;
                             else
                             if (row + i == 1) /* Minimum */
-                               ; 
+                               ;
                             else
                             if (row + i == 2) /* Maximum */
-                               ; 
+                               ;
                             else
                             if (row + i < 3 + (int)vote->nr)
                                vote->M->a[row+i-3][col+j-1] = (isNA)? vote->NA: dvalue;
@@ -544,6 +544,10 @@ void ResolveVoteDialog::onNAChange()
 
 void ResolveVoteDialog::onInputChange(void)
 {
+    if (!vote) {
+        return;
+    }
+
     vote_proc_rc = tc_vote_proc(vote);
     char tmp[32];
     snprintf(tmp, sizeof(tmp), "%u", vote_proc_rc);

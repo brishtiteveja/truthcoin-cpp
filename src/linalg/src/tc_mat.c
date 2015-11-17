@@ -788,7 +788,7 @@ tc_wgt_median(const struct tc_mat *wgt, const struct tc_mat *A, uint32_t j,
     double NA)
 {
     if (!wgt || !A || !A->nr || !A->nc
-            || (wgt->nr != A->nr) || (j >= A->nc))
+        || (wgt->nr != A->nr) || (j >= A->nc))
         return 0.0;
 
     struct vecdouble *v = (struct vecdouble *)
@@ -804,7 +804,9 @@ tc_wgt_median(const struct tc_mat *wgt, const struct tc_mat *A, uint32_t j,
         nwgts++;
     }
     double mid_wgts = sum_wgts / 2.0;
-    if (nwgts == 0)
+
+    /* Is there a median to look for? */
+    if (nwgts <= 2)
         return 0.0;
 
     /* iterate through the sorted values until mid_wgts is passed */
@@ -1011,8 +1013,7 @@ tc_vote_print(const struct tc_vote *ptr)
     return 0;
 }
 
-#undef METHOD1
-#define METHOD5 /* Change to 6? */
+#define METHOD6
 int
 tc_vote_proc(struct tc_vote *vote)
 {
@@ -1061,99 +1062,143 @@ tc_vote_proc(struct tc_vote *vote)
         if (isbin->a[0][j] == 0.0)
             wgtT_fM->a[0][j] = tc_wgt_median(wgt, fM, j, vote->NA);
 
-    /* scores1: scores adjusted by adding min{scores} */
-    double min_score = scores->a[0][0];
-    for(uint32_t i=1; i < scores->nr; i++)
-        if (min_score > scores->a[i][0])
-            min_score = scores->a[i][0];
-    if (min_score < 0.0)
-        min_score = -min_score;
-    struct tc_mat *scores1 = tc_mat_ctr(0, 0);
-    tc_mat_copy(scores1, scores);
-    for(uint32_t i=0; i < scores1->nr; i++)
-        scores1->a[i][0] += min_score;
-
-    /* scores2: scores adjusted by subtracting max{scores} */
-    double max_score = scores->a[0][0];
-    for(uint32_t i=1; i < scores->nr; i++)
-        if (max_score < scores->a[i][0])
-            max_score = scores->a[i][0];
-    struct tc_mat *scores2 = tc_mat_ctr(0, 0);
-    tc_mat_copy(scores2, scores);
-    for(uint32_t i=0; i < scores2->nr; i++)
-        scores2->a[i][0] = max_score - scores2->a[i][0];
-
-#ifdef METHOD5
-    /* distance */
-    struct tc_mat *dist = tc_mat_ctr(0, 0);
-    tc_mat_copy(dist, fM);
-    for(uint32_t j=0; j < dist->nc; j++) {
-        double val = 0.0;
-        if (isbin->a[0][j] != 0.0)
-            val = (wgtT_fM->a[0][j] < 0.5)
-                ? 0.0: ((wgtT_fM->a[0][j] > 0.5)? 1.0: 0.5);
-        else
-            val = wgtT_fM->a[0][j];
-        for(uint32_t i=0; i < dist->nr; i++)
-            dist->a[i][j] = fabs(dist->a[i][j] - val);
-
+    /* Calculate sum of first score's absolute values */
+    double sum_first_fabs = 0.0;
+    for(uint32_t i=0; i < scores->nr; i++) {
+        for(uint32_t j=0; j < scores->nc; j++) {
+            if (scores->a[i][j] == 0.0)
+              continue;
+            sum_first_fabs += fabs(scores->a[i][j]);
+        }
     }
-    /* mainstream = 1/dissent */
-    struct tc_mat *mainstream = tc_mat_ctr(firstloading->nc, 1);
-    for(uint32_t j=0; j < firstloading->nc; j++) {
-        double value = firstloading->a[0][j];
-        if (value == 0.0)
-            mainstream->a[j][0] = vote->NA;
-        else
-            mainstream->a[j][0] = 1.0/fabs(value);
-    }
-    tc_wgt_normalize(mainstream);
-    /* noncompliance = distance * mainstream^T */
-    struct tc_mat *noncompliance = tc_mat_ctr(0, 0);
-    tc_mat_mult(noncompliance, dist, mainstream);
-    double max_noncompliance = noncompliance->a[0][0];
-    for(uint32_t i=1; i < noncompliance->nr; i++)
-        if (max_noncompliance < noncompliance->a[i][0])
-            max_noncompliance = noncompliance->a[i][0];
-    /* compliance */
-    struct tc_mat *compliance = tc_mat_ctr(noncompliance->nr, 1);
-    for(uint32_t i=0; i < noncompliance->nr; i++)
-        compliance->a[i][0] = max_noncompliance - noncompliance->a[i][0];
-    tc_wgt_normalize(compliance);
 
-    struct tc_mat *v1 = tc_mat_ctr(0, 0);
-    tc_mat_copy(v1, scores1);
-    tc_wgt_normalize(v1);
-    tc_mat_sub(v1, v1, compliance);
-    struct tc_mat *v2 = tc_mat_ctr(0, 0);
-    tc_mat_copy(v2, scores2);
-    tc_wgt_normalize(v2);
-    tc_mat_sub(v2, v2, compliance);
-
-    tc_mat_dtr(compliance);
-    tc_mat_dtr(noncompliance);
-    tc_mat_dtr(mainstream);
-    tc_mat_dtr(dist);
-#endif
-
-    /* twgt: reputation vector of this round of votes  */
-    /* twgt = (||v1|| < ||v2||)? score1: score2          */
-    if (tc_mat_norm(v1) <= tc_mat_norm(v2))
-        tc_mat_copy(twgt, scores1);
-    else
-        tc_mat_copy(twgt, scores2);
-    double median_factor = tc_wgt_median(wgt, twgt, 0, vote->NA);
-    if (median_factor > 0.0) {
-        /* above-median weights are knocked down to median */
-        for(uint32_t i=0; i < wgt->nr; i++)
-            if (twgt->a[i][0] > median_factor)
-                twgt->a[i][0] = median_factor;
-    } else {
-        /* just use old rep */
+    /* If perfect consensus, use old weights. Otherwise, calculate new */
+    if (!sum_first_fabs != 0) {
         tc_mat_copy(twgt, wgt);
+    } else {
+        /* scores1: scores adjusted by adding min{scores} */
+        double min_score = scores->a[0][0];
+        for(uint32_t i=1; i < scores->nr; i++)
+            if (min_score > scores->a[i][0])
+                min_score = scores->a[i][0];
+        if (min_score < 0.0)
+            min_score = -min_score;
+        struct tc_mat *scores1 = tc_mat_ctr(0, 0);
+        tc_mat_copy(scores1, scores);
+        for(uint32_t i=0; i < scores1->nr; i++)
+            scores1->a[i][0] += min_score;
+
+        /* scores2: scores adjusted by subtracting max{scores} */
+        double max_score = scores->a[0][0];
+        for(uint32_t i=1; i < scores->nr; i++)
+            if (max_score < scores->a[i][0])
+                max_score = scores->a[i][0];
+        struct tc_mat *scores2 = tc_mat_ctr(0, 0);
+        tc_mat_copy(scores2, scores);
+        for(uint32_t i=0; i < scores2->nr; i++)
+            scores2->a[i][0] = max_score - scores2->a[i][0];
+
+        /* Median factors for both choices */
+        double median_factor_1 = tc_wgt_median(wgt, scores1, 0, vote->NA);
+        double median_factor_2 = tc_wgt_median(wgt, scores2, 0, vote->NA);
+
+        /* Use median as new upper limit, shift excessive values */
+        struct tc_mat *new_scores_1 = tc_mat_ctr(0, 0);
+        tc_mat_copy(new_scores_1, scores1);
+        if (median_factor_1 > 0.0) {
+            /* above-median weights are adjusted to below median */
+            for(uint32_t i=0; i < scores1->nr; i++)
+              if (scores1->a[i][0] > median_factor_1) {
+                  double excessive = scores1->a[i][0] - median_factor_1;
+                  new_scores_1->a[i][0] = scores1->a[i][0] - (excessive * 0.5);
+              } else {
+                new_scores_1->a[i][0] = scores1->a[i][0];
+              }
+        }
+
+        /* Use median as new upper limit, shift excessive values */
+        struct tc_mat *new_scores_2 = tc_mat_ctr(0, 0);
+        tc_mat_copy(new_scores_2, scores2);
+        if (median_factor_2 > 0.0) {
+            /* above-median weights are adjusted to below median */
+            for(uint32_t i=0; i < scores2->nr; i++)
+              if (scores2->a[i][0] > median_factor_2) {
+                  double excessive = scores2->a[i][0] - median_factor_2;
+                  new_scores_2->a[i][0] = scores2->a[i][0] - (excessive * 0.5);
+              } else {
+                new_scores_2->a[i][0] = scores2->a[i][0];
+              }
+        }
+
+#ifdef METHOD6
+        /* distance */
+        struct tc_mat *dist = tc_mat_ctr(0, 0);
+        tc_mat_copy(dist, fM);
+        for(uint32_t j=0; j < dist->nc; j++) {
+            double val = 0.0;
+            if (isbin->a[0][j] != 0.0)
+                val = (wgtT_fM->a[0][j] < 0.5)
+                    ? 0.0: ((wgtT_fM->a[0][j] > 0.5)? 1.0: 0.5);
+            else
+                val = wgtT_fM->a[0][j];
+            for(uint32_t i=0; i < dist->nr; i++)
+                dist->a[i][j] = fabs(dist->a[i][j] - val);
+        }
+
+        /* mainstream = 1/dissent */
+        struct tc_mat *mainstream = tc_mat_ctr(firstloading->nc, 1);
+        for(uint32_t j=0; j < firstloading->nc; j++) {
+            double value = firstloading->a[0][j];
+            if (value == 0.0)
+                mainstream->a[j][0] = vote->NA;
+            else
+                mainstream->a[j][0] = 1.0/fabs(value);
+        }
+        tc_wgt_normalize(mainstream);
+
+        /* noncompliance = distance * mainstream^T */
+        struct tc_mat *noncompliance = tc_mat_ctr(0, 0);
+        tc_mat_mult(noncompliance, dist, mainstream);
+        double max_noncompliance = noncompliance->a[0][0];
+        for(uint32_t i=1; i < noncompliance->nr; i++)
+            if (max_noncompliance < noncompliance->a[i][0])
+                max_noncompliance = noncompliance->a[i][0];
+        /* compliance */
+        struct tc_mat *compliance = tc_mat_ctr(noncompliance->nr, 1);
+        for(uint32_t i=0; i < noncompliance->nr; i++)
+            compliance->a[i][0] = max_noncompliance - noncompliance->a[i][0];
+        tc_wgt_normalize(compliance);
+
+        struct tc_mat *v1 = tc_mat_ctr(0, 0);
+        tc_mat_copy(v1, new_scores_1);
+        tc_wgt_normalize(v1);
+        tc_mat_sub(v1, v1, compliance);
+        struct tc_mat *v2 = tc_mat_ctr(0, 0);
+        tc_mat_copy(v2, new_scores_2);
+        tc_wgt_normalize(v2);
+        tc_mat_sub(v2, v2, compliance);
+
+        tc_mat_dtr(compliance);
+        tc_mat_dtr(noncompliance);
+        tc_mat_dtr(mainstream);
+        tc_mat_dtr(dist);
+#endif
+        /* twgt = (||v1|| < ||v2||)? score1: score2 */
+        if (tc_mat_norm(v1) <= tc_mat_norm(v2))
+            tc_mat_copy(twgt, new_scores_1);
+        else
+            tc_mat_copy(twgt, new_scores_2);
+
+        /* normalized */
+        tc_wgt_normalize(twgt);
+
+        tc_mat_dtr(v2);
+        tc_mat_dtr(v1);
+        tc_mat_dtr(new_scores_2);
+        tc_mat_dtr(new_scores_1);
+        tc_mat_dtr(scores2);
+        tc_mat_dtr(scores1);
     }
-    /* normalized */
-    tc_wgt_normalize(twgt);
 
     /* smoothedrep: smoothed with previous oldrep   */
     /* smoothedrep: (1-alpha) oldrep + alpha * smoothedrep */
@@ -1246,10 +1291,6 @@ tc_vote_proc(struct tc_vote *vote)
         colbonus->a[0][j] = fracNA * partic_rel_col->a[0][j] + (1.0 - fracNA) * conreward->a[0][j];
     tc_mat_dtr(partic_rel_col);
 
-    tc_mat_dtr(v2);
-    tc_mat_dtr(scores2);
-    tc_mat_dtr(v1);
-    tc_mat_dtr(scores1);
     tc_mat_dtr(wgtT_fM);
     tc_mat_dtr(wgtT);
     tc_mat_dtr(scores);
@@ -1257,4 +1298,3 @@ tc_vote_proc(struct tc_vote *vote)
 
     return rc;
 }
-
