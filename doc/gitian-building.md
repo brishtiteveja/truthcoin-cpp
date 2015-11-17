@@ -281,8 +281,8 @@ Clone the git repositories for hivemind and gitian and then checkout the hivemin
 
 ```bash
 git clone https://github.com/devrandom/gitian-builder.git
-git clone https://github.com/psztorc/hivemind-cpp
-cd hivemind-cpp
+git clone https://github.com/bitcoin-hivemind/hivemind
+cd hivemind
 git checkout t${VERSION}
 cd ..
 ```
@@ -365,9 +365,9 @@ For example:
 ```bash
 URL=https://github.com/laanwj/hivemind.git
 COMMIT=2014_03_windows_unicode_path
-./bin/gbuild --commit hivemind-cpp=${COMMIT} --url hivemind-cpp=${URL} ../hivemind-cpp/contrib/gitian-descriptors/gitian-linux.yml
-./bin/gbuild --commit hivemind-cpp=${COMMIT} --url hivemind-cpp=${URL} ../hivemind-cpp/contrib/gitian-descriptors/gitian-win.yml
-./bin/gbuild --commit hivemind-cpp=${COMMIT} --url hivemind-cpp=${URL} ../hivemind-cpp/contrib/gitian-descriptors/gitian-osx.yml
+./bin/gbuild --commit hivemind=${COMMIT} --url hivemind=${URL} ../hivemind-cpp/contrib/gitian-descriptors/gitian-linux.yml
+./bin/gbuild --commit hivemind=${COMMIT} --url hivemind=${URL} ../hivemind-cpp/contrib/gitian-descriptors/gitian-win.yml
+./bin/gbuild --commit hivemind=${COMMIT} --url hivemind=${URL} ../hivemind-cpp/contrib/gitian-descriptors/gitian-osx.yml
 ```
 
 Signing externally
