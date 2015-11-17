@@ -1,9 +1,7 @@
 Hivemind Core integration/staging tree
 =====================================
 
-[![Build Status](https://travis-ci.org/hivemind/hivemind.svg?branch=master)](https://travis-ci.org/hivemind/hivemind)
-
-[http://www.hivemind.info](http://www.hivemind.info)
+[http://www.bitcoinhivemind.com](http://www.bitcoinhivemind.com)
 
 What is Hivemind?
 ----------------
@@ -14,7 +12,7 @@ Although substantially more complex, Hivemind offers correspondingly substantial
 
 Hivemind includes two types of value-token.  One, "Bitcoin", is used for storing value, buying/selling in markets and paying transaction fees to miners. This coin will resemble Bitcoin-testnet-money (an "Altcoin") for the duration of pre-release testing, and will then be a [sidechain](http://www.blockstream.com/) of Bitcoin. Therefore, the network will "accept" Bitcoin (indeed, this will be the only currency the network accepts). The second (less important) token, "VoteCoin", is used to track a smaller group of special users and reward them for providing reports to the blockchain on the status of the bet-upon events.
 
-For an immediately useable, binary version of the Hivemind Core software, see [http://www.hivemind.info/software/](http://www.hivemind.info/software/).
+For an immediately useable, binary version of the Hivemind Core software, see [https://github.com/bitcoin-hivemind/hivemind-binaries](https://github.com/bitcoin-hivemind/hivemind-binaries).
 
 License
 -------
