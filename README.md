@@ -33,7 +33,7 @@ To compile on Ubuntu 14.04:
 sudo apt-get install git
 
 # Download Hivemind
-git clone https://github.com/github.com/bitcoin-hivemind/hivemind
+git clone https://github.com/bitcoin-hivemind/hivemind
 
 # (permission is required)
 # Username:
