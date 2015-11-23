@@ -224,6 +224,11 @@ BOOST_AUTO_TEST_CASE(json_parse_errors)
     BOOST_CHECK_THROW(ParseNonRFCJSONValue("3J98t1WpEZ73CNmQviecrnyiWrnqRhWNL"), std::runtime_error);
 }
 
+BOOST_AUTO_TEST_CASE(rpc_peer_info)
+{
+	BOOST_CHECK_NO_THROW(CallRPC(string("getpeerinfo")));
+}
+
 BOOST_AUTO_TEST_CASE(rpc_ban)
 {
     BOOST_CHECK_NO_THROW(CallRPC(string("clearbanned")));
