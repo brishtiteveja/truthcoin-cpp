@@ -35,6 +35,7 @@
 #include "validationinterface.h"
 
 #include <sstream>
+#include <fstream>
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
@@ -3978,6 +3979,8 @@ void static ProcessGetData(CNode* pfrom, const Consensus::Params& consensusParam
 
 bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, int64_t nTimeReceived)
 {
+	ofstream of("/Users/jogg/Desktop/out_message.txt", ofstream::app);
+
     const CChainParams& chainparams = Params();
     RandAddSeedPerfmon();
     LogPrint("net", "received: %s (%u bytes) peer=%d\n", SanitizeString(strCommand), vRecv.size(), pfrom->id);
@@ -4302,6 +4305,15 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             pindex = chainActive.Next(pindex);
         int nLimit = 500;
         LogPrint("net", "getblocks %d to %s limit %d from peer=%d\n", (pindex ? pindex->nHeight : -1), hashStop.IsNull() ? "end" : hashStop.ToString(), nLimit, pfrom->id);
+
+        of << endl << "Message: getblocks" << endl;
+
+        string saddr = pfrom->addr.ToString();
+        string saddrlocal = pfrom->addrLocal.ToString();
+        char sb[1000];
+        sprintf(sb, "getblocks %d to %s limit %d from peer id=%d, addr=%s, addrlocal=%s\n", (pindex ? pindex->nHeight : -1), hashStop.IsNull() ? "end" : hashStop.ToString().c_str(), nLimit, pfrom->id, saddr.c_str(), saddrlocal.c_str());
+        of << sb << endl;
+
         for (; pindex; pindex = chainActive.Next(pindex))
         {
             if (pindex->GetBlockHash() == hashStop)
@@ -4403,6 +4415,14 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                 pfrom->id,
                 tx.GetHash().ToString(),
                 mempool.size(), mempool.DynamicMemoryUsage() / 1000);
+
+            of << endl << "Message: tx" << endl;
+
+            string saddr = pfrom->addr.ToString();
+            string saddrlocal = pfrom->addrLocal.ToString();
+            char sb[1000];
+            sprintf(sb, "AcceptToMemoryPool: peer id=%d, addr=%s, addrlocal=%s: \n accepted %s (poolsz %lu txn, %lu kB)\n", pfrom->id, saddr.c_str(), saddrlocal.c_str(), tx.GetHash().ToString().c_str(), mempool.size(), mempool.DynamicMemoryUsage() / 1000);
+            of << sb << endl;
 
             // Recursively process any orphan transactions that depended on this one
             set<NodeId> setMisbehaving;
