@@ -161,9 +161,11 @@ bool ResolveVoteInputTableModel::setData(const QModelIndex &index, const QVarian
     const char *str;
 
     if (value.isNull()) {
-      return false;
+        return false;
     } else {
-      str = value.toString().toStdString().c_str();
+        str = value.toString().toStdString().c_str();
+        if (str == NULL || str[0] == '\0')
+            return false;
     }
 
     bool isNA = (strstr(str, "NA"))? true: false;
@@ -197,4 +199,3 @@ bool ResolveVoteInputTableModel::setData(const QModelIndex &index, const QVarian
     }
     return false;
 }
-
