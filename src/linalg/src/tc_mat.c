@@ -493,8 +493,7 @@ tc_mat_svd(
             threshold = fabs(D->a[i][i+1]);
     threshold *= 1e-12;
     const double zero_threshold = 0.1 * threshold;
-    /* Always reindex the components so that
-     * D so that has the form
+    /* Always reindex the components so that D has the form
      *     [D1, 0] where D1 is diagonal and
      *     [ 0,D2]       D2 is bidiagonal
      * Let i0 be the starting index of D2
@@ -536,6 +535,7 @@ tc_mat_svd(
                 }
                 i1++;
             }
+
             /* move (i0,i1-1) down, i1 -> i0  */
             for(uint32_t j=0; j < D->nr; j++) {
                 double tmp = V->a[i1][j];
@@ -543,21 +543,28 @@ tc_mat_svd(
                     V->a[k][j] = V->a[k-1][j];
                 V->a[i0][j] = tmp;
             }
+
             for(uint32_t j=0; j < D->nr; j++) {
                 double tmp = U->a[j][i1];
                 for(uint32_t k=i1; k > i0; k--)
                     U->a[j][k] = U->a[j][k-1];
                 U->a[j][i0] = tmp;
             }
+
+            uint32_t ir = i1;
+            if (ir+1 == D->nr)
+                ir--;
             double tmp = D->a[i1][i1];
-            double tmp1 = D->a[i1][i1+1];
+            double tmp1 = D->a[i1][ir+1];
+
             for(uint32_t k=i1; k > i0; k--) {
                 D->a[k][k] = D->a[k-1][k-1];
                 if (k+1 < D->nc)
                     D->a[k][k+1] = D->a[k-1][k];
             }
+
             D->a[i0][i0] = tmp;
-            D->a[i0][i0+1] = tmp1;
+            D->a[i0][ir+1] = tmp1;
             i0++;
         }
         /* For any zeros on the superdiagonal, move the
@@ -855,7 +862,7 @@ tc_wgt_prin_comp(
         for(uint32_t i=0; i < M->nr; i++)
             x[i][j] = M->a[i][j] - avg;
     }
-    /* wCMV = weighted covariance matrix of M */
+    /* wCVM = weighted covariance matrix of M */
     double wgts2 = 0.0;
     for(uint32_t i=0; i < M->nr; i++)
         wgts2 += wgt->a[i][0] * wgt->a[i][0];
