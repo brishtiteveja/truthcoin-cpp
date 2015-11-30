@@ -170,7 +170,6 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
     vi1layout->addWidget(inputTableView);
 
     /* vo1layout (output)      */
-
     QTabWidget *tabs = new QTabWidget();
     QWidget *dataTab = new QWidget();
     tabs->addTab(dataTab, tr("Data"));

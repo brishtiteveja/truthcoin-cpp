@@ -1,7 +1,7 @@
 Hivemind Core integration/staging tree
 =====================================
 
-[http://www.bitcoinhivemind.com](http://www.bitcoinhivemind.com)
+[http://www.bitcoin-hivemind.com](http://www.bitcoin-hivemind.com)
 
 What is Hivemind?
 ----------------
