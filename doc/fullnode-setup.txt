@@ -61,6 +61,12 @@ binaries:
   Warning: You may need to enable and configure swapfiles if your computer or
   VPS has a small amount of memory available (<2 GB)
 
+  How to enable and configure swapfiles (create 1.1 GB swapfile at /swapfile):
+    dd if=/dev/zero of=/swapfile bs=64M count=16
+    chmod 600 /swapfile
+    mkswap /swapfile
+    swapon /swapfile
+
 7.
 (Skip to step 8 if you built from source)
 Download and extract the pre-built hivemind binary for your platform
