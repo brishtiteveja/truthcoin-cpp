@@ -130,4 +130,3 @@ void ResolveVoteGraph::paintEvent(QPaintEvent *)
     uint32_t margin = 20;
     draw_graph(painter, width(), height(), margin, vote_ptr);
 }
-

@@ -131,5 +131,3 @@ void ResolveVoteRowTableModel::onVoteChange(unsigned int rmax, unsigned int cmax
 {
     emit dataChanged( index(0,0,QModelIndex()), index(rmax,cmax,QModelIndex()) );
 }
-
-

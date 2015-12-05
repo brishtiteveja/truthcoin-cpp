@@ -566,4 +566,3 @@ void ResolveVoteDialog::onInputChange(void)
     graphScrollArea->setWidget(resolveVoteGraph);
     graphLayout->addWidget(graphScrollArea);
 }
-
