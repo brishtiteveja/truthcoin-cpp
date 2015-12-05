@@ -1,0 +1,87 @@
+================================================================================
+Hivemind fullnode setup guide
+
+Tested on / recommended: Debian stable x64
+================================================================================
+
+1.
+First of all you need to setup the server that you are going to run the
+hivemind node on. This guide will assume that you have either direct access to
+the terminal or SSH access.
+
+2.
+Make sure that you have updated the system completely:
+  apt-get update && apt-get upgrade
+
+ and then reboot the system:
+  reboot
+
+3.
+Create a non-privileged user who will run the full node, do not use any default
+root account that your VPS provider configures.
+  adduser hivemind
+You will be asked to enter a password twice, you can skip the full name and all
+other optional information.
+
+4.
+(Skip to step 7 if you are downloading pre-built binaries)
+Install required dependencies if you are going to build from source, skip this
+step if you will be downloading the pre-built binaries:
+  apt-get install \
+    git \
+    build-essential \
+    autoconf \
+    liboost-all-dev \
+    libssl-dev \
+    libtool \
+    libdb++-dev
+
+5.
+Download source code, skip this step if you will be downloading the pre-built
+binaries:
+  git clone https://github.com:/bitcoin-hivemind/hivemind
+
+6.
+Compile the source code, skip this step if you will be downloading the pre-built
+binaries:
+  cd hivemind
+  ./autogen.sh
+  ./configure
+  make
+
+  Note: add the -j switch to make in order to speed up compilation. For example
+  on an 8 core system, make -j 9 will use all 8 cores, or make -j 5 will use
+  half of them. You can also specify simply make -j and make will guess how
+  many threads to use, this can cause lockups so beware.
+
+  Warning: You may need to enable and configure swapfiles if your computer or
+  VPS has a small amount of memory available (<2 GB)
+
+7.
+(Skip to step 8 if you built from source)
+Download and extract the pre-built hivemind binary for your platform
+  wget http://forum.truthcoin.info/Builds/hivemind-0.10.99-linux64.tar.gz
+  tar -xvzf hivemind-0.10.99-linux64.tar.gz
+
+8.
+Setup your configuration file, all of the same options are available in
+hivemind that are in Bitcoin. An rpc password is required.
+
+Example configuration file located at ~/.hivemind/hivemind.conf:
+  rpcuser=hivemindrpc
+  rpcpassword=EuCCV1xGaZffjre6oaDFwL5uqPF2m7E3Be1VXvr3zZ
+
+9.
+Run the hivemindd binary as the non-privileged user we created earlier
+  ./hivemindd &
+
+  Tip: Adding the ampersand & symbol after a command in Linux will make it run
+  in the background so you still control the active terminal. (useful for ssh)
+
+10.
+To test the connection to the full node, run the following command from the
+debug window of the qt client:
+  addpeer ***.***.***.*** onetry
+
+Then, check the peer list in the debug menu to make sure you can connect to the
+full node you have created.
