@@ -31,10 +31,14 @@ step if you will be downloading the pre-built binaries:
     git \
     build-essential \
     autoconf \
-    liboost-all-dev \
+    pkg-config \
+    libboost-all-dev \
     libssl-dev \
     libtool \
     libdb++-dev
+
+and then reboot the system:
+  reboot
 
 5.
 Download source code, skip this step if you will be downloading the pre-built
@@ -46,7 +50,7 @@ Compile the source code, skip this step if you will be downloading the pre-built
 binaries:
   cd hivemind
   ./autogen.sh
-  ./configure
+  ./configure --with-incompatible-bdb
   make
 
   Note: add the -j switch to make in order to speed up compilation. For example
