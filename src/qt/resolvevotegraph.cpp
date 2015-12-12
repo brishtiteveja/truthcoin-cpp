@@ -15,7 +15,6 @@ extern "C" {
 #include <QRectF>
 #include <QString>
 
-
 static void draw_graph(
     QPainter &painter,
     int w, /* width */
@@ -34,7 +33,6 @@ static void draw_graph(
 
     if (x0 >= x1) return;
     if (y0 >= y1) return;
-
 
     /* draw labels */
     QString Title("Plot of Judgement Space");
@@ -63,7 +61,8 @@ static void draw_graph(
     uint32_t nDecisions = vote->nc;
     uint32_t nVoters = vote->nr;
     if (nDecisions) {
-        uint32_t *colors = new uint32_t [nVoters];
+        uint32_t *colors = new uint32_t[nVoters];
+
         colors[0] = 0xFF0000;
         colors[1] = 0x00FF00;
         colors[2] = 0x0000FF;

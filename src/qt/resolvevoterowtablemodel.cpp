@@ -8,7 +8,6 @@ extern "C" {
 }
 #include "resolvevoterowtablemodel.h"
 
-
 ResolveVoteRowTableModel::ResolveVoteRowTableModel()
     : QAbstractTableModel(0),
     voteptr(0)
@@ -39,19 +38,15 @@ QVariant ResolveVoteRowTableModel::data(const QModelIndex &index, int role) cons
 
     if (role == Qt::DisplayRole)
     {
-        if (!voteptr || !*voteptr)
+        if (!voteptr || !*voteptr || !(*voteptr))
             return QVariant();
 
         uint32_t row = index.row();
         uint32_t col = index.column();
-        if ((row < (*voteptr)->nr)
-            && (col < TC_VOTE_NROWS))
-        {
+        if ((row < (*voteptr)->nr) && (col < TC_VOTE_NROWS)) {
             double value = (*voteptr)->rvecs[col]->a[row][0];
             if (value != (*voteptr)->NA) {
-                char tmp[32];
-                snprintf(tmp, sizeof(tmp), "%.8f", value);
-                return QVariant(QString(tmp));
+                return QVariant(QString::number(value));
             }
             return QVariant(QString("NA"));
         }

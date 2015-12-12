@@ -8,7 +8,6 @@ extern "C"{
 }
 #include "resolvevotecoltablemodel.h"
 
-
 ResolveVoteColTableModel::ResolveVoteColTableModel()
     : QAbstractTableModel(0),
     voteptr(0)
@@ -49,9 +48,7 @@ QVariant ResolveVoteColTableModel::data(const QModelIndex &index, int role) cons
         {
             double value = (*voteptr)->cvecs[row]->a[0][col];
             if (value != (*voteptr)->NA) {
-                char tmp[32];
-                snprintf(tmp, sizeof(tmp), "%.8f", value);
-                return QVariant(QString(tmp));
+                return QVariant(QString::number(value, 'f', 8));
             }
             return QVariant(QString("NA"));
         }

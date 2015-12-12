@@ -34,57 +34,57 @@ extern "C" {
 #include <QTabWidget>
 #include <QVBoxLayout>
 
-
 ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
     : QDialog(parent),
     vote(0),
     model(0)
 {
-    char tmp[32];
-
-    /* starting data */
-
-    vote = tc_vote_ctr(6, 6);
+    /* starting data: start with minimum defualts */
+    vote = tc_vote_ctr(2, 1);
     vote->NA = 0.138042e-30;
     vote->alpha = 0.10;
     vote->tol = 0.10;
+
+    // oldrep
     double **rep = vote->rvecs[TC_VOTE_OLD_REP]->a;
-    rep[0][0] = 0.05;
-    rep[1][0] = 0.05;
-    rep[2][0] = 0.05;
-    rep[3][0] = 0.05;
-    rep[4][0] = 0.10;
-    rep[5][0] = 0.70;
+    rep[0][0] = 0.5;
+    rep[1][0] = 0.5;
+
+    // Binary / scaled
     double **isbin = vote->cvecs[TC_VOTE_IS_BINARY]->a;
     for(uint32_t j=0; j < vote->nc; j++)
         isbin[0][j] = (j < 4)? 1.0: 0;
+
+    // Vote matrix
     double **m = vote->M->a;
-    m[0][0] = 1.0; m[0][1] = 1.0; m[0][2] = 0.0; m[0][3] = 0.0; m[0][4] = 233.0/435; m[0][5] = (16027.59-8000)/(20000-8000);
-    m[1][0] = 1.0; m[1][1] = 0.0; m[1][2] = 0.0; m[1][3] = 0.0; m[1][4] = 199.0/435; m[1][5] = vote->NA;
-    m[2][0] = 1.0; m[2][1] = 1.0; m[2][2] = 0.0; m[2][3] = 0.0; m[2][4] = 233.0/435; m[2][5] = (16027.59-8000)/(20000-8000);
-    m[3][0] = 1.0; m[3][1] = 1.0; m[3][2] = 1.0; m[3][3] = 0.0; m[3][4] = 250.0/435; m[3][5] = vote->NA;
-    m[4][0] = 0.0; m[4][1] = 0.0; m[4][2] = 1.0; m[4][3] = 1.0; m[4][4] = 435.0/435; m[4][5] = ( 8001.00-8000)/(20000-8000);
-    m[5][0] = 0.0; m[5][1] = 0.0; m[5][2] = 1.0; m[5][3] = 1.0; m[5][4] = 435.0/435; m[5][5] = (19999.00-8000)/(20000-8000);
+    m[0][0] = 1.0;
+    m[1][0] = 1.0;
+
+    // RC
     int rc = tc_vote_proc(vote);
 
-    /* gui */
+    /* gui styling */
     setWindowTitle(tr("Resolve Vote Scenarios"));
     setMinimumSize(800, 200);
 
-    /* vlayout:                */
-    /*   Qsplitter:            */
-    /*     [Input  groupbox]   */
-    /*     [Output groupbox]   */
+    QSplitter *splitter = new QSplitter(Qt::Vertical);
+
+    // Vertical layout to contain input and output widgets
     QVBoxLayout *vlayout = new QVBoxLayout(this);
     vlayout->setContentsMargins(0,0,0,0);
-    QSplitter *splitter = new QSplitter(Qt::Vertical);
+
+    // Add input widget
     QWidget *inputWidget = new QWidget();
     splitter->addWidget(inputWidget);
+
+    // Add output widget
     QWidget *outputWidget = new QWidget();
     splitter->addWidget(outputWidget);
+
+    // Add splitter
     vlayout->addWidget(splitter);
 
-    /* inputWidget             */
+    // Contain input widget in groupbox
     QVBoxLayout *vilayout = new QVBoxLayout(inputWidget);
     vilayout->setContentsMargins(0,0,0,0);
     QGroupBox *groupbox1 = new QGroupBox(tr("Input"));
@@ -92,7 +92,7 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
     groupbox1->setLayout(vi1layout);
     vilayout->addWidget(groupbox1);
 
-    /* outputWidget            */
+    // Contain output widget in groupbox
     QVBoxLayout *volayout = new QVBoxLayout(outputWidget);
     volayout->setContentsMargins(0,0,0,0);
     QGroupBox *groupbox2 = new QGroupBox(tr("Output"));
@@ -106,6 +106,7 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
     /*   # Voters    [   ]    # Decisions [   ]                  */
     /*   alpha       [   ]    tol         [   ]     NA    [   ]  */
     QGridLayout *g1layout = new QGridLayout();
+
     g1layout->setHorizontalSpacing(0);
     g1layout->setColumnStretch(0, 1);
     g1layout->setColumnStretch(1, 2);
@@ -117,47 +118,47 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
     g1layout->setColumnStretch(7, 2);
     vi1layout->addLayout(g1layout);
 
-    snprintf(tmp, sizeof(tmp), "%u", vote->nr);
+    // #Voters value display
     nVotersLabel = new QLabel(tr("# Voters: "));
     g1layout->addWidget(nVotersLabel, /* row */0, /* col */0);
     nVotersLineEdit = new QLineEdit();
-    nVotersLineEdit->setText(tmp);
+    nVotersLineEdit->setText(QString::number(vote->nr));
     nVotersLineEdit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     g1layout->addWidget(nVotersLineEdit, /* row */0, /* col */1);
     connect(nVotersLineEdit, SIGNAL(editingFinished()), this, SLOT(onNVotersChange()));
 
-    snprintf(tmp, sizeof(tmp), "%u", vote->nc);
+    // #Decisions value display
     nDecisionsLabel = new QLabel(tr("# Decisions: "));
     g1layout->addWidget(nDecisionsLabel, /* row */0, /* col */3);
     nDecisionsLineEdit = new QLineEdit();
-    nDecisionsLineEdit->setText(tmp);
+    nDecisionsLineEdit->setText(QString::number(vote->nc));
     nDecisionsLineEdit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     g1layout->addWidget(nDecisionsLineEdit, /* row */0, /* col */4);
     connect(nDecisionsLineEdit, SIGNAL(editingFinished()), this, SLOT(onNDecisionsChange()));
 
-    snprintf(tmp, sizeof(tmp), "%.8f", vote->alpha);
+    // Alpha value display
     alphaLabel = new QLabel(tr("alpha: "));
     g1layout->addWidget(alphaLabel, /* row */1, /* col */0);
     alphaLineEdit = new QLineEdit();
-    alphaLineEdit->setText(tmp);
+    alphaLineEdit->setText(QString::number(vote->alpha, 'f', 8));
     alphaLineEdit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     g1layout->addWidget(alphaLineEdit, /* row */1, /* col */1);
     connect(alphaLineEdit, SIGNAL(editingFinished()), this, SLOT(onAlphaChange()));
 
-    snprintf(tmp, sizeof(tmp), "%.8f", vote->tol);
+    // Tolerance value display
     tolLabel = new QLabel(tr("tol: "));
     g1layout->addWidget(tolLabel, /* row */1, /* col */3);
     tolLineEdit = new QLineEdit();
-    tolLineEdit->setText(tmp);
+    tolLineEdit->setText(QString::number(vote->tol, 'f', 8));
     tolLineEdit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     g1layout->addWidget(tolLineEdit, /* row */1, /* col */4);
     connect(tolLineEdit, SIGNAL(editingFinished()), this, SLOT(onTolChange()));
 
-    snprintf(tmp, sizeof(tmp), "%.8e", vote->NA);
+    // NA value display
     NALabel = new QLabel(tr("NA: "));
     g1layout->addWidget(NALabel, /* row */1, /* col */6);
     NALineEdit = new QLineEdit();
-    NALineEdit->setText(tmp);
+    NALineEdit->setText(QString::number(vote->NA, 'e', 8));
     NALineEdit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     g1layout->addWidget(NALineEdit, /* row */1, /* col */7);
     connect(NALineEdit, SIGNAL(textEdited()), this, SLOT(onNAChange()));
@@ -199,8 +200,7 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
     vdlayout->addLayout(g2layout);
     voteProcRCLabel[0] = new QLabel(tr("rc: "));
     g2layout->addWidget(voteProcRCLabel[0], /* row */0, /* col */0);
-    snprintf(tmp, sizeof(tmp), "%d", rc);
-    voteProcRCLabel[1] = new QLabel(tmp);
+    voteProcRCLabel[1] = new QLabel(QString::number(rc));
     g2layout->addWidget(voteProcRCLabel[1], /* row */0, /* col */1);
 
     /* col table */
@@ -288,6 +288,10 @@ void ResolveVoteDialog::setModel(WalletModel *model)
 
 bool ResolveVoteDialog::eventFilter(QObject *obj, QEvent *event)
 {
+    if (!inputTableView || !rowTableView || !colTableView) {
+        return QDialog::eventFilter(obj, event);
+    }
+
     /* table with focus */
     QTableView *tableView = 0;
     if (obj == inputTableView)
@@ -381,19 +385,20 @@ bool ResolveVoteDialog::eventFilter(QObject *obj, QEvent *event)
 
 void ResolveVoteDialog::onNVotersChange()
 {
-    char tmp[32];
-    int nVoters = atoi(nVotersLineEdit->text().toStdString().c_str());
+    if (!vote) {
+        return;
+    }
 
-    if ((nVoters <= 0) || (nVoters == (int)vote->nr)) {
+    unsigned int nVotersInput = nVotersLineEdit->text().toUInt();
+
+    if ((nVotersInput <= 0) || (nVotersInput == vote->nr)) {
         /* bad input or no change. reset. */
-        snprintf(tmp, sizeof(tmp), "%u", vote->nr);
-        nVotersLineEdit->setText(QString(tmp));
+        nVotersLineEdit->setText(QString::number(vote->nr));
     } else {
-        snprintf(tmp, sizeof(tmp), "%u", nVoters);
-        nVotersLineEdit->setText(QString(tmp));
+        nVotersLineEdit->setText(QString::number(nVotersInput));
 
         /* create new tc_vote */
-        struct tc_vote *vote = tc_vote_ctr(nVoters, this->vote->nc);
+        struct tc_vote *vote = tc_vote_ctr(nVotersInput, this->vote->nc);
         /* copy this->vote to vote */
         vote->NA = this->vote->NA;
         vote->alpha = this->vote->alpha;
@@ -411,15 +416,15 @@ void ResolveVoteDialog::onNVotersChange()
 
         /* replace this->vote with vote */
         struct tc_vote *oldvote = this->vote;
-        if (nVoters > (int)oldvote->nr) {
-            inputTableModel->callBeginInsertRows(QModelIndex(), 3+oldvote->nr, 3+nVoters-1);
-            rowTableModel->callBeginInsertRows(QModelIndex(), oldvote->nr, nVoters-1);
+        if (nVotersInput > oldvote->nr) {
+            inputTableModel->callBeginInsertRows(QModelIndex(), 3+oldvote->nr, 3+nVotersInput-1);
+            rowTableModel->callBeginInsertRows(QModelIndex(), oldvote->nr, nVotersInput-1);
         } else {
-            inputTableModel->callBeginRemoveRows(QModelIndex(), 3+nVoters, 3+oldvote->nr-1);
-            rowTableModel->callBeginRemoveRows(QModelIndex(), nVoters, oldvote->nr-1);
+            inputTableModel->callBeginRemoveRows(QModelIndex(), 3+nVotersInput, 3+oldvote->nr-1);
+            rowTableModel->callBeginRemoveRows(QModelIndex(), nVotersInput, oldvote->nr-1);
         }
         this->vote = vote;
-        if (nVoters > (int)oldvote->nr) {
+        if (nVotersInput > oldvote->nr) {
             inputTableModel->callEndInsertRows();
             rowTableModel->callEndInsertRows();
         } else {
@@ -548,9 +553,7 @@ void ResolveVoteDialog::onInputChange(void)
     }
 
     vote_proc_rc = tc_vote_proc(vote);
-    char tmp[32];
-    snprintf(tmp, sizeof(tmp), "%u", vote_proc_rc);
-    voteProcRCLabel[1]->setText(tmp);
+    voteProcRCLabel[1]->setText(QString::number(vote_proc_rc));
     colTableModel->onVoteChange(TC_VOTE_NCOLS, vote->nc);
     rowTableModel->onVoteChange(vote->nr, TC_VOTE_NROWS);
 
