@@ -27,6 +27,7 @@ extern "C" {
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QScrollArea>
 #include <QSplitter>
 #include <QString>
@@ -127,31 +128,47 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
     g1layout->addWidget(nVotersLineEdit, /* row */0, /* col */1);
     connect(nVotersLineEdit, SIGNAL(editingFinished()), this, SLOT(onNVotersChange()));
 
+    // #Voter - + buttons
+    voterMinus = new QPushButton("-");
+    connect(voterMinus, SIGNAL(clicked()), this, SLOT(onVoterMinusClicked()));
+    g1layout->addWidget(voterMinus, 0, 2);
+    voterPlus = new QPushButton("+");
+    connect(voterPlus, SIGNAL(clicked()), this, SLOT(onVoterPlusClicked()));
+    g1layout->addWidget(voterPlus, 0, 3);
+
     // #Decisions value display
     nDecisionsLabel = new QLabel(tr("# Decisions: "));
-    g1layout->addWidget(nDecisionsLabel, /* row */0, /* col */3);
+    g1layout->addWidget(nDecisionsLabel, /* row */1, /* col */0);
     nDecisionsLineEdit = new QLineEdit();
     nDecisionsLineEdit->setText(QString::number(vote->nc));
     nDecisionsLineEdit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    g1layout->addWidget(nDecisionsLineEdit, /* row */0, /* col */4);
+    g1layout->addWidget(nDecisionsLineEdit, /* row */1, /* col */1);
     connect(nDecisionsLineEdit, SIGNAL(editingFinished()), this, SLOT(onNDecisionsChange()));
+
+    // #Decision - + buttons
+    decisionMinus = new QPushButton("-");
+    connect(decisionMinus, SIGNAL(clicked()), this, SLOT(onDecisionMinusClicked()));
+    g1layout->addWidget(decisionMinus, 1, 2);
+    decisionPlus = new QPushButton("+");
+    connect(decisionPlus, SIGNAL(clicked()), this, SLOT(onDecisionPlusClicked()));
+    g1layout->addWidget(decisionPlus, 1, 3);
 
     // Alpha value display
     alphaLabel = new QLabel(tr("alpha: "));
-    g1layout->addWidget(alphaLabel, /* row */1, /* col */0);
+    g1layout->addWidget(alphaLabel, /* row */0, /* col */4);
     alphaLineEdit = new QLineEdit();
     alphaLineEdit->setText(QString::number(vote->alpha, 'f', 8));
     alphaLineEdit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    g1layout->addWidget(alphaLineEdit, /* row */1, /* col */1);
+    g1layout->addWidget(alphaLineEdit, /* row */0, /* col */5);
     connect(alphaLineEdit, SIGNAL(editingFinished()), this, SLOT(onAlphaChange()));
 
     // Tolerance value display
     tolLabel = new QLabel(tr("tol: "));
-    g1layout->addWidget(tolLabel, /* row */1, /* col */3);
+    g1layout->addWidget(tolLabel, /* row */1, /* col */4);
     tolLineEdit = new QLineEdit();
     tolLineEdit->setText(QString::number(vote->tol, 'f', 8));
     tolLineEdit->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    g1layout->addWidget(tolLineEdit, /* row */1, /* col */4);
+    g1layout->addWidget(tolLineEdit, /* row */1, /* col */5);
     connect(tolLineEdit, SIGNAL(editingFinished()), this, SLOT(onTolChange()));
 
     // NA value display
@@ -568,4 +585,46 @@ void ResolveVoteDialog::onInputChange(void)
     graphScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     graphScrollArea->setWidget(resolveVoteGraph);
     graphLayout->addWidget(graphScrollArea);
+}
+
+void ResolveVoteDialog::onVoterMinusClicked()
+{
+    uint nVoters = this->nVotersLineEdit->text().toUInt();
+
+    if (nVoters > 1) {
+        nVoters--;
+    }
+
+    this->nVotersLineEdit->setText(QString::number(nVoters));
+    onNVotersChange();
+}
+
+void ResolveVoteDialog::onVoterPlusClicked()
+{
+    uint nVoters = this->nVotersLineEdit->text().toUInt();
+    nVoters++;
+
+    this->nVotersLineEdit->setText(QString::number(nVoters));
+    onNVotersChange();
+}
+
+void ResolveVoteDialog::onDecisionMinusClicked()
+{
+    uint nDecisions = this->nDecisionsLineEdit->text().toUInt();
+
+    if (nDecisions > 0) {
+        nDecisions--;
+    }
+
+    this->nDecisionsLineEdit->setText(QString::number(nDecisions));
+    onNDecisionsChange();
+}
+
+void ResolveVoteDialog::onDecisionPlusClicked()
+{
+    uint nDecisions = this->nDecisionsLineEdit->text().toUInt();
+    nDecisions++;
+
+    this->nDecisionsLineEdit->setText(QString::number(nDecisions));
+    onNDecisionsChange();
 }
