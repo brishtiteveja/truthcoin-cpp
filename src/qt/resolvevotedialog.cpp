@@ -27,6 +27,7 @@ extern "C" {
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QSplitter>
@@ -130,9 +131,13 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
 
     // #Voter - + buttons
     voterMinus = new QPushButton("-");
+    voterMinus->setDefault(false);
+    voterMinus->setAutoDefault(false);
     connect(voterMinus, SIGNAL(clicked()), this, SLOT(onVoterMinusClicked()));
     g1layout->addWidget(voterMinus, 0, 2);
     voterPlus = new QPushButton("+");
+    voterPlus->setDefault(false);
+    voterPlus->setAutoDefault(false);
     connect(voterPlus, SIGNAL(clicked()), this, SLOT(onVoterPlusClicked()));
     g1layout->addWidget(voterPlus, 0, 3);
 
@@ -147,9 +152,13 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
 
     // #Decision - + buttons
     decisionMinus = new QPushButton("-");
+    decisionMinus->setDefault(false);
+    decisionMinus->setAutoDefault(false);
     connect(decisionMinus, SIGNAL(clicked()), this, SLOT(onDecisionMinusClicked()));
     g1layout->addWidget(decisionMinus, 1, 2);
     decisionPlus = new QPushButton("+");
+    decisionPlus->setDefault(false);
+    decisionPlus->setAutoDefault(false);
     connect(decisionPlus, SIGNAL(clicked()), this, SLOT(onDecisionPlusClicked()));
     g1layout->addWidget(decisionPlus, 1, 3);
 
@@ -412,6 +421,14 @@ void ResolveVoteDialog::onNVotersChange()
         /* bad input or no change. reset. */
         nVotersLineEdit->setText(QString::number(vote->nr));
     } else {
+        if (nVotersInput > 25) {
+            bool confirmed = confirmInput("Huge number of voters");
+            if (!confirmed) {
+                nVotersLineEdit->setText(QString::number(vote->nr));
+                return;
+            }
+        }
+
         nVotersLineEdit->setText(QString::number(nVotersInput));
 
         /* create new tc_vote */
@@ -431,16 +448,22 @@ void ResolveVoteDialog::onNVotersChange()
                 vote->M->a[i][j]
                     = ((i < this->vote->nr) && (j < this->vote->nc))? this->vote->M->a[i][j]: vote->NA;
 
-        /* replace this->vote with vote */
+        // Old vote matrix to be replaced with new vote matrix
         struct tc_vote *oldvote = this->vote;
+
         if (nVotersInput > oldvote->nr) {
+            // Add rows
             inputTableModel->callBeginInsertRows(QModelIndex(), 3+oldvote->nr, 3+nVotersInput-1);
             rowTableModel->callBeginInsertRows(QModelIndex(), oldvote->nr, nVotersInput-1);
         } else {
+            // Remove rows
             inputTableModel->callBeginRemoveRows(QModelIndex(), 3+nVotersInput, 3+oldvote->nr-1);
             rowTableModel->callBeginRemoveRows(QModelIndex(), nVotersInput, oldvote->nr-1);
         }
+
+        // Replace old vote matrix with new vote matrix
         this->vote = vote;
+
         if (nVotersInput > oldvote->nr) {
             inputTableModel->callEndInsertRows();
             rowTableModel->callEndInsertRows();
@@ -448,6 +471,8 @@ void ResolveVoteDialog::onNVotersChange()
             inputTableModel->callEndRemoveRows();
             rowTableModel->callEndRemoveRows();
         }
+
+        // Delete old vote matrix
         tc_vote_dtr(oldvote);
 
         /* recalc */
@@ -589,7 +614,7 @@ void ResolveVoteDialog::onInputChange(void)
 
 void ResolveVoteDialog::onVoterMinusClicked()
 {
-    uint nVoters = this->nVotersLineEdit->text().toUInt();
+    unsigned int nVoters = this->nVotersLineEdit->text().toUInt();
 
     if (nVoters > 1) {
         nVoters--;
@@ -601,7 +626,7 @@ void ResolveVoteDialog::onVoterMinusClicked()
 
 void ResolveVoteDialog::onVoterPlusClicked()
 {
-    uint nVoters = this->nVotersLineEdit->text().toUInt();
+    unsigned int nVoters = this->nVotersLineEdit->text().toUInt();
     nVoters++;
 
     this->nVotersLineEdit->setText(QString::number(nVoters));
@@ -610,7 +635,7 @@ void ResolveVoteDialog::onVoterPlusClicked()
 
 void ResolveVoteDialog::onDecisionMinusClicked()
 {
-    uint nDecisions = this->nDecisionsLineEdit->text().toUInt();
+    unsigned int nDecisions = this->nDecisionsLineEdit->text().toUInt();
 
     if (nDecisions > 0) {
         nDecisions--;
@@ -622,9 +647,19 @@ void ResolveVoteDialog::onDecisionMinusClicked()
 
 void ResolveVoteDialog::onDecisionPlusClicked()
 {
-    uint nDecisions = this->nDecisionsLineEdit->text().toUInt();
+    unsigned int nDecisions = this->nDecisionsLineEdit->text().toUInt();
     nDecisions++;
 
     this->nDecisionsLineEdit->setText(QString::number(nDecisions));
     onNDecisionsChange();
+}
+
+bool ResolveVoteDialog::confirmInput(QString errorText)
+{
+    QMessageBox *confirmInput = new QMessageBox(this);
+    confirmInput->setWindowTitle("Confirm Input");
+    confirmInput->setText(errorText);
+    confirmInput->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+
+    return confirmInput->exec();
 }

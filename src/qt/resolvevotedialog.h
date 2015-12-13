@@ -65,7 +65,6 @@ private:
     QVBoxLayout *graphLayout;
     QScrollArea *graphScrollArea;
 
-
 private slots:
     void onNVotersChange();
     void onNDecisionsChange();
@@ -76,6 +75,7 @@ private slots:
     void onVoterPlusClicked();
     void onDecisionMinusClicked();
     void onDecisionPlusClicked();
+    bool confirmInput(QString errorText);
 
 public slots:
     void onInputChange(void);
