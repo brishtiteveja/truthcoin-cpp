@@ -93,11 +93,12 @@ QVariant ResolveVoteInputTableModel::headerData(int section, Qt::Orientation ori
     {
         if(role == Qt::DisplayRole)
         {
+            // Oldrep and Decision headers for input view
             char tmp[32];
             if (section == 0)
                 snprintf(tmp, sizeof(tmp), "Old Rep");
             else
-                snprintf(tmp, sizeof(tmp), "Decision %u", section+1);
+                snprintf(tmp, sizeof(tmp), "Decision %u", section);
             return QVariant(QString(tmp));
         }
         else

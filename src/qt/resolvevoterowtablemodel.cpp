@@ -64,6 +64,7 @@ QVariant ResolveVoteRowTableModel::headerData(int section, Qt::Orientation orien
     {
         if(role == Qt::DisplayRole)
         {
+            // Voter headers for results view
             char tmp[32];
             snprintf(tmp, sizeof(tmp), "Voter %u", (section+1));
             return QVariant(QString(tmp));
