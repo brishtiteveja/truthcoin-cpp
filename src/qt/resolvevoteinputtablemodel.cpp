@@ -11,7 +11,6 @@ extern "C" {
 #include "resolvevotedialog.h"
 #include "resolvevoteinputtablemodel.h"
 
-
 ResolveVoteInputTableModel::ResolveVoteInputTableModel()
     : QAbstractTableModel(0),
     resolveVoteDialog(0),
@@ -28,12 +27,14 @@ ResolveVoteInputTableModel::~ResolveVoteInputTableModel()
 int ResolveVoteInputTableModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
+    // 3 (min number of rows) + number of rows initialized or 0 if none
     return 3 + ((voteptr && *voteptr)? (*voteptr)->nr: 0);
 }
 
 int ResolveVoteInputTableModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
+    // 1 (min number of columns) + number of columns initialized or 0 if none
     return 1 + ((voteptr && *voteptr)? (*voteptr)->nc: 0);
 }
 
@@ -44,16 +45,15 @@ QVariant ResolveVoteInputTableModel::data(const QModelIndex &index, int role) co
 
     if (role == Qt::DisplayRole)
     {
-        if (!voteptr || !*voteptr)
+        if (!voteptr || !*voteptr || !(*voteptr))
             return QVariant();
 
         uint32_t row = index.row();
         uint32_t col = index.column();
-        if ((row < 3+(*voteptr)->nr)
-            && (col < 1+(*voteptr)->nc))
-        {
 
-            double value = 0.0;
+        if ((row < 3+(*voteptr)->nr) && (col < 1+(*voteptr)->nc))
+        {
+            double value = 0.0;            
 
             if (col == 0) { /* Starting Reputations */
                 if (row >= 3)
@@ -74,10 +74,9 @@ QVariant ResolveVoteInputTableModel::data(const QModelIndex &index, int role) co
                 value = (*voteptr)->M->a[row-3][col-1];
 
             if (value != (*voteptr)->NA) {
-                char tmp[32];
-                snprintf(tmp, sizeof(tmp), "%.8f", value);
-                return QVariant(QString(tmp));
+                return QVariant(QString::number(value, 'f', 8));
             }
+
             return QVariant(QString("NA"));
         }
     }
@@ -94,11 +93,12 @@ QVariant ResolveVoteInputTableModel::headerData(int section, Qt::Orientation ori
     {
         if(role == Qt::DisplayRole)
         {
+            // Oldrep and Decision headers for input view
             char tmp[32];
             if (section == 0)
                 snprintf(tmp, sizeof(tmp), "Old Rep");
             else
-                snprintf(tmp, sizeof(tmp), "Decision %u", section+1);
+                snprintf(tmp, sizeof(tmp), "Decision %u", section);
             return QVariant(QString(tmp));
         }
         else

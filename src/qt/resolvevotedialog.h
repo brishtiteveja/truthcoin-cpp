@@ -6,6 +6,7 @@
 #define HIVEMIND_QT_RESOLVEVOTEDIALOG_H
 
 #include <QDialog>
+#include <QPushButton>
  
 struct tc_vote;
 class ResolveVoteColTableModel;
@@ -41,8 +42,12 @@ private:
     WalletModel *model;
     QLabel *nVotersLabel; /* nVotes: nVoters */
     QLineEdit *nVotersLineEdit;
+    QPushButton *voterMinus;
+    QPushButton *voterPlus;
     QLabel *nDecisionsLabel; /* nDecisions: nDecisions */
     QLineEdit *nDecisionsLineEdit;
+    QPushButton *decisionMinus;
+    QPushButton *decisionPlus;
     QLabel *alphaLabel; /* alpha: alpha */
     QLineEdit *alphaLineEdit;
     QLabel *tolLabel; /* tol: tol */
@@ -60,13 +65,16 @@ private:
     QVBoxLayout *graphLayout;
     QScrollArea *graphScrollArea;
 
-
 private slots:
     void onNVotersChange();
     void onNDecisionsChange();
     void onAlphaChange();
     void onTolChange();
     void onNAChange();
+    void onVoterMinusClicked();
+    void onVoterPlusClicked();
+    void onDecisionMinusClicked();
+    void onDecisionPlusClicked();
 
 public slots:
     void onInputChange(void);
