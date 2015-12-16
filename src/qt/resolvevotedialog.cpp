@@ -105,19 +105,11 @@ ResolveVoteDialog::ResolveVoteDialog(QWidget *parent)
     /* vi1layout (input)       */
 
     /* input params */
-    /*   # Voters    [   ]    # Decisions [   ]                  */
-    /*   alpha       [   ]    tol         [   ]     NA    [   ]  */
+    // {# voters}       [] {-}{+} {alpha}   []
+    // {# Decisions}    [] {-}{+} {tol}     [] {NA} []
     QGridLayout *g1layout = new QGridLayout();
-
-    g1layout->setHorizontalSpacing(0);
-    g1layout->setColumnStretch(0, 1);
-    g1layout->setColumnStretch(1, 2);
-    g1layout->setColumnStretch(2, 1); /* space */
-    g1layout->setColumnStretch(3, 1);
-    g1layout->setColumnStretch(4, 2);
-    g1layout->setColumnStretch(5, 1); /* space */
-    g1layout->setColumnStretch(6, 1);
-    g1layout->setColumnStretch(7, 2);
+    g1layout->setHorizontalSpacing(5);
+    g1layout->setVerticalSpacing(5);
     vi1layout->addLayout(g1layout);
 
     // #Voters value display
