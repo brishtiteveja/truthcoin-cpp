@@ -421,14 +421,6 @@ void ResolveVoteDialog::onNVotersChange()
         /* bad input or no change. reset. */
         nVotersLineEdit->setText(QString::number(vote->nr));
     } else {
-        if (nVotersInput > 25) {
-            bool confirmed = confirmInput("Huge number of voters");
-            if (!confirmed) {
-                nVotersLineEdit->setText(QString::number(vote->nr));
-                return;
-            }
-        }
-
         nVotersLineEdit->setText(QString::number(nVotersInput));
 
         /* create new tc_vote */
@@ -652,14 +644,4 @@ void ResolveVoteDialog::onDecisionPlusClicked()
 
     this->nDecisionsLineEdit->setText(QString::number(nDecisions));
     onNDecisionsChange();
-}
-
-bool ResolveVoteDialog::confirmInput(QString errorText)
-{
-    QMessageBox *confirmInput = new QMessageBox(this);
-    confirmInput->setWindowTitle("Confirm Input");
-    confirmInput->setText(errorText);
-    confirmInput->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-
-    return confirmInput->exec();
 }

@@ -75,7 +75,6 @@ private slots:
     void onVoterPlusClicked();
     void onDecisionMinusClicked();
     void onDecisionPlusClicked();
-    bool confirmInput(QString errorText);
 
 public slots:
     void onInputChange(void);
