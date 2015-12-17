@@ -53,6 +53,7 @@ echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.3
 tar -xvf db-4.8.30.NC.tar.gz
 cd db-4.8.30.NC/build_unix
 mkdir -p build
+cd build
 BDB_PREFIX=$(pwd)/build
 ../dist/configure --disable-shared --enable-cxx --with-pic --prefix=$BDB_PREFIX
 make install
@@ -63,12 +64,12 @@ sudo apt-get install autoconf libboost-all-dev libssl-dev libtool libdb++-dev li
 
 
 # Install Hivemindd (no GUI)
-cd hivemind-cpp/src/
+cd hivemind/src/
 make hivemindd
 make hivemind-cli
 
 # # Install Hivemind
-# cd hivemind-cpp
+# cd hivemind
 # ./autogen.sh
 # ./configure --with-incompatible-bdb
 # make
