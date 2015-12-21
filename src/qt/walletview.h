@@ -7,6 +7,7 @@
 #define HIVEMIND_QT_WALLETVIEW_H
 
 #include "amount.h"
+#include "hivemindauthorpage.h"
 
 #include <QStackedWidget>
 
@@ -67,6 +68,7 @@ private:
     QWidget *marketPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
+    HivemindAuthorPage *authorPage;
 
     BallotView *ballotView;
     DecisionView *decisionView;

@@ -10,8 +10,6 @@
 #include <QSortFilterProxyModel>
 #include <QString>
 
-
-
 class BallotBallotFilterProxyModel
     : public QSortFilterProxyModel
 {
@@ -25,6 +23,5 @@ protected:
 
 private:
 };
-
 
 #endif // HIVEMIND_QT_BALLOTBALLOTFILTERPROXYMODEL_H
