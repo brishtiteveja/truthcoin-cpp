@@ -89,6 +89,7 @@ private:
     QMenuBar *appMenuBar;
     QAction *overviewAction;
     QAction *historyAction;
+    QAction *authorAction;
     QAction *ballotAction;
     QAction *decisionAction;
     QAction *marketAction;
@@ -179,6 +180,8 @@ private slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to author page */
+    void gotoAuthorPage();
     /** Switch to ballot page */
     void gotoBallotPage();
     /** Switch to decision page */

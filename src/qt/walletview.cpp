@@ -43,6 +43,7 @@ WalletView::WalletView(QWidget *parent):
     // Create tabs
     overviewPage = new OverviewPage();
 
+    // Transactions tab
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
@@ -58,6 +59,10 @@ WalletView::WalletView(QWidget *parent):
     vbox->addLayout(hbox_buttons);
     transactionsPage->setLayout(vbox);
 
+    // Author tab
+    authorPage = new HivemindAuthorPage(this);
+
+    // Ballot tab
     ballotPage = new QWidget(this);
     QVBoxLayout *bvbox = new QVBoxLayout();
     QHBoxLayout *bhbox_buttons = new QHBoxLayout();
@@ -67,6 +72,7 @@ WalletView::WalletView(QWidget *parent):
     bvbox->addLayout(bhbox_buttons);
     ballotPage->setLayout(bvbox);
 
+    // Decision tab
     decisionPage = new QWidget(this);
     QVBoxLayout *dvbox = new QVBoxLayout();
     QHBoxLayout *dhbox_buttons = new QHBoxLayout();
@@ -76,6 +82,7 @@ WalletView::WalletView(QWidget *parent):
     dvbox->addLayout(dhbox_buttons);
     decisionPage->setLayout(dvbox);
 
+    // Market tab
     marketPage = new QWidget(this);
     QVBoxLayout *mvbox = new QVBoxLayout();
     QHBoxLayout *mhbox_buttons = new QHBoxLayout();
@@ -85,9 +92,13 @@ WalletView::WalletView(QWidget *parent):
     mvbox->addLayout(mhbox_buttons);
     marketPage->setLayout(mvbox);
 
+    // Receive tab
     receiveCoinsPage = new ReceiveCoinsDialog();
+
+    // Send tab
     sendCoinsPage = new SendCoinsDialog();
 
+    addWidget(authorPage);
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(marketPage);
@@ -201,6 +212,11 @@ void WalletView::gotoOverviewPage()
 void WalletView::gotoHistoryPage()
 {
     setCurrentWidget(transactionsPage);
+}
+
+void WalletView::gotoAuthorPage()
+{
+    setCurrentWidget(authorPage);
 }
 
 void WalletView::gotoBallotPage()

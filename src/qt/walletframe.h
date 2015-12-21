@@ -53,6 +53,8 @@ public slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to author page */
+    void gotoAuthorPage();
     /** Switch to ballot page */
     void gotoBallotPage();
     /** Switch to decision page */
