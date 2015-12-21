@@ -1,4 +1,4 @@
-<!DOCTYPE RCC><RCC version="1.0">
+<RCC>
     <qresource prefix="/icons">
         <file alias="hivemind">res/icons/hivemind.png</file>
         <file alias="address-book">res/icons/address-book.png</file>
@@ -49,6 +49,7 @@
         <file alias="about">res/icons/about.png</file>
         <file alias="about_qt">res/icons/about_qt.png</file>
         <file alias="verify">res/icons/verify.png</file>
+        <file>res/icons/author.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
