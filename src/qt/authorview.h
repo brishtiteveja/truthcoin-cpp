@@ -2,6 +2,7 @@
 #define AUTHORVIEW_H
 
 #include <QWidget>
+#include "decisioncreationwidget.h"
 
 class marketBranch;
 class marketDecision;
@@ -35,6 +36,8 @@ private slots:
 
 private:
     Ui::AuthorView *ui;
+
+    DecisionCreationWidget *decisionCreationWidget;
 };
 
 #endif // AUTHORVIEW_H

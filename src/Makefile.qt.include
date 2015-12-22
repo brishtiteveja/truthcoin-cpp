@@ -80,6 +80,7 @@ QT_FORMS_UI = \
   qt/forms/askpassphrasedialog.ui \
   qt/forms/authorview.ui \
   qt/forms/coincontroldialog.ui \
+  qt/forms/decisioncreationwidget.ui \
   qt/forms/editaddressdialog.ui \
   qt/forms/helpmessagedialog.ui \
   qt/forms/intro.ui \
@@ -107,6 +108,7 @@ QT_MOC_CPP = \
   qt/moc_coincontroldialog.cpp \
   qt/moc_coincontroltreewidget.cpp \
   qt/moc_csvmodelwriter.cpp \
+  qt/moc_decisioncreationwidget.cpp \
   qt/moc_editaddressdialog.cpp \
   qt/moc_guiutil.cpp \
   qt/moc_intro.cpp \
@@ -208,6 +210,7 @@ HIVEMIND_QT_H = \
   qt/coincontroldialog.h \
   qt/coincontroltreewidget.h \
   qt/csvmodelwriter.h \
+  qt/decisioncreationwidget.h \
   qt/editaddressdialog.h \
   qt/guiconstants.h \
   qt/guiutil.h \
@@ -337,7 +340,6 @@ RES_ICONS = \
   qt/res/icons/verify.png
 
 HIVEMIND_QT_CPP = \
-  qt/authorview.cpp \
   qt/hivemindaddressvalidator.cpp \
   qt/hivemindamountfield.cpp \
   qt/hivemindgui.cpp \
@@ -365,11 +367,13 @@ endif
 
 if ENABLE_WALLET
 HIVEMIND_QT_CPP += \
+  qt/authorview.cpp \
   qt/addressbookpage.cpp \
   qt/addresstablemodel.cpp \
   qt/askpassphrasedialog.cpp \
   qt/coincontroldialog.cpp \
   qt/coincontroltreewidget.cpp \
+  qt/decisioncreationwidget.cpp \
   qt/editaddressdialog.cpp \
   qt/ballotview.cpp \
   qt/ballotballotfilterproxymodel.cpp \
