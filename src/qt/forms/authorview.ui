@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>HivemindAuthorPage</class>
- <widget class="QWidget" name="HivemindAuthorPage">
+ <class>AuthorView</class>
+ <widget class="QWidget" name="AuthorView">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Author Page</string>
+      <string>Author View</string>
      </property>
     </widget>
    </item>

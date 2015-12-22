@@ -78,7 +78,7 @@ QT_TS = \
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
   qt/forms/askpassphrasedialog.ui \
-  qt/forms/hivemindauthorpage.ui \
+  qt/forms/authorview.ui \
   qt/forms/coincontroldialog.ui \
   qt/forms/editaddressdialog.ui \
   qt/forms/helpmessagedialog.ui \
@@ -98,7 +98,7 @@ QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
-  qt/moc_hivemindauthorpage.cpp \
+  qt/moc_authorview.cpp \
   qt/moc_hivemindaddressvalidator.cpp \
   qt/moc_hivemindamountfield.cpp \
   qt/moc_hivemindgui.cpp \
@@ -199,7 +199,7 @@ HIVEMIND_QT_H = \
   qt/addressbookpage.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
-  qt/hivemindauthorpage.h \
+  qt/authorview.h \
   qt/hivemindaddressvalidator.h \
   qt/hivemindamountfield.h \
   qt/hivemindgui.h \
@@ -337,7 +337,7 @@ RES_ICONS = \
   qt/res/icons/verify.png
 
 HIVEMIND_QT_CPP = \
-  qt/hivemindauthorpage.cpp \
+  qt/authorview.cpp \
   qt/hivemindaddressvalidator.cpp \
   qt/hivemindamountfield.cpp \
   qt/hivemindgui.cpp \

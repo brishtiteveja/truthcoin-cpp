@@ -32,7 +32,6 @@ QT_END_NAMESPACE
 #define DECISIONMARKET_NLABLES     12
 #define DECISIONTRADE_NLABLES       8
 
-
 class DecisionView
    : public QWidget
 {
