@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "decisioncreationwidget.h"
+#include "decisionmarketcreationwidget.h"
 
 class marketBranch;
 class marketDecision;
@@ -38,6 +39,7 @@ private:
     Ui::AuthorView *ui;
 
     DecisionCreationWidget *decisionCreationWidget;
+    DecisionMarketCreationWidget *decisionMarketCreationWidget;
 };
 
 #endif // AUTHORVIEW_H
