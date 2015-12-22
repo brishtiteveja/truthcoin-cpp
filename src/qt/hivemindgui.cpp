@@ -667,7 +667,7 @@ void HivemindGUI::gotoHistoryPage()
     if (walletFrame) walletFrame->gotoHistoryPage();
 }
 
-void HivemindGUI::gotoAuthorPage()
+void HivemindGUI::gotoAuthorView()
 {
     authorAction->setChecked(true);
     if (walletFrame) walletFrame->gotoAuthorView();

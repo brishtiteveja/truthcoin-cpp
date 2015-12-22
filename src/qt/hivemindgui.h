@@ -181,7 +181,7 @@ private slots:
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to author page */
-    void gotoAuthorPage();
+    void gotoAuthorView();
     /** Switch to ballot page */
     void gotoBallotPage();
     /** Switch to decision page */
