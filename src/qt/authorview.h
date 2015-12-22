@@ -2,6 +2,7 @@
 #define AUTHORVIEW_H
 
 #include <QWidget>
+#include "combocreationwidget.h"
 #include "decisioncreationwidget.h"
 #include "decisionmarketcreationwidget.h"
 
@@ -38,6 +39,7 @@ private slots:
 private:
     Ui::AuthorView *ui;
 
+    ComboCreationWidget *comboCreationWidget;
     DecisionCreationWidget *decisionCreationWidget;
     DecisionMarketCreationWidget *decisionMarketCreationWidget;
 };
