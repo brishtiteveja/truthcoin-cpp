@@ -332,7 +332,7 @@ void HivemindGUI::createActions(const NetworkStyle *networkStyle)
     connect(ballotAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(ballotAction, SIGNAL(triggered()), this, SLOT(gotoBallotPage()));
     connect(authorAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(authorAction, SIGNAL(triggered()), this, SLOT(gotoAuthorPage()));
+    connect(authorAction, SIGNAL(triggered()), this, SLOT(gotoAuthorView()));
     connect(decisionAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(decisionAction, SIGNAL(triggered()), this, SLOT(gotoDecisionPage()));
     connect(marketAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -670,7 +670,7 @@ void HivemindGUI::gotoHistoryPage()
 void HivemindGUI::gotoAuthorPage()
 {
     authorAction->setChecked(true);
-    if (walletFrame) walletFrame->gotoAuthorPage();
+    if (walletFrame) walletFrame->gotoAuthorView();
 }
 
 void HivemindGUI::gotoBallotPage()

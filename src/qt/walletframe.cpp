@@ -120,11 +120,11 @@ void WalletFrame::gotoHistoryPage()
         i.value()->gotoHistoryPage();
 }
 
-void WalletFrame::gotoAuthorPage()
+void WalletFrame::gotoAuthorView()
 {
     QMap<QString, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
-        i.value()->gotoAuthorPage();
+        i.value()->gotoAuthorView();
 }
 
 void WalletFrame::gotoBallotPage()

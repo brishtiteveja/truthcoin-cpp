@@ -7,7 +7,7 @@
 #define HIVEMIND_QT_WALLETVIEW_H
 
 #include "amount.h"
-#include "hivemindauthorpage.h"
+#include "authorview.h"
 
 #include <QStackedWidget>
 
@@ -68,7 +68,7 @@ private:
     QWidget *marketPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
-    HivemindAuthorPage *authorPage;
+    AuthorView *authorView;
 
     BallotView *ballotView;
     DecisionView *decisionView;
@@ -82,8 +82,8 @@ public slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
-    /** Switch to author page */
-    void gotoAuthorPage();
+    /** Switch to author view */
+    void gotoAuthorView();
     /** Switch to ballot page */
     void gotoBallotPage();
     /** Switch to decision page */

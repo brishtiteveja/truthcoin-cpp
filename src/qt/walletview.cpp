@@ -60,7 +60,7 @@ WalletView::WalletView(QWidget *parent):
     transactionsPage->setLayout(vbox);
 
     // Author tab
-    authorPage = new HivemindAuthorPage(this);
+    authorView = new AuthorView(this);
 
     // Ballot tab
     ballotPage = new QWidget(this);
@@ -98,7 +98,7 @@ WalletView::WalletView(QWidget *parent):
     // Send tab
     sendCoinsPage = new SendCoinsDialog();
 
-    addWidget(authorPage);
+    addWidget(authorView);
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(marketPage);
@@ -214,9 +214,9 @@ void WalletView::gotoHistoryPage()
     setCurrentWidget(transactionsPage);
 }
 
-void WalletView::gotoAuthorPage()
+void WalletView::gotoAuthorView()
 {
-    setCurrentWidget(authorPage);
+    setCurrentWidget(authorView);
 }
 
 void WalletView::gotoBallotPage()
