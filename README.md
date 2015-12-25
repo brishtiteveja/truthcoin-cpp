@@ -12,7 +12,7 @@ Although substantially more complex, Hivemind offers correspondingly substantial
 
 Hivemind includes two types of value-token.  One, "Bitcoin", is used for storing value, buying/selling in markets and paying transaction fees to miners. This coin will resemble Bitcoin-testnet-money (an "Altcoin") for the duration of pre-release testing, and will then be a [sidechain](http://www.blockstream.com/) of Bitcoin. Therefore, the network will "accept" Bitcoin (indeed, this will be the only currency the network accepts). The second (less important) token, "VoteCoin", is used to track a smaller group of special users and reward them for providing reports to the blockchain on the status of the bet-upon events.
 
-For an immediately useable, binary version of the Hivemind Core software, see [https://github.com/bitcoin-hivemind/hivemind-binaries](https://github.com/bitcoin-hivemind/hivemind-binaries).
+For an immediately useable, binary version of the Hivemind Core software, see [http://107.170.174.203/Builds/](http://107.170.174.203/Builds/).
 
 License
 -------
