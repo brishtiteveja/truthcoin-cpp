@@ -12,3 +12,8 @@ DecisionMarketCreationWidget::~DecisionMarketCreationWidget()
 {
     delete ui;
 }
+
+void DecisionMarketCreationWidget::on_pushButtonCreateMarket_clicked()
+{
+
+}

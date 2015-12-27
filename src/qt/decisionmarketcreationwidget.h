@@ -15,6 +15,9 @@ public:
     explicit DecisionMarketCreationWidget(QWidget *parent = 0);
     ~DecisionMarketCreationWidget();
 
+private slots:
+    void on_pushButtonCreateMarket_clicked();
+
 private:
     Ui::DecisionMarketCreationWidget *ui;
 };

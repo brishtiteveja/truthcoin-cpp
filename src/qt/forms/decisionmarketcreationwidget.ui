@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>691</width>
-    <height>626</height>
+    <height>754</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -188,7 +188,7 @@
        <widget class="QLineEdit" name="lineEdit_5"/>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="pushButtonCreateMarket">
         <property name="text">
          <string>Create Market</string>
         </property>

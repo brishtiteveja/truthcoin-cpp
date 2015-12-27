@@ -76,7 +76,7 @@ struct marketTrade : public marketObj {
     marketTrade(void) : marketObj() { marketop = 'T'; } 
     virtual ~marketTrade(void) { } 
 
-    ADD_SERIALIZE_METHODS;
+    ADD_SERIALIZE_METHODS
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
@@ -176,7 +176,7 @@ struct marketRevealVote : public marketObj {
     marketRevealVote(void) : marketObj() { marketop = 'R'; } 
     virtual ~marketRevealVote(void) { } 
 
-    ADD_SERIALIZE_METHODS;
+    ADD_SERIALIZE_METHODS
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
@@ -200,7 +200,7 @@ struct marketSealedVote : public marketObj {
     marketSealedVote(void) : marketObj() { marketop = 'S'; } 
     virtual ~marketSealedVote(void) { } 
 
-    ADD_SERIALIZE_METHODS;
+    ADD_SERIALIZE_METHODS
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
@@ -221,7 +221,7 @@ struct marketStealVote : public marketObj {
     marketStealVote(void) : marketObj() { marketop = 'L'; } 
     virtual ~marketStealVote(void) { } 
 
-    ADD_SERIALIZE_METHODS;
+    ADD_SERIALIZE_METHODS
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
@@ -266,9 +266,9 @@ struct marketOutcome : public marketObj {
     CTransaction tx; /* transaction */
 
     marketOutcome(void) : marketObj() { marketop = 'O'; } 
-    virtual ~marketOutcome(void) { };
+    virtual ~marketOutcome(void) { }
 
-    ADD_SERIALIZE_METHODS;
+    ADD_SERIALIZE_METHODS
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
@@ -329,7 +329,7 @@ struct marketBranch : public marketObj {
     marketBranch(void) : marketObj() { marketop = 'B'; } 
     virtual ~marketBranch(void) { } 
 
-    ADD_SERIALIZE_METHODS;
+    ADD_SERIALIZE_METHODS
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
