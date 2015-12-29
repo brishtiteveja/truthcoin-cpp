@@ -18,9 +18,11 @@ DecisionCreationWidget::~DecisionCreationWidget()
 
 void DecisionCreationWidget::on_pushButtonCreateDecision_clicked()
 {
+    // Main branch ID
+    QString branchID = "0f894a25c5e0318ee148fe54600ebbf50782f0a1df1eb2aab06321a8ccec270d";
+
     // Grab user input from ui
     QString address = (ui->lineEditOwnerAddr->text().size())? ui->lineEditOwnerAddr->text() : "<address>";
-    QString branchID = "Main"; // Starting with just the main branch for now.
     QString prompt = (ui->plainTextEditPrompt->toPlainText().size())? ui->plainTextEditPrompt->toPlainText(): "<prompt>";
     int eventOverBy = ui->lineEditEventOverBy->text().toInt();
     bool voteMandatory = ui->checkBoxVoteMandatory->isChecked();
@@ -70,5 +72,29 @@ void DecisionCreationWidget::on_pushButtonCreateDecision_clicked()
     } catch (...) {
         std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
         std::cout << "write_string: Unknown Exception!\n";
+    }
+}
+
+void DecisionCreationWidget::on_radioButtonBinary_clicked(bool checked)
+{
+    // Enable scale doublespinbox widgets for binary decision
+    if (checked) {
+        ui->doubleSpinBoxScaledMin->setEnabled(false);
+        ui->doubleSpinBoxScaledMax->setEnabled(false);
+    } else {
+        ui->doubleSpinBoxScaledMin->setEnabled(true);
+        ui->doubleSpinBoxScaledMax->setEnabled(true);
+    }
+}
+
+void DecisionCreationWidget::on_radioButtonScaled_clicked(bool checked)
+{
+    // Enable scale doublespinbox widgets for scaled decision
+    if (checked) {
+        ui->doubleSpinBoxScaledMin->setEnabled(true);
+        ui->doubleSpinBoxScaledMax->setEnabled(true);
+    } else {
+        ui->doubleSpinBoxScaledMin->setEnabled(false);
+        ui->doubleSpinBoxScaledMax->setEnabled(false);
     }
 }

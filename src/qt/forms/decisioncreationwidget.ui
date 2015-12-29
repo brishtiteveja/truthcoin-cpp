@@ -10,6 +10,12 @@
     <height>498</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -137,23 +143,18 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBoxScaledMin"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxScaledMin">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBoxScaledMax"/>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxScaledMax">
+        <property name="enabled">
+         <bool>false</bool>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label">
@@ -164,11 +165,17 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEditEventOverBy">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string/>
         </property>
         <property name="placeholderText">
-         <string>Event End Block #</string>
+         <string>End Block #</string>
         </property>
        </widget>
       </item>

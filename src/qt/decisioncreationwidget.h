@@ -21,6 +21,10 @@ public:
 private slots:
     void on_pushButtonCreateDecision_clicked();
 
+    void on_radioButtonBinary_clicked(bool checked);
+
+    void on_radioButtonScaled_clicked(bool checked);
+
 private:
     Ui::DecisionCreationWidget *ui;
     const marketBranch *branch;
