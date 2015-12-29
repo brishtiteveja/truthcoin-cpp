@@ -24,21 +24,21 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="labelMarketType">
         <property name="text">
          <string>Market Type:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton">
+       <widget class="QRadioButton" name="radioButtonStandard">
         <property name="text">
          <string>Standard</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_2">
+       <widget class="QRadioButton" name="radioButtonDAC">
         <property name="text">
          <string>DAC (Selling Disabled)</string>
         </property>
@@ -70,14 +70,14 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="labelHashFunction">
         <property name="text">
          <string>Hash Function:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox">
+       <widget class="QComboBox" name="comboBoxHashFunction">
         <item>
          <property name="text">
           <string>SHA-2</string>
@@ -86,14 +86,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="labelDifficulty">
         <property name="text">
          <string>Difficulty</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxDifficulty"/>
       </item>
      </layout>
     </widget>
@@ -108,84 +108,84 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="labelB">
         <property name="text">
          <string>B:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="lineEditB"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="labelMaxCommission">
         <property name="text">
          <string>Max Commission:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxMaxCommission"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="labelTradeFee">
         <property name="text">
          <string>Trading Fee:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxTradeFee"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="labelAuthorAddress">
         <property name="text">
          <string>Author Address:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_2"/>
+       <widget class="QLineEdit" name="lineEditAuthorAddress"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="labelDescription">
         <property name="text">
          <string>Description:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPlainTextEdit" name="plainTextEdit"/>
+       <widget class="QPlainTextEdit" name="plainTextEditDescription"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_9">
+       <widget class="QLabel" name="labelTags">
         <property name="text">
          <string>Tags</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_3"/>
+       <widget class="QLineEdit" name="lineEditTags"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_10">
+       <widget class="QLabel" name="labelDecisions">
         <property name="text">
          <string>Decisions:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_4"/>
+       <widget class="QLineEdit" name="lineEditDecisions"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_11">
+       <widget class="QLabel" name="labelFunctions">
         <property name="text">
          <string>Functions</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_5"/>
+       <widget class="QLineEdit" name="lineEditFunctions"/>
       </item>
       <item>
        <widget class="QPushButton" name="pushButtonCreateMarket">
