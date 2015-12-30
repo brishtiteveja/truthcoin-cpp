@@ -3,12 +3,16 @@
 
 #include <QHBoxLayout>
 #include <QDialog>
+#include <QTableWidgetItem>
 
 AuthorView::AuthorView(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AuthorView)
 {
     ui->setupUi(this);
+
+    connect(this, SIGNAL(newPendingCreation()),
+            this, SLOT(on_newPendingCreation_received()));
 }
 
 AuthorView::~AuthorView()
@@ -56,6 +60,10 @@ void AuthorView::on_pushButtonCreateMarket_clicked()
 
 void AuthorView::on_decisionArray_received(const json_spirit::Array &array)
 {
+    // Add the array to the pending creations vector
+    pending.push_back(array);
+    emit newPendingCreation();
+
     std::cout << "Decision array received\n";
     std::cout << "----------------------------------------\n";
 
@@ -65,4 +73,8 @@ void AuthorView::on_decisionArray_received(const json_spirit::Array &array)
     }
 
     std::cout << "----------------------------------------\n";
+}
+
+void AuthorView::on_newPendingCreation_received() {
+
 }

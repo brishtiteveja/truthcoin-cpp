@@ -2,6 +2,8 @@
 #define AUTHORVIEW_H
 
 #include <QWidget>
+#include <vector>
+
 #include "combocreationwidget.h"
 #include "decisioncreationwidget.h"
 #include "decisionmarketcreationwidget.h"
@@ -39,12 +41,19 @@ private slots:
 
     void on_decisionArray_received(const json_spirit::Array &array);
 
+    void on_newPendingCreation_received();
+
+signals:
+    void newPendingCreation();
+
 private:
     Ui::AuthorView *ui;
 
     ComboCreationWidget *comboCreationWidget;
     DecisionCreationWidget *decisionCreationWidget;
     DecisionMarketCreationWidget *decisionMarketCreationWidget;
+
+    std::vector<json_spirit::Array> pending;
 };
 
 #endif // AUTHORVIEW_H
