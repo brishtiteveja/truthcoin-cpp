@@ -12,8 +12,8 @@ ComboCreationWidget::ComboCreationWidget(QWidget *parent) :
     decisionCreationWidget = new DecisionCreationWidget(this);
     marketCreationWidget = new DecisionMarketCreationWidget(this);
 
-    ui->frame_decision->layout()->addWidget(decisionCreationWidget);
-    ui->frame_market->layout()->addWidget(marketCreationWidget);
+    ui->frameDecision->layout()->addWidget(decisionCreationWidget);
+    ui->frameMarket->layout()->addWidget(marketCreationWidget);
 }
 
 ComboCreationWidget::~ComboCreationWidget()

@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QFrame" name="frame_decision">
+    <widget class="QFrame" name="frameDecision">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -24,7 +24,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="labelDecision">
         <property name="text">
          <string>Decision Creation</string>
         </property>
@@ -34,7 +34,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame_market">
+    <widget class="QFrame" name="frameMarket">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -43,7 +43,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="labelMarket">
         <property name="text">
          <string>Market Creation</string>
         </property>
@@ -62,21 +62,21 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="labelStatus">
         <property name="text">
          <string>Status:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="labelDecisionCreated">
         <property name="text">
          <string>Decision Created: No</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="labelMarketCreated">
         <property name="text">
          <string>Market Created: No</string>
         </property>

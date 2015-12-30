@@ -1,7 +1,6 @@
 #include "decisioncreationwidget.h"
 #include "ui_decisioncreationwidget.h"
 
-#include "json/json_spirit_writer_template.h"
 #include "primitives/market.h"
 
 DecisionCreationWidget::DecisionCreationWidget(QWidget *parent) :
@@ -44,6 +43,8 @@ void DecisionCreationWidget::on_pushButtonCreateDecision_clicked()
         params.push_back(scaledMin);
         params.push_back(scaledMax);
     }
+
+    emit receivedDecisionArray(params);
 
     // Create decision, passing spirit array and returning spirit object
     json_spirit::Value result;
