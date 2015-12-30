@@ -999,7 +999,7 @@ void DecisionView::showTradeWindow(void)
 void DecisionView::setModel(WalletModel *model)
 {
     this->model = model;
-    /* branch is last. it populate decisions and market */
+    /* branch is last as it populates decisions and market */
     tradeWindow->setModel(model);
     marketWindow->setModel(model);
     decisionWindow->setModel(model);

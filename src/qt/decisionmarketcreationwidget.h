@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class DecisionDecisionWindow;
+
 namespace Ui {
 class DecisionMarketCreationWidget;
 }
@@ -18,8 +20,11 @@ public:
 private slots:
     void on_pushButtonCreateMarket_clicked();
 
+    void on_pushButtonSelectDecision_clicked();
+
 private:
     Ui::DecisionMarketCreationWidget *ui;
+    DecisionDecisionWindow *decisionWindow;
 };
 
 #endif // DECISIONMARKETCREATIONWIDGET_H

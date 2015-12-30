@@ -1,8 +1,8 @@
 #include "decisioncreationwidget.h"
 #include "ui_decisioncreationwidget.h"
 
-#include "primitives/market.h"
 #include "json/json_spirit_writer_template.h"
+#include "primitives/market.h"
 
 DecisionCreationWidget::DecisionCreationWidget(QWidget *parent) :
     QWidget(parent),
@@ -61,14 +61,14 @@ void DecisionCreationWidget::on_pushButtonCreateDecision_clicked()
         result = object;
     } catch (...) {
         std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-        std::cout << "Unknown Exception!\n";;
+        std::cout << "Unknown Exception!\n";
         return;
     }
 
     // Unpack spirit results
     try {
         std::string text = json_spirit::write_string(result, true);
-        std::cout << "CLI Response: \n" << text << std::endl;
+        std::cout << "Create Decision Result: \n" << text << std::endl;
     } catch (...) {
         std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
         std::cout << "write_string: Unknown Exception!\n";
