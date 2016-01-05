@@ -1,8 +1,9 @@
 #ifndef DECISIONCREATIONWIDGET_H
 #define DECISIONCREATIONWIDGET_H
 
-#include <QWidget>
 #include "json/json_spirit_writer_template.h"
+
+#include <QWidget>
 
 class marketBranch;
 class marketDecision;
@@ -21,7 +22,7 @@ public:
 
 signals:
     /** Signal raised when json_spirit::Array for new Decision is created */
-    void receivedDecisionArray(const json_spirit::Array &array);
+    void receivedDecisionArray(const json_spirit::Array array);
 
 private slots:
     void on_pushButtonCreateDecision_clicked();

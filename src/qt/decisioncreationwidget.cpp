@@ -29,8 +29,6 @@ void DecisionCreationWidget::on_pushButtonCreateDecision_clicked()
     double scaledMin = ui->doubleSpinBoxScaledMin->value();
     double scaledMax = ui->doubleSpinBoxScaledMax->value();
 
-    extern json_spirit::Value createdecision(const json_spirit::Array &params, bool fHelp);
-
     // Setup json_spirit array
     json_spirit::Array params;
     params.push_back(address.toStdString());
@@ -43,37 +41,10 @@ void DecisionCreationWidget::on_pushButtonCreateDecision_clicked()
         params.push_back(scaledMin);
         params.push_back(scaledMax);
     }
+    // Type of array
+    params.push_back("decision");
 
     emit receivedDecisionArray(params);
-
-    // Create decision, passing spirit array and returning spirit object
-    json_spirit::Value result;
-    try {
-        result = createdecision(params, false);
-    } catch (const std::runtime_error &error) {
-        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-        std::cout << "Error: \n" << error.what() << std::endl;
-        return;
-    } catch (const std::exception &exception) {
-        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-        std::cout << "Exception: \n" << exception.what() << std::endl;
-        return;
-    } catch (const json_spirit::Object &object) {
-        result = object;
-    } catch (...) {
-        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-        std::cout << "Unknown Exception!\n";
-        return;
-    }
-
-    // Unpack spirit results
-    try {
-        std::string text = json_spirit::write_string(result, true);
-        std::cout << "Create Decision Result: \n" << text << std::endl;
-    } catch (...) {
-        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-        std::cout << "write_string: Unknown Exception!\n";
-    }
 }
 
 void DecisionCreationWidget::on_radioButtonBinary_clicked(bool checked)

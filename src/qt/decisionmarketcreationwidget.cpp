@@ -21,7 +21,7 @@ void DecisionMarketCreationWidget::on_pushButtonCreateMarket_clicked()
 {
     // Grab user input from the ui
     QString address = ui->lineEditAuthorAddress->text();
-    QString decisionID = "";
+    QString decisionID = ui->lineEditDecisions->text();
     decisionID.append(":");
     decisionID.append(ui->lineEditFunctions->text());
     double B = ui->lineEditB->text().toDouble();
@@ -33,8 +33,6 @@ void DecisionMarketCreationWidget::on_pushButtonCreateMarket_clicked()
     int maturation = 1;
     int txPoWh = ui->comboBoxHashFunction->currentIndex();
     int txPoWd = ui->doubleSpinBoxDifficulty->value();
-
-    extern json_spirit::Value createmarket(const json_spirit::Array &params, bool fHelp);
 
     // Setup json_spirit array
     json_spirit::Array params;
@@ -49,35 +47,10 @@ void DecisionMarketCreationWidget::on_pushButtonCreateMarket_clicked()
     params.push_back(maturation);
     params.push_back(txPoWh);
     params.push_back(txPoWd);
+    // Array type
+    params.push_back("market");
 
-    // Create market, passing spirit array and returning spirit object
-    json_spirit::Value result;
-    try {
-        result = createmarket(params, false);
-    } catch (const std::runtime_error &error) {
-        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-        std::cout << "Error: \n" << error.what() << std::endl;
-        return;
-    } catch (const std::exception &exception) {
-        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-        std::cout << "Exception: \n" << exception.what() << std::endl;
-        return;
-    }  catch (const json_spirit::Object &object) {
-        result = object;
-    } catch (...) {
-        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-        std::cout << "Unknown Exception!\n";
-        return;
-    }
-
-    // Unpack spirit results
-    try {
-        std::string text = json_spirit::write_string(result, true);
-        std::cout << "Create Market Result: " << text << std::endl;
-    } catch (...) {
-        std::cout << "decisioncreationwidget::on_pushButtonCreateMarket clicked\n";
-        std::cout << "write_string: Unknown Exception!\n";
-    }
+    emit receivedDecisionMarketArray(params);
 }
 
 void DecisionMarketCreationWidget::on_pushButtonSelectDecision_clicked()

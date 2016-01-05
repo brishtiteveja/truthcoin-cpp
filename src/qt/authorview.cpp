@@ -3,7 +3,6 @@
 
 #include <QHBoxLayout>
 #include <QDialog>
-#include <QTableWidgetItem>
 
 AuthorView::AuthorView(QWidget *parent) :
     QWidget(parent),
@@ -11,8 +10,24 @@ AuthorView::AuthorView(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(this, SIGNAL(newPendingCreation()),
-            this, SLOT(on_newPendingCreation_received()));
+    // Setup model & author pending table
+    pendingTableView = new QTableView(this);
+    pendingTableModel = new AuthorPendingTableModel(this);
+    pendingTableView->setModel(pendingTableModel);
+    ui->frameLeft->layout()->addWidget(pendingTableView);
+
+    // Setup signals
+    connect(this, SIGNAL(newPendingCombo(json_spirit::Array)),
+            pendingTableModel, SLOT(receivePendingCombo(json_spirit::Array)));
+
+    connect(this, SIGNAL(newPendingDecision(json_spirit::Array)),
+            pendingTableModel, SLOT(receivePendingDecision(json_spirit::Array)));
+
+    connect(this, SIGNAL(newPendingDecisionMarket(json_spirit::Array)),
+            pendingTableModel, SLOT(receivePendingDecisionMarket(json_spirit::Array)));
+
+    connect(pendingTableView, SIGNAL(doubleClicked(QModelIndex)),
+            pendingTableModel, SLOT(on_tableView_doubleClicked(QModelIndex)));
 }
 
 AuthorView::~AuthorView()
@@ -22,10 +37,16 @@ AuthorView::~AuthorView()
 
 void AuthorView::on_pushButtonCreateCombo_clicked()
 {
-    ComboCreationWidget *comboCreationWidget = new ComboCreationWidget(this);
+    comboCreationWidget = new ComboCreationWidget(this);
 
     QHBoxLayout *hbox = new QHBoxLayout(this);
     hbox->addWidget(comboCreationWidget);
+
+    // Pass array to model
+    connect(comboCreationWidget, SIGNAL(receivedComboArray(json_spirit::Array)),
+            this, SIGNAL(newPendingCombo(json_spirit::Array)));
+    connect(comboCreationWidget, SIGNAL(receivedComboArray(json_spirit::Array)),
+            this, SIGNAL(newPendingCombo(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);
     dialog->setLayout(hbox);
@@ -34,13 +55,13 @@ void AuthorView::on_pushButtonCreateCombo_clicked()
 
 void AuthorView::on_pushButtonCreateDecision_clicked()
 {
-    DecisionCreationWidget *creationWidget = new DecisionCreationWidget(this);
+    decisionCreationWidget = new DecisionCreationWidget(this);
     QHBoxLayout *hbox = new QHBoxLayout(this);
-    hbox->addWidget(creationWidget);
+    hbox->addWidget(decisionCreationWidget);
 
-    // Recieve decision arrays from each creation window the user opens
-    connect(creationWidget, SIGNAL(receivedDecisionArray(json_spirit::Array)),
-            this, SLOT(on_decisionArray_received(json_spirit::Array)));
+    // Pass array to model
+    connect(decisionCreationWidget, SIGNAL(receivedDecisionArray(json_spirit::Array)),
+            this, SIGNAL(newPendingDecision(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);
     dialog->setLayout(hbox);
@@ -49,32 +70,82 @@ void AuthorView::on_pushButtonCreateDecision_clicked()
 
 void AuthorView::on_pushButtonCreateMarket_clicked()
 {
-    DecisionMarketCreationWidget *marketCreationWidget = new DecisionMarketCreationWidget(this);
+    decisionMarketCreationWidget = new DecisionMarketCreationWidget(this);
     QHBoxLayout *hbox = new QHBoxLayout(this);
-    hbox->addWidget(marketCreationWidget);
+    hbox->addWidget(decisionMarketCreationWidget);
+
+    // Pass array to model
+    connect(decisionMarketCreationWidget, SIGNAL(receivedDecisionMarketArray(json_spirit::Array)),
+            this, SIGNAL(newPendingDecisionMarket(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);
     dialog->setLayout(hbox);
     dialog->show();
 }
 
-void AuthorView::on_decisionArray_received(const json_spirit::Array &array)
+void AuthorView::on_pushButtonFinalize_clicked()
 {
-    // Add the array to the pending creations vector
-    pending.push_back(array);
-    emit newPendingCreation();
+    // CREATE DECISION CODE
+    // Remove the type value from the array
+    //params.pop_back();
 
-    std::cout << "Decision array received\n";
-    std::cout << "----------------------------------------\n";
+//    // Create decision, passing spirit array and returning spirit object
+//    json_spirit::Value result;
+//    try {
+//        result = createdecision(params, false);
+//    } catch (const std::runtime_error &error) {
+//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
+//        std::cout << "Error: \n" << error.what() << std::endl;
+//        return;
+//    } catch (const std::exception &exception) {
+//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
+//        std::cout << "Exception: \n" << exception.what() << std::endl;
+//        return;
+//    } catch (const json_spirit::Object &object) {
+//        result = object;
+//    } catch (...) {
+//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
+//        std::cout << "Unknown Exception!\n";
+//        return;
+//    }
 
-    for (unsigned int i = 0; i < array.size(); i++) {
-        std::string text = json_spirit::write_string(array.at(i), true);
-        std::cout << text << std::endl;
-    }
+//    // Unpack spirit results
+//    try {
+//        std::string text = json_spirit::write_string(result, true);
+//        std::cout << "Create Decision Result: \n" << text << std::endl;
+//    } catch (...) {
+//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
+//        std::cout << "write_string: Unknown Exception!\n";
+//    }
 
-    std::cout << "----------------------------------------\n";
-}
 
-void AuthorView::on_newPendingCreation_received() {
+    // CREATE MARKET CODE
+//    // Create market, passing spirit array and returning spirit object
+//    json_spirit::Value result;
+//    try {
+//        result = createmarket(params, false);
+//    } catch (const std::runtime_error &error) {
+//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
+//        std::cout << "Error: \n" << error.what() << std::endl;
+//        return;
+//    } catch (const std::exception &exception) {
+//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
+//        std::cout << "Exception: \n" << exception.what() << std::endl;
+//        return;
+//    }  catch (const json_spirit::Object &object) {
+//        result = object;
+//    } catch (...) {
+//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
+//        std::cout << "Unknown Exception!\n";
+//        return;
+//    }
 
+//    // Unpack spirit results
+//    try {
+//        std::string text = json_spirit::write_string(result, true);
+//        std::cout << "Create Market Result: " << text << std::endl;
+//    } catch (...) {
+//        std::cout << "decisioncreationwidget::on_pushButtonCreateMarket clicked\n";
+//        std::cout << "write_string: Unknown Exception!\n";
+//    }
 }

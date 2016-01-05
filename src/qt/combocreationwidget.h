@@ -1,11 +1,12 @@
 #ifndef COMBOCREATIONWIDGET_H
 #define COMBOCREATIONWIDGET_H
 
-#include <QWidget>
-#include <QHBoxLayout>
-
 #include "decisioncreationwidget.h"
 #include "decisionmarketcreationwidget.h"
+#include "json/json_spirit_writer_template.h"
+
+#include <QWidget>
+#include <QHBoxLayout>
 
 namespace Ui {
 class ComboCreationWidget;
@@ -24,6 +25,10 @@ private:
 
     DecisionCreationWidget *decisionCreationWidget;
     DecisionMarketCreationWidget *marketCreationWidget;
+
+signals:
+    /** Signal raised when json_spirit::Array for new Combo (Market & Decision) is created */
+    void receivedComboArray(const json_spirit::Array &array);
 };
 
 #endif // COMBOCREATIONWIDGET_H

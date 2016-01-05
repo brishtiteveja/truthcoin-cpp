@@ -1,13 +1,14 @@
 #ifndef AUTHORVIEW_H
 #define AUTHORVIEW_H
 
-#include <QWidget>
-#include <vector>
-
+#include "authorpendingtablemodel.h"
 #include "combocreationwidget.h"
 #include "decisioncreationwidget.h"
 #include "decisionmarketcreationwidget.h"
-#include "json/json_spirit_writer_template.h"
+
+#include <QList>
+#include <QTableView>
+#include <QWidget>
 
 class marketBranch;
 class marketDecision;
@@ -34,17 +35,14 @@ public:
 
 private slots:
     void on_pushButtonCreateCombo_clicked();
-
     void on_pushButtonCreateDecision_clicked();
-
     void on_pushButtonCreateMarket_clicked();
-
-    void on_decisionArray_received(const json_spirit::Array &array);
-
-    void on_newPendingCreation_received();
+    void on_pushButtonFinalize_clicked();
 
 signals:
-    void newPendingCreation();
+    void newPendingCombo(const json_spirit::Array array);
+    void newPendingDecision(const json_spirit::Array array);
+    void newPendingDecisionMarket(const json_spirit::Array array);
 
 private:
     Ui::AuthorView *ui;
@@ -53,7 +51,9 @@ private:
     DecisionCreationWidget *decisionCreationWidget;
     DecisionMarketCreationWidget *decisionMarketCreationWidget;
 
-    std::vector<json_spirit::Array> pending;
+    AuthorPendingTableModel *pendingTableModel;
+    QTableView *pendingTableView;
+
 };
 
 #endif // AUTHORVIEW_H
