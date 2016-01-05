@@ -49,6 +49,7 @@ void AuthorView::on_pushButtonCreateCombo_clicked()
             this, SIGNAL(newPendingCombo(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Create Combo (Decision & Market)");
     dialog->setLayout(hbox);
     dialog->show();
 }
@@ -64,6 +65,7 @@ void AuthorView::on_pushButtonCreateDecision_clicked()
             this, SIGNAL(newPendingDecision(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Create Decision");
     dialog->setLayout(hbox);
     dialog->show();
 }
@@ -79,6 +81,7 @@ void AuthorView::on_pushButtonCreateMarket_clicked()
             this, SIGNAL(newPendingDecisionMarket(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Create Market");
     dialog->setLayout(hbox);
     dialog->show();
 }
