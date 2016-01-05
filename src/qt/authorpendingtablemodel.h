@@ -18,8 +18,11 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    void finalize();
 
 signals:
+    void finalizeError(const QString &errorMessage);
+    void finalizeComplete();
 
 public slots:
     void on_tableView_doubleClicked(const QModelIndex &index);

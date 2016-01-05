@@ -1,8 +1,9 @@
 #include "authorview.h"
 #include "ui_authorview.h"
 
-#include <QHBoxLayout>
 #include <QDialog>
+#include <QHBoxLayout>
+#include <QMessageBox>
 
 AuthorView::AuthorView(QWidget *parent) :
     QWidget(parent),
@@ -28,6 +29,12 @@ AuthorView::AuthorView(QWidget *parent) :
 
     connect(pendingTableView, SIGNAL(doubleClicked(QModelIndex)),
             pendingTableModel, SLOT(on_tableView_doubleClicked(QModelIndex)));
+
+    connect(pendingTableModel, SIGNAL(finalizeError(QString)),
+            this, SLOT(on_finalizeError(QString)));
+
+    connect(pendingTableModel, SIGNAL(finalizeComplete()),
+            this, SLOT(on_finalizeComplete()));
 }
 
 AuthorView::~AuthorView()
@@ -88,67 +95,20 @@ void AuthorView::on_pushButtonCreateMarket_clicked()
 
 void AuthorView::on_pushButtonFinalize_clicked()
 {
-    // CREATE DECISION CODE
-    // Remove the type value from the array
-    //params.pop_back();
+    pendingTableModel->finalize();
+}
 
-//    // Create decision, passing spirit array and returning spirit object
-//    json_spirit::Value result;
-//    try {
-//        result = createdecision(params, false);
-//    } catch (const std::runtime_error &error) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-//        std::cout << "Error: \n" << error.what() << std::endl;
-//        return;
-//    } catch (const std::exception &exception) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-//        std::cout << "Exception: \n" << exception.what() << std::endl;
-//        return;
-//    } catch (const json_spirit::Object &object) {
-//        result = object;
-//    } catch (...) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-//        std::cout << "Unknown Exception!\n";
-//        return;
-//    }
+void AuthorView::on_finalizeError(const QString &errorMessage)
+{
+    QMessageBox errorMessageBox;
+    errorMessageBox.setWindowTitle("Error finalizing creations!");
+    errorMessageBox.setText(errorMessage);
+    errorMessageBox.setStandardButtons(QMessageBox::Ok);
+    errorMessageBox.setDefaultButton(QMessageBox::Ok);
+    errorMessageBox.exec();
+}
 
-//    // Unpack spirit results
-//    try {
-//        std::string text = json_spirit::write_string(result, true);
-//        std::cout << "Create Decision Result: \n" << text << std::endl;
-//    } catch (...) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-//        std::cout << "write_string: Unknown Exception!\n";
-//    }
+void AuthorView::on_finalizeComplete()
+{
 
-
-    // CREATE MARKET CODE
-//    // Create market, passing spirit array and returning spirit object
-//    json_spirit::Value result;
-//    try {
-//        result = createmarket(params, false);
-//    } catch (const std::runtime_error &error) {
-//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-//        std::cout << "Error: \n" << error.what() << std::endl;
-//        return;
-//    } catch (const std::exception &exception) {
-//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-//        std::cout << "Exception: \n" << exception.what() << std::endl;
-//        return;
-//    }  catch (const json_spirit::Object &object) {
-//        result = object;
-//    } catch (...) {
-//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-//        std::cout << "Unknown Exception!\n";
-//        return;
-//    }
-
-//    // Unpack spirit results
-//    try {
-//        std::string text = json_spirit::write_string(result, true);
-//        std::cout << "Create Market Result: " << text << std::endl;
-//    } catch (...) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateMarket clicked\n";
-//        std::cout << "write_string: Unknown Exception!\n";
-//    }
 }

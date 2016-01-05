@@ -38,6 +38,8 @@ private slots:
     void on_pushButtonCreateDecision_clicked();
     void on_pushButtonCreateMarket_clicked();
     void on_pushButtonFinalize_clicked();
+    void on_finalizeError(const QString &errorMessage);
+    void on_finalizeComplete();
 
 signals:
     void newPendingCombo(const json_spirit::Array array);
