@@ -10,16 +10,16 @@
 #include <QTableView>
 #include <QWidget>
 
-class marketBranch;
-class marketDecision;
-class marketMarket;
-class marketTrade;
-class DecisionViewGraph;
-class DecisionBranchWindow;
-class DecisionDecisionWindow;
-class DecisionMarketWindow;
-class DecisionTradeWindow;
-class WalletModel;
+//class marketBranch;
+//class marketDecision;
+//class marketMarket;
+//class marketTrade;
+//class DecisionViewGraph;
+//class DecisionBranchWindow;
+//class DecisionDecisionWindow;
+//class DecisionMarketWindow;
+//class DecisionTradeWindow;
+//class WalletModel;
 
 namespace Ui {
 class AuthorView;

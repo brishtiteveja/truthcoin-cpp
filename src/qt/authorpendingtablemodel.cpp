@@ -1,4 +1,5 @@
 #include "authorpendingtablemodel.h"
+#include "primitives/market.h"
 
 #include <QDialog>
 #include <QHBoxLayout>
@@ -126,7 +127,6 @@ void AuthorPendingTableModel::on_tableView_doubleClicked(const QModelIndex &inde
     // Figure out what we are editing, and open proper dialog
     json_spirit::Array itemClicked = pending.at(index.row());
     std::string itemType = json_spirit::write_string(itemClicked.back(), true);
-    std::cout << "Item Type:" << itemType << std::endl;
 
     if (itemType == "\"combo\"") {
         editCombo(index);
@@ -167,42 +167,69 @@ void AuthorPendingTableModel::receivePendingDecisionMarket(json_spirit::Array ar
 void AuthorPendingTableModel::finalize()
 {
     if (pending.empty()) {
-        QString error = "Empty pending array!\n";
-        emit finalizeError("Empty");
+        QString error = "There is nothing to finalize, create some decisions or markets!\n";
+        emit finalizeError(error);
     }
-    // CREATE DECISION CODE
-    // Remove the type value from the array
-    //params.pop_back();
 
-//    // Create decision, passing spirit array and returning spirit object
-//    json_spirit::Value result;
-//    try {
-//        result = createdecision(params, false);
-//    } catch (const std::runtime_error &error) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-//        std::cout << "Error: \n" << error.what() << std::endl;
-//        return;
-//    } catch (const std::exception &exception) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-//        std::cout << "Exception: \n" << exception.what() << std::endl;
-//        return;
-//    } catch (const json_spirit::Object &object) {
-//        result = object;
-//    } catch (...) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-//        std::cout << "Unknown Exception!\n";
-//        return;
-//    }
+    // Finalize the pending creations
+    for (int i = 0; i < pending.size(); i++) {
+        // Grab creation parameters and type
+        json_spirit::Array params = pending.at(i);
+        std::string type = json_spirit::write_string(params.back(), true);
 
-//    // Unpack spirit results
-//    try {
-//        std::string text = json_spirit::write_string(result, true);
-//        std::cout << "Create Decision Result: \n" << text << std::endl;
-//    } catch (...) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateDecision clicked\n";
-//        std::cout << "write_string: Unknown Exception!\n";
-//    }
+        // Remove type from parameters
+        params.pop_back();
 
+        json_spirit::Value result;
+
+        extern json_spirit::Value createdecision(const json_spirit::Array &params, bool fHelp);
+
+        // Try to finalize pending creations
+        if (type == "\"combo\"") {
+
+        } else if (type == "\"decision\"") {
+            try {
+                result = createdecision(params, false);
+            } catch (const std::runtime_error &error) {
+                QString errorText = QString::fromStdString(error.what());
+                emit finalizeError(errorText);
+            } catch (const std::exception &exception) {
+                QString exceptionText = QString::fromStdString(exception.what());
+                emit finalizeError(exceptionText);
+            } catch (json_spirit::Object &object) {
+                result = object;
+            }
+        } else if (type == "\"market\"") {
+
+        } else {
+            return;
+        }
+
+        // Check the result
+        try {
+            // Get result pairs
+            json_spirit::Object resultObject = result.get_obj();
+            json_spirit::Pair codePair = resultObject[0];
+            json_spirit::Pair messagePair = resultObject[1];
+
+            if (codePair.name_ == "code") {
+                int code = codePair.value_.get_int();
+                if (code < 0) {
+                    QString messageText = "Error creating #";
+                    messageText.append(QString::number(i+1)); // row #
+                    messageText.append("\n");
+                    messageText.append(QString::fromStdString(messagePair.value_.get_str()));
+                    emit finalizeError(messageText);
+                }
+            }
+        } catch (const std::runtime_error &error) {
+            QString errorText = QString::fromStdString(error.what());
+            emit finalizeError(errorText);
+        } catch (const std::exception &exception) {
+            QString exceptionText = QString::fromStdString(exception.what());
+            emit finalizeError(exceptionText);
+        }
+    }
 
     // CREATE MARKET CODE
 //    // Create market, passing spirit array and returning spirit object

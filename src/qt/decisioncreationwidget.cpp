@@ -1,8 +1,6 @@
 #include "decisioncreationwidget.h"
 #include "ui_decisioncreationwidget.h"
 
-#include "primitives/market.h"
-
 DecisionCreationWidget::DecisionCreationWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DecisionCreationWidget)

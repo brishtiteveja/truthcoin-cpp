@@ -3,7 +3,6 @@
 
 #include "decisiondecisionwindow.h"
 #include "json/json_spirit_writer_template.h"
-#include "primitives/market.h"
 
 DecisionMarketCreationWidget::DecisionMarketCreationWidget(QWidget *parent) :
     QWidget(parent),
