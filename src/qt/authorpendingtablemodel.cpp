@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QHBoxLayout>
 #include <QFont>
-#include <QBrush>
 
 AuthorPendingTableModel::AuthorPendingTableModel(QObject *parent) :
     QAbstractTableModel(parent)
@@ -180,29 +179,30 @@ void AuthorPendingTableModel::finalize()
         // Remove type from parameters
         params.pop_back();
 
+        extern json_spirit::Value createdecision(const json_spirit::Array &params, bool fHelp);
+        extern json_spirit::Value createmarket(const json_spirit::Array &params, bool fHelp);
+
         json_spirit::Value result;
 
-        extern json_spirit::Value createdecision(const json_spirit::Array &params, bool fHelp);
-
         // Try to finalize pending creations
-        if (type == "\"combo\"") {
+        try {
+            if (type == "\"combo\"") {
 
-        } else if (type == "\"decision\"") {
-            try {
+            } else if (type == "\"decision\"") {
                 result = createdecision(params, false);
-            } catch (const std::runtime_error &error) {
-                QString errorText = QString::fromStdString(error.what());
-                emit finalizeError(errorText);
-            } catch (const std::exception &exception) {
-                QString exceptionText = QString::fromStdString(exception.what());
-                emit finalizeError(exceptionText);
-            } catch (json_spirit::Object &object) {
-                result = object;
+            } else if (type == "\"market\"") {
+                result = createmarket(params, false);
+            } else {
+                continue;
             }
-        } else if (type == "\"market\"") {
-
-        } else {
-            return;
+        } catch (const std::runtime_error &error) {
+            QString errorText = QString::fromStdString(error.what());
+            emit finalizeError(errorText);
+        } catch (const std::exception &exception) {
+            QString exceptionText = QString::fromStdString(exception.what());
+            emit finalizeError(exceptionText);
+        } catch (json_spirit::Object &object) {
+            result = object;
         }
 
         // Check the result
@@ -230,34 +230,4 @@ void AuthorPendingTableModel::finalize()
             emit finalizeError(exceptionText);
         }
     }
-
-    // CREATE MARKET CODE
-//    // Create market, passing spirit array and returning spirit object
-//    json_spirit::Value result;
-//    try {
-//        result = createmarket(params, false);
-//    } catch (const std::runtime_error &error) {
-//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-//        std::cout << "Error: \n" << error.what() << std::endl;
-//        return;
-//    } catch (const std::exception &exception) {
-//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-//        std::cout << "Exception: \n" << exception.what() << std::endl;
-//        return;
-//    }  catch (const json_spirit::Object &object) {
-//        result = object;
-//    } catch (...) {
-//        std::cout << "decisionmarketcreationwidget::on_pushButtonCreateMarket clicked\n";
-//        std::cout << "Unknown Exception!\n";
-//        return;
-//    }
-
-//    // Unpack spirit results
-//    try {
-//        std::string text = json_spirit::write_string(result, true);
-//        std::cout << "Create Market Result: " << text << std::endl;
-//    } catch (...) {
-//        std::cout << "decisioncreationwidget::on_pushButtonCreateMarket clicked\n";
-//        std::cout << "write_string: Unknown Exception!\n";
-//    }
 }
