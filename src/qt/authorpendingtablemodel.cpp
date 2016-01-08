@@ -258,10 +258,18 @@ void AuthorPendingTableModel::receiveUpdatedCombo(json_spirit::Array array)
 
 void AuthorPendingTableModel::receiveUpdatedDecision(json_spirit::Array array)
 {
+    if (!array.size() >= 8) return;
+    int index = array.back().get_int();
+    array.pop_back();
 
+    pending.replace(index, array);
 }
 
 void AuthorPendingTableModel::receiveUpdatedDecisionMarket(json_spirit::Array array)
 {
+    if(!array.size() == 13) return;
+    int index = array.back().get_int();
+    array.pop_back();
 
+    pending.replace(index, array);
 }
