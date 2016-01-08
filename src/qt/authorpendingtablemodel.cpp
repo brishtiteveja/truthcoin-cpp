@@ -45,7 +45,7 @@ QVariant AuthorPendingTableModel::data(const QModelIndex &index, int role) const
         // Fee
         if (col == 2) {
             return "0.0"; // Dummy temp
-         }
+        }
 
         break;
     }
@@ -94,6 +94,9 @@ void AuthorPendingTableModel::editCombo(const QModelIndex &index)
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addWidget(comboCreationWidget);
 
+    connect(comboCreationWidget, SIGNAL(updatedComboArray(json_spirit::Array)),
+            this, SLOT(receiveUpdatedCombo(json_spirit::Array)));
+
     QDialog *dialog = new QDialog;
     dialog->setLayout(hbox);
     dialog->show();
@@ -101,12 +104,20 @@ void AuthorPendingTableModel::editCombo(const QModelIndex &index)
 
 void AuthorPendingTableModel::editDecision(const QModelIndex &index)
 {
-    DecisionCreationWidget *creationWidget = new DecisionCreationWidget;
+    DecisionCreationWidget *decisionCreationWidget = new DecisionCreationWidget;
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->addWidget(creationWidget);
+    hbox->addWidget(decisionCreationWidget);
+
+    connect(decisionCreationWidget, SIGNAL(updatedDecisionArray(json_spirit::Array)),
+            this, SLOT(receiveUpdatedDecision(json_spirit::Array)));
+
+    json_spirit::Array decisionToEdit = pending.at(index.row());
+    decisionToEdit.push_back(index.row());
+    decisionCreationWidget->editArray(decisionToEdit);
 
     QDialog *dialog = new QDialog;
     dialog->setLayout(hbox);
+    dialog->setWindowTitle("Edit Decision");
     dialog->show();
 }
 
@@ -116,8 +127,16 @@ void AuthorPendingTableModel::editDecisionMarket(const QModelIndex &index)
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->addWidget(marketCreationWidget);
 
+    connect(marketCreationWidget, SIGNAL(updatedDecisionMarketArray(json_spirit::Array)),
+            this, SLOT(receiveUpdatedDecisionMarket(json_spirit::Array)));
+
+    json_spirit::Array marketToEdit = pending.at(index.row());
+    marketToEdit.push_back(index.row());
+    marketCreationWidget->editArray(marketToEdit);
+
     QDialog *dialog = new QDialog;
     dialog->setLayout(hbox);
+    dialog->setWindowTitle("Edit Market");
     dialog->show();
 }
 
@@ -230,4 +249,19 @@ void AuthorPendingTableModel::finalize()
             emit finalizeError(exceptionText);
         }
     }
+}
+
+void AuthorPendingTableModel::receiveUpdatedCombo(json_spirit::Array array)
+{
+
+}
+
+void AuthorPendingTableModel::receiveUpdatedDecision(json_spirit::Array array)
+{
+
+}
+
+void AuthorPendingTableModel::receiveUpdatedDecisionMarket(json_spirit::Array array)
+{
+
 }

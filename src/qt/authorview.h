@@ -45,6 +45,9 @@ signals:
     void newPendingCombo(const json_spirit::Array array);
     void newPendingDecision(const json_spirit::Array array);
     void newPendingDecisionMarket(const json_spirit::Array array);
+//    void updatedPendingCombo(const json_spirit::Array array);
+//    void updatedPendingDecision(const json_spirit::Array array);
+//    void updatedPendingDecisionMarket(const json_spirit::Array array);
 
 private:
     Ui::AuthorView *ui;

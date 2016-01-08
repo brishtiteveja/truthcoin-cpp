@@ -232,6 +232,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonUpdateDecision">
+        <property name="text">
+         <string>Update Decision</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

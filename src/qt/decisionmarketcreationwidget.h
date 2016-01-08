@@ -24,13 +24,28 @@ private slots:
 
     void on_pushButtonSelectDecision_clicked();
 
+    void on_inputError(const QString &errorMessage);
+
+    void on_pushButtonUpdateMarket_clicked();
+
+public slots:
+    void editArray(json_spirit::Array array);
+
 signals:
     /** Signal raised when json_spirit::Array for new Decision Market is created */
-    void receivedDecisionMarketArray(const json_spirit::Array array);
+    void newDecisionMarketArray(const json_spirit::Array array);
+
+    /** Signal raised when user updates a decision array */
+    void updatedDecisionMarketArray(const json_spirit::Array array);
+
+    /** Signal raised for user input errors on market creation widget */
+    void inputError(const QString &error);
 
 private:
     Ui::DecisionMarketCreationWidget *ui;
+    json_spirit::Array createDecisionMarketArray();
     DecisionDecisionWindow *decisionWindow;
+    int updateIndex;
 };
 
 #endif // DECISIONMARKETCREATIONWIDGET_H

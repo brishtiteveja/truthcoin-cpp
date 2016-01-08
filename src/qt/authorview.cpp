@@ -50,9 +50,7 @@ void AuthorView::on_pushButtonCreateCombo_clicked()
     hbox->addWidget(comboCreationWidget);
 
     // Pass array to model
-    connect(comboCreationWidget, SIGNAL(receivedComboArray(json_spirit::Array)),
-            this, SIGNAL(newPendingCombo(json_spirit::Array)));
-    connect(comboCreationWidget, SIGNAL(receivedComboArray(json_spirit::Array)),
+    connect(comboCreationWidget, SIGNAL(newComboArray(json_spirit::Array)),
             this, SIGNAL(newPendingCombo(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);
@@ -68,7 +66,7 @@ void AuthorView::on_pushButtonCreateDecision_clicked()
     hbox->addWidget(decisionCreationWidget);
 
     // Pass array to model
-    connect(decisionCreationWidget, SIGNAL(receivedDecisionArray(json_spirit::Array)),
+    connect(decisionCreationWidget, SIGNAL(newDecisionArray(json_spirit::Array)),
             this, SIGNAL(newPendingDecision(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);
@@ -84,7 +82,7 @@ void AuthorView::on_pushButtonCreateMarket_clicked()
     hbox->addWidget(decisionMarketCreationWidget);
 
     // Pass array to model
-    connect(decisionMarketCreationWidget, SIGNAL(receivedDecisionMarketArray(json_spirit::Array)),
+    connect(decisionMarketCreationWidget, SIGNAL(newDecisionMarketArray(json_spirit::Array)),
             this, SIGNAL(newPendingDecisionMarket(json_spirit::Array)));
 
     QDialog *dialog = new QDialog(this);

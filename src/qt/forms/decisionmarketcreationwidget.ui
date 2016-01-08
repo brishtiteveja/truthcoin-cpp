@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>691</width>
-    <height>754</height>
+    <height>770</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -98,6 +98,16 @@
       <item>
        <widget class="QDoubleSpinBox" name="doubleSpinBoxDifficulty"/>
       </item>
+      <item>
+       <widget class="QLabel" name="labelMaturation">
+        <property name="text">
+         <string>Maturation</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBoxMaturation"/>
+      </item>
      </layout>
     </widget>
    </item>
@@ -125,7 +135,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEditB"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxB"/>
       </item>
       <item>
        <widget class="QLabel" name="labelMaxCommission">
@@ -205,12 +215,40 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEditFunctions"/>
+       <widget class="QComboBox" name="comboBoxFunctions">
+        <item>
+         <property name="text">
+          <string>X1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>X2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>X3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lnX1</string>
+         </property>
+        </item>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButtonCreateMarket">
         <property name="text">
          <string>Create Market</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonUpdateMarket">
+        <property name="text">
+         <string>Update Market</string>
         </property>
        </widget>
       </item>

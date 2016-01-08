@@ -22,7 +22,16 @@ public:
 
 signals:
     /** Signal raised when json_spirit::Array for new Decision is created */
-    void receivedDecisionArray(const json_spirit::Array array);
+    void newDecisionArray(const json_spirit::Array array);
+
+    /** Signal raised for user input errors on decision creation widget */
+    void inputError(const QString &error);
+
+    /** Signal raised when user updates a decision array */
+    void updatedDecisionArray(const json_spirit::Array array);
+
+public slots:
+    void editArray(json_spirit::Array array);
 
 private slots:
     void on_pushButtonCreateDecision_clicked();
@@ -31,9 +40,15 @@ private slots:
 
     void on_radioButtonScaled_clicked(bool checked);
 
+    void on_inputError(const QString &errorMessage);
+
+    void on_pushButtonUpdateDecision_clicked();
+
 private:
     Ui::DecisionCreationWidget *ui;
+    json_spirit::Array createDecisionArray();
     const marketBranch *branch;
+    int updateIndex;
 };
 
 #endif // DECISIONCREATIONWIDGET_H

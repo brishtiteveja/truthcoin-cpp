@@ -29,12 +29,21 @@ signals:
 
 public slots:
     void on_tableView_doubleClicked(const QModelIndex &index);
+
+    // Edit on double click
     void editCombo(const QModelIndex &index);
     void editDecision(const QModelIndex &index);
     void editDecisionMarket(const QModelIndex &index);
+
+    // Receive new arrays
     void receivePendingCombo(json_spirit::Array array);
     void receivePendingDecision(json_spirit::Array array);
     void receivePendingDecisionMarket(json_spirit::Array array);
+
+    // Receive array updates
+    void receiveUpdatedCombo(json_spirit::Array array);
+    void receiveUpdatedDecision(json_spirit::Array array);
+    void receiveUpdatedDecisionMarket(json_spirit::Array array);
 
 private:
     QList<json_spirit::Array> pending;

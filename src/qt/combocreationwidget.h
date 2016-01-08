@@ -28,7 +28,10 @@ private:
 
 signals:
     /** Signal raised when json_spirit::Array for new Combo (Market & Decision) is created */
-    void receivedComboArray(const json_spirit::Array &array);
+    void newComboArray(const json_spirit::Array &array);
+
+    /** Signal raised when user updates a decision array */
+    void updatedComboArray(const json_spirit::Array array);
 };
 
 #endif // COMBOCREATIONWIDGET_H
