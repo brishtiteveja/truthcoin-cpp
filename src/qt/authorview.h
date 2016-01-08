@@ -10,17 +10,6 @@
 #include <QTableView>
 #include <QWidget>
 
-//class marketBranch;
-//class marketDecision;
-//class marketMarket;
-//class marketTrade;
-//class DecisionViewGraph;
-//class DecisionBranchWindow;
-//class DecisionDecisionWindow;
-//class DecisionMarketWindow;
-//class DecisionTradeWindow;
-//class WalletModel;
-
 namespace Ui {
 class AuthorView;
 }
@@ -45,9 +34,6 @@ signals:
     void newPendingCombo(const json_spirit::Array array);
     void newPendingDecision(const json_spirit::Array array);
     void newPendingDecisionMarket(const json_spirit::Array array);
-//    void updatedPendingCombo(const json_spirit::Array array);
-//    void updatedPendingDecision(const json_spirit::Array array);
-//    void updatedPendingDecisionMarket(const json_spirit::Array array);
 
 private:
     Ui::AuthorView *ui;
