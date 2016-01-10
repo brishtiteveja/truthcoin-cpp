@@ -29,7 +29,11 @@ private slots:
     void on_pushButtonUpdateMarket_clicked();
 
 public slots:
+    // Load json_spirit array for editing
     void editArray(json_spirit::Array array);
+
+    // Setup the UI for the combo creation widget
+    void comboCreationUI();
 
 signals:
     /** Signal raised when json_spirit::Array for new Decision Market is created */

@@ -210,3 +210,10 @@ void DecisionMarketCreationWidget::on_pushButtonUpdateMarket_clicked()
         emit updatedDecisionMarketArray(updatedMarket);
     }
 }
+
+void DecisionMarketCreationWidget::comboCreationUI()
+{
+    ui->pushButtonCreateMarket->hide();
+    ui->pushButtonSelectDecision->hide();
+    ui->lineEditDecisions->setEnabled(false);
+}

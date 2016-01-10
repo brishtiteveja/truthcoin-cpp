@@ -10,7 +10,10 @@ ComboCreationWidget::ComboCreationWidget(QWidget *parent) :
     ui->setupUi(this);
 
     decisionCreationWidget = new DecisionCreationWidget(this);
+    decisionCreationWidget->comboCreationUI();
+
     marketCreationWidget = new DecisionMarketCreationWidget(this);
+    marketCreationWidget->comboCreationUI();
 
     ui->frameDecision->layout()->addWidget(decisionCreationWidget);
     ui->frameMarket->layout()->addWidget(marketCreationWidget);

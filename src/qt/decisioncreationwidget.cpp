@@ -182,3 +182,8 @@ void DecisionCreationWidget::on_pushButtonUpdateDecision_clicked()
         emit updatedDecisionArray(updatedDecision);
     }
 }
+
+void DecisionCreationWidget::comboCreationUI()
+{
+    ui->pushButtonCreateDecision->hide();
+}

@@ -231,6 +231,7 @@ void AuthorPendingTableModel::finalize()
             json_spirit::Pair codePair = resultObject[0];
             json_spirit::Pair messagePair = resultObject[1];
 
+            // If error, get error code and message
             if (codePair.name_ == "code") {
                 int code = codePair.value_.get_int();
                 if (code < 0) {
@@ -239,6 +240,29 @@ void AuthorPendingTableModel::finalize()
                     messageText.append("\n");
                     messageText.append(QString::fromStdString(messagePair.value_.get_str()));
                     emit finalizeError(messageText);
+                }
+            }
+
+            // If success, get txid and decision or market id
+            if (codePair.name_ == "txid" ) {
+                std::string txid = codePair.value_.get_str();
+                // Decision or market?
+                if (messagePair.name_ == "decisionid") {
+                    std::string decisionID = messagePair.value_.get_str();
+                    // Remove completed creations from the pending model
+                    beginRemoveRows(QModelIndex(), i, i);
+
+                    pending.removeAt(i);
+
+                    endRemoveRows();
+                } else if (messagePair.name_ == "marketid") {
+                    std::string marketID = messagePair.value_.get_str();
+                    // Remove completed creations from the pending model
+                    beginRemoveRows(QModelIndex(), i, i);
+
+                    pending.removeAt(i);
+
+                    endRemoveRows();
                 }
             }
         } catch (const std::runtime_error &error) {
