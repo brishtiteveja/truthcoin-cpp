@@ -32,6 +32,9 @@ signals:
 
     /** Signal raised when user updates a decision array */
     void updatedComboArray(const json_spirit::Array array);
+
+private slots:
+    void on_pushButtonCreateCombo_clicked();
 };
 
 #endif // COMBOCREATIONWIDGET_H

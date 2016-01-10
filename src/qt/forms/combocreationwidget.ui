@@ -6,47 +6,59 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>756</width>
-    <height>557</height>
+    <width>848</width>
+    <height>569</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
-    <widget class="QFrame" name="frameDecision">
+    <widget class="QFrame" name="frame_2">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="labelDecision">
-        <property name="text">
-         <string>Decision Creation</string>
+       <widget class="QFrame" name="frameDecision">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
         </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="labelDecision">
+           <property name="text">
+            <string>1: Create Decision</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frameMarket">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QLabel" name="labelMarket">
-        <property name="text">
-         <string>Market Creation</string>
+       <widget class="QFrame" name="frameMarket">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
         </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLabel" name="labelMarket">
+           <property name="text">
+            <string>2: Create Market</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
@@ -62,38 +74,25 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QLabel" name="labelStatus">
-        <property name="text">
-         <string>Status:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QLabel" name="labelDecisionCreated">
         <property name="text">
-         <string>Decision Created: No</string>
+         <string>Decision Ready: No</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="labelMarketCreated">
         <property name="text">
-         <string>Market Created: No</string>
+         <string>Market Ready:   No</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+       <widget class="QPushButton" name="pushButtonCreateCombo">
+        <property name="text">
+         <string>Create Decision and Market</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </widget>

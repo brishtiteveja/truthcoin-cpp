@@ -20,3 +20,8 @@ ComboCreationWidget::~ComboCreationWidget()
 {
     delete ui;
 }
+
+void ComboCreationWidget::on_pushButtonCreateCombo_clicked()
+{
+
+}
