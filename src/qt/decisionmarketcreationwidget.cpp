@@ -29,9 +29,9 @@ json_spirit::Array DecisionMarketCreationWidget::createDecisionMarketArray()
 {
     // Grab user input from the ui
     QString address = ui->lineEditAuthorAddress->text();
-    QString decisionID = ui->lineEditDecisions->text();
-    decisionID.append(":");
-    decisionID.append(ui->comboBoxFunctions->currentText());
+    std::string decisionID = ui->lineEditDecisions->text().toStdString();
+    decisionID += ":";
+    decisionID += ui->comboBoxFunctions->currentText().toStdString();
     double B = ui->doubleSpinBoxB->value();
     double tradingFee = ui->doubleSpinBoxTradeFee->value();
     double maxCommission = ui->doubleSpinBoxMaxCommission->value();
@@ -50,7 +50,7 @@ json_spirit::Array DecisionMarketCreationWidget::createDecisionMarketArray()
         error = true;
     }
 
-    if (decisionID.isEmpty()) {
+    if (decisionID.size() == 0) {
         emit inputError("You must enter a decision ID!");
         error = true;
     }
@@ -102,7 +102,7 @@ json_spirit::Array DecisionMarketCreationWidget::createDecisionMarketArray()
     if (error) return params;
 
     params.push_back(address.toStdString());
-    params.push_back(decisionID.toStdString());
+    params.push_back(decisionID);
     params.push_back(B);
     params.push_back(tradingFee);
     params.push_back(maxCommission);

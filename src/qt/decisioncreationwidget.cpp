@@ -43,7 +43,7 @@ json_spirit::Array DecisionCreationWidget::createDecisionArray()
         error = true;
     }
 
-    if (prompt.isEmpty() || prompt.length() > 500) {
+    if (prompt.isEmpty()) {
         emit inputError("You must enter a valid prompt!");
         error = true;
     }
@@ -53,7 +53,7 @@ json_spirit::Array DecisionCreationWidget::createDecisionArray()
         error = true;
     }
 
-    if (scaled && (scaledMax == 0 || scaledMin == 0)) {
+    if (scaled && (scaledMax == scaledMin)) {
         emit inputError("You must enter  valid scaled values!");
         error = true;
     }

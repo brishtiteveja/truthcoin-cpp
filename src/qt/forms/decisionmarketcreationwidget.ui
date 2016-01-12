@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>691</width>
-    <height>770</height>
+    <height>804</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -96,7 +96,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBoxDifficulty"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxDifficulty">
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="labelMaturation">
@@ -106,7 +110,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spinBoxMaturation"/>
+       <widget class="QSpinBox" name="spinBoxMaturation">
+        <property name="value">
+         <number>1</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -135,7 +143,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBoxB"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxB">
+        <property name="value">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="labelMaxCommission">
@@ -145,7 +157,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBoxMaxCommission"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxMaxCommission">
+        <property name="value">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="labelTradeFee">
@@ -155,7 +171,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBoxTradeFee"/>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxTradeFee">
+        <property name="value">
+         <double>0.100000000000000</double>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="labelAuthorAddress">
@@ -233,7 +253,7 @@
         </item>
         <item>
          <property name="text">
-          <string>lnX1</string>
+          <string>LNX1</string>
          </property>
         </item>
        </widget>
