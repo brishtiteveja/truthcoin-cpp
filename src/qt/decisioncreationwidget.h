@@ -34,9 +34,6 @@ public slots:
     // Load a json_spirit array for editing
     void editArray(json_spirit::Array array);
 
-    // Setup the UI for the combo creation widget
-    void comboCreationUI();
-
 private slots:
     void on_pushButtonCreateDecision_clicked();
 

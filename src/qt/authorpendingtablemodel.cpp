@@ -190,9 +190,9 @@ void AuthorPendingTableModel::finalize()
     }
 
     // Finalize the pending creations
-    for (int i = 0; i < pending.size(); i++) {
+    for (int i = pending.size(); i > 0; i--) {
         // Grab creation parameters and type
-        json_spirit::Array params = pending.at(i);
+        json_spirit::Array params = pending.at(i-1);
         std::string type = json_spirit::write_string(params.back(), true);
 
         // Remove type from parameters
@@ -211,8 +211,6 @@ void AuthorPendingTableModel::finalize()
                 result = createdecision(params, false);
             } else if (type == "\"market\"") {
                 result = createmarket(params, false);
-            } else {
-                continue;
             }
         } catch (const std::runtime_error &error) {
             QString errorText = QString::fromStdString(error.what());
@@ -236,7 +234,7 @@ void AuthorPendingTableModel::finalize()
                 int code = codePair.value_.get_int();
                 if (code < 0) {
                     QString messageText = "Error creating #";
-                    messageText.append(QString::number(i+1)); // row #
+                    messageText.append(QString::number(i)); // row #
                     messageText.append("\n");
                     messageText.append(QString::fromStdString(messagePair.value_.get_str()));
                     emit finalizeError(messageText);
@@ -249,19 +247,14 @@ void AuthorPendingTableModel::finalize()
                 // Decision or market?
                 if (messagePair.name_ == "decisionid") {
                     std::string decisionID = messagePair.value_.get_str();
-                    // Remove completed creations from the pending model
-                    beginRemoveRows(QModelIndex(), i, i);
-
-                    pending.removeAt(i);
-
+                    // Remove finalized decisions from the pending model
+                    beginRemoveRows(QModelIndex(), pending.size()-1, pending.size()-1);
+                    pending.removeAt(i-1);
                     endRemoveRows();
                 } else if (messagePair.name_ == "marketid") {
-                    std::string marketID = messagePair.value_.get_str();
-                    // Remove completed creations from the pending model
-                    beginRemoveRows(QModelIndex(), i, i);
-
-                    pending.removeAt(i);
-
+                    // Remove finalized markets from the pending model
+                    beginRemoveRows(QModelIndex(), pending.size()-1, pending.size()-1);
+                    pending.removeAt(i-1);
                     endRemoveRows();
                 }
             }
