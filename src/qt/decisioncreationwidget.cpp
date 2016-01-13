@@ -24,7 +24,14 @@ DecisionCreationWidget::~DecisionCreationWidget()
 json_spirit::Array DecisionCreationWidget::createDecisionArray()
 {
     // Main branch ID
-    QString branchID = "0f894a25c5e0318ee148fe54600ebbf50782f0a1df1eb2aab06321a8ccec270d";
+    QString branchID;
+    if (ui->comboBoxBranch->currentText() == "Main") {
+        branchID = "0f894a25c5e0318ee148fe54600ebbf50782f0a1df1eb2aab06321a8ccec270d";
+    } else if (ui->comboBoxBranch->currentText() == "Sports") {
+        branchID = "419cd87761f45c108a976ca6d93d4929c7c4d1ff4386f5089fc2f7ff7ae21ddf";
+    } else if (ui->comboBoxBranch->currentText() == "Econ") {
+        branchID = "3277b5057ac9cda54e9edfbb45fd8bab38be1b5afc3cd6c587f6d17779f34f74";
+    }
 
     // Grab user input from ui
     QString address = ui->lineEditOwnerAddr->text();
@@ -38,6 +45,11 @@ json_spirit::Array DecisionCreationWidget::createDecisionArray()
     bool error = false;
 
     // Perform basic checks and avoid wasting json calls
+    if (branchID.isEmpty()) {
+        emit inputError("You must select a branch!");
+        error = true;
+    }
+
     if (address.isEmpty()) {
         emit inputError("You must enter a valid Hivemind address!");
         error = true;
@@ -134,11 +146,19 @@ void DecisionCreationWidget::editArray(json_spirit::Array array)
     ui->lineEditOwnerAddr->setText(QString::fromStdString(ownerAddr.get_str()));
 
     // Load branchID
-    json_spirit::Value branchID = array.at(1);
+    json_spirit::Value branch = array.at(1);
     QString branchLabel = "Branch: ";
-    branchLabel.append(QString::fromStdString(branchID.get_str()).left(12));
+    QString branchID = QString::fromStdString(branch.get_str());
+    branchLabel.append(branchID.left(12));
     branchLabel.append("...");
     ui->labelBranch->setText(branchLabel);
+    if (branchID == "0f894a25c5e0318ee148fe54600ebbf50782f0a1df1eb2aab06321a8ccec270d") {
+        ui->comboBoxBranch->setCurrentIndex(0); // Main
+    } else if (branchID == "419cd87761f45c108a976ca6d93d4929c7c4d1ff4386f5089fc2f7ff7ae21ddf") {
+        ui->comboBoxBranch->setCurrentIndex(1); // Sports
+    } else if (branchID == "3277b5057ac9cda54e9edfbb45fd8bab38be1b5afc3cd6c587f6d17779f34f74") {
+        ui->comboBoxBranch->setCurrentIndex(2); // Econ
+    }
 
     // Load prompt
     json_spirit::Value prompt = array.at(2);
