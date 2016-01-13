@@ -22,6 +22,10 @@ int AuthorPendingTableModel::columnCount(const QModelIndex & /*parent*/) const
 
 QVariant AuthorPendingTableModel::data(const QModelIndex &index, int role) const
 {
+    if (!index.isValid()) {
+        return false;
+    }
+
     int row = index.row();
     int col = index.column();
 

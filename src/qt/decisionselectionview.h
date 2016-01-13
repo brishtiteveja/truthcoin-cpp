@@ -1,6 +1,9 @@
 #ifndef DECISIONSELECTIONVIEW_H
 #define DECISIONSELECTIONVIEW_H
 
+#include "decisionselectionmodel.h"
+
+#include <QTableView>
 #include <QWidget>
 
 namespace Ui {
@@ -17,6 +20,9 @@ public:
 
 private:
     Ui::DecisionSelectionView *ui;
+
+    DecisionSelectionModel *decisionSelectionModel;
+    QTableView *decisionSelectionTable;
 };
 
 #endif // DECISIONSELECTIONVIEW_H
