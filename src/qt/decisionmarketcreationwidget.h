@@ -5,8 +5,6 @@
 
 #include <QWidget>
 
-class DecisionDecisionWindow;
-
 namespace Ui {
 class DecisionMarketCreationWidget;
 }
@@ -48,7 +46,6 @@ signals:
 private:
     Ui::DecisionMarketCreationWidget *ui;
     json_spirit::Array createDecisionMarketArray();
-    DecisionDecisionWindow *decisionWindow;
     int updateIndex;
 };
 

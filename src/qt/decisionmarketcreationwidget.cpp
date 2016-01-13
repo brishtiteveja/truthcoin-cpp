@@ -1,10 +1,12 @@
 #include "decisionmarketcreationwidget.h"
 #include "ui_decisionmarketcreationwidget.h"
 
-#include "decisiondecisionwindow.h"
 #include "json/json_spirit_writer_template.h"
+#include "txdb.h"
 
 #include <QMessageBox>
+
+extern CMarketTreeDB *pmarkettree;
 
 DecisionMarketCreationWidget::DecisionMarketCreationWidget(QWidget *parent) :
     QWidget(parent),
@@ -128,10 +130,34 @@ void DecisionMarketCreationWidget::on_pushButtonCreateMarket_clicked()
 
 void DecisionMarketCreationWidget::on_pushButtonSelectDecision_clicked()
 {
-    decisionWindow = new DecisionDecisionWindow(this);
-    decisionWindow->show();
-    decisionWindow->raise();
-    decisionWindow->setFocus();
+    // Grab the ID of the user selected branch
+    QString branchID;
+    if (ui->comboBoxBranch->currentText() == "Main") {
+        branchID = "0f894a25c5e0318ee148fe54600ebbf50782f0a1df1eb2aab06321a8ccec270d";
+    } else if (ui->comboBoxBranch->currentText() == "Sports") {
+        branchID = "419cd87761f45c108a976ca6d93d4929c7c4d1ff4386f5089fc2f7ff7ae21ddf";
+    } else if (ui->comboBoxBranch->currentText() == "Econ") {
+        branchID = "3277b5057ac9cda54e9edfbb45fd8bab38be1b5afc3cd6c587f6d17779f34f74";
+    }
+
+    // Exit if no branch is selected (technically impossible via the UI)
+    if (branchID.isEmpty()) return;
+
+    // Grab the branch
+    uint256 uBranch;
+    uBranch.SetHex(branchID.toStdString());
+    const marketBranch *branch = pmarkettree->GetBranch(uBranch);
+
+    // Exit if the branch object is empty
+    if (branch->GetHash().IsNull()) return;
+
+    // Grab decisions on the branch
+    vector<marketDecision *> decisions = pmarkettree->GetDecisions(uBranch);
+
+    std::cout << "#Decisions?: " << decisions.size() << std::endl;
+    for (unsigned int i = 0; i < decisions.size(); i++) {
+        std::cout << i << ": " << decisions.at(i)->ToString() << std::endl;
+    }
 }
 
 void DecisionMarketCreationWidget::on_inputError(const QString &errorMessage)
