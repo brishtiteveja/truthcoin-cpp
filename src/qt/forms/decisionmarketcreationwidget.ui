@@ -138,7 +138,7 @@
       <item>
        <widget class="QLabel" name="labelB">
         <property name="text">
-         <string>B:</string>
+         <string>Liquidity Factor:</string>
         </property>
        </widget>
       </item>

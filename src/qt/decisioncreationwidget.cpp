@@ -29,7 +29,7 @@ json_spirit::Array DecisionCreationWidget::createDecisionArray()
     // Grab user input from ui
     QString address = ui->lineEditOwnerAddr->text();
     QString prompt = ui->plainTextEditPrompt->toPlainText();
-    int eventOverBy = ui->lineEditEventOverBy->text().toInt();
+    int eventOverBy = 1; // Temporary placeholder
     bool voteMandatory = ui->checkBoxVoteMandatory->isChecked();
     bool scaled = ui->radioButtonScaled->isChecked();
     double scaledMin = ui->doubleSpinBoxScaledMin->value();
@@ -145,9 +145,9 @@ void DecisionCreationWidget::editArray(json_spirit::Array array)
     ui->plainTextEditPrompt->setPlainText(QString::fromStdString(prompt.get_str()));
 
     // Load event over by
-    json_spirit::Value eventOverBy = array.at(3);
-    int overBy = eventOverBy.get_int();
-    ui->lineEditEventOverBy->setText(QString::number(overBy));
+//    Don't need this until nlocktime is implemented
+//    json_spirit::Value eventOverBy = array.at(3);
+//    int overBy = eventOverBy.get_int();
 
     // Load voteMandatory
     json_spirit::Value voteMandatory = array.at(4);
