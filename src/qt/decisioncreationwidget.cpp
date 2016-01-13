@@ -37,7 +37,12 @@ json_spirit::Array DecisionCreationWidget::createDecisionArray()
     QString address = ui->lineEditOwnerAddr->text();
     QString prompt = ui->plainTextEditPrompt->toPlainText();
     int eventOverBy = 1; // Temporary placeholder
-    bool voteMandatory = ui->checkBoxVoteMandatory->isChecked();
+    bool answerOptionality = false;
+    if (ui->checkBoxVoteMandatory->isChecked()) {
+        answerOptionality = false;
+    } else {
+        answerOptionality = true;
+    }
     bool scaled = ui->radioButtonScaled->isChecked();
     double scaledMin = ui->doubleSpinBoxScaledMin->value();
     double scaledMax = ui->doubleSpinBoxScaledMax->value();
@@ -81,7 +86,7 @@ json_spirit::Array DecisionCreationWidget::createDecisionArray()
     params.push_back(branchID.toStdString());
     params.push_back(prompt.toStdString());
     params.push_back(eventOverBy);
-    params.push_back(voteMandatory);
+    params.push_back(answerOptionality);
     params.push_back(scaled);
     if (scaled) {
         params.push_back(scaledMin);
