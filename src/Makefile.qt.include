@@ -83,6 +83,7 @@ QT_FORMS_UI = \
   qt/forms/combocreationwidget.ui \
   qt/forms/decisioncreationwidget.ui \
   qt/forms/decisionmarketcreationwidget.ui \
+  qt/forms/decisionselectionview.ui \
   qt/forms/editaddressdialog.ui \
   qt/forms/helpmessagedialog.ui \
   qt/forms/intro.ui \
@@ -114,6 +115,8 @@ QT_MOC_CPP = \
   qt/moc_csvmodelwriter.cpp \
   qt/moc_decisioncreationwidget.cpp \
   qt/moc_decisionmarketcreationwidget.cpp \
+  qt/moc_decisionselectionview.cpp \
+  qt/moc_decisionselectionmodel.cpp \
   qt/moc_editaddressdialog.cpp \
   qt/moc_guiutil.cpp \
   qt/moc_intro.cpp \
@@ -248,6 +251,8 @@ HIVEMIND_QT_H = \
   qt/decisionmarketfilterproxymodel.h \
   qt/decisionmarkettablemodel.h \
   qt/decisionmarketwindow.h \
+  qt/decisionselectionview.h \
+  qt/decisionselectionmodel.h \
   qt/decisiontradefilterproxymodel.h \
   qt/decisiontradetablemodel.h \
   qt/decisiontradewindow.h \
@@ -409,6 +414,8 @@ HIVEMIND_QT_CPP += \
   qt/decisionmarketfilterproxymodel.cpp \
   qt/decisionmarkettablemodel.cpp \
   qt/decisionmarketwindow.cpp \
+  qt/decisionselectionview.cpp \
+  qt/decisionselectionmodel.cpp \
   qt/decisiontradefilterproxymodel.cpp \
   qt/decisiontradetablemodel.cpp \
   qt/decisiontradewindow.cpp \

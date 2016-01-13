@@ -5,6 +5,8 @@
 #include "txdb.h"
 
 #include <QMessageBox>
+#include <QDialog>
+#include <QHBoxLayout>
 
 extern CMarketTreeDB *pmarkettree;
 
@@ -156,8 +158,17 @@ void DecisionMarketCreationWidget::on_pushButtonSelectDecision_clicked()
 
     std::cout << "#Decisions?: " << decisions.size() << std::endl;
     for (unsigned int i = 0; i < decisions.size(); i++) {
-        std::cout << i << ": " << decisions.at(i)->ToString() << std::endl;
+        std::cout << "Prompt: " << decisions.at(i)->prompt << std::endl;
     }
+
+    decisionSelection = new DecisionSelectionView(this);
+    QHBoxLayout *hbox = new QHBoxLayout(this);
+    hbox->addWidget(decisionSelection);
+
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Select Decision");
+    dialog->setLayout(hbox);
+    dialog->show();
 }
 
 void DecisionMarketCreationWidget::on_inputError(const QString &errorMessage)

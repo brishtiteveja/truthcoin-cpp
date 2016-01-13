@@ -2,6 +2,7 @@
 #define DECISIONMARKETCREATIONWIDGET_H
 
 #include "json/json_spirit_writer_template.h"
+#include "decisionselectionview.h"
 
 #include <QWidget>
 
@@ -47,6 +48,7 @@ private:
     Ui::DecisionMarketCreationWidget *ui;
     json_spirit::Array createDecisionMarketArray();
     int updateIndex;
+    DecisionSelectionView *decisionSelection;
 };
 
 #endif // DECISIONMARKETCREATIONWIDGET_H
