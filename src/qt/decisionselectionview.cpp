@@ -35,4 +35,10 @@ void DecisionSelectionView::on_table_doubleClicked(QModelIndex index)
 {
     QString hex = decisionSelectionTable->model()->data(decisionSelectionTable->model()->index(index.row(), 1)).toString();
     emit decisionSelected(hex);
+    emit done();
+}
+
+void DecisionSelectionView::on_pushButtonDone_clicked()
+{
+    emit done();
 }

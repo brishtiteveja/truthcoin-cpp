@@ -38,11 +38,18 @@
          </size>
         </property>
         <property name="text">
-         <string>Select Decision:</string>
+         <string>Select Decision by double clicking, or select multiple and click &quot;Done&quot;:</string>
         </property>
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonDone">
+     <property name="text">
+      <string>Done</string>
+     </property>
     </widget>
    </item>
   </layout>

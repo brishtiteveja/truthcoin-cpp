@@ -24,6 +24,10 @@ public slots:
 
 signals:
     void decisionSelected(QString decisionHex);
+    void done();
+
+private slots:
+    void on_pushButtonDone_clicked();
 
 private:
     Ui::DecisionSelectionView *ui;

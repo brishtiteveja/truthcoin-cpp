@@ -170,9 +170,13 @@ void DecisionMarketCreationWidget::on_pushButtonSelectDecision_clicked()
     QHBoxLayout *hbox = new QHBoxLayout(this);
     hbox->addWidget(decisionSelection);
     QDialog *dialog = new QDialog(this);
+
+    connect(decisionSelection, SIGNAL(done()),
+            dialog, SLOT(close()));
+
     dialog->setWindowTitle("Select Decision");
     dialog->setLayout(hbox);
-    dialog->show();
+    dialog->exec();
 }
 
 void DecisionMarketCreationWidget::on_inputError(const QString &errorMessage)
