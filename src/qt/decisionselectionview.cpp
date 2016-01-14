@@ -18,7 +18,7 @@ DecisionSelectionView::DecisionSelectionView(QWidget *parent) :
 
     // Setup signals
     connect(decisionSelectionTable, SIGNAL(doubleClicked(QModelIndex)),
-            decisionSelectionModel, SLOT(on_tableView_doubleClicked(QModelIndex)));
+            this, SLOT(on_table_doubleClicked(QModelIndex)));
 }
 
 DecisionSelectionView::~DecisionSelectionView()
@@ -29,4 +29,10 @@ DecisionSelectionView::~DecisionSelectionView()
 void DecisionSelectionView::loadDecisions(QList<marketDecision *> decisions)
 {
     decisionSelectionModel->loadDecisions(decisions);
+}
+
+void DecisionSelectionView::on_table_doubleClicked(QModelIndex index)
+{
+    QString hex = decisionSelectionTable->model()->data(decisionSelectionTable->model()->index(index.row(), 1)).toString();
+    emit decisionSelected(hex);
 }

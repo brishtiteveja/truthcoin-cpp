@@ -34,6 +34,8 @@ public slots:
     // Setup the UI for the combo creation widget
     void comboCreationUI();
 
+    void decisionSelected(QString decisionHex);
+
 signals:
     /** Signal raised when json_spirit::Array for new Decision Market is created */
     void newDecisionMarketArray(const json_spirit::Array array);

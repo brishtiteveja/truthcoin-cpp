@@ -20,6 +20,10 @@ public:
 
 public slots:
     void loadDecisions(QList<marketDecision *> decisions);
+    void on_table_doubleClicked(QModelIndex index);
+
+signals:
+    void decisionSelected(QString decisionHex);
 
 private:
     Ui::DecisionSelectionView *ui;

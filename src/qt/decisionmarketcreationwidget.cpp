@@ -162,6 +162,10 @@ void DecisionMarketCreationWidget::on_pushButtonSelectDecision_clicked()
     QList<marketDecision *> qlDecisions = QList<marketDecision *>::fromVector(qvDecisions);
     decisionSelection->loadDecisions(qlDecisions);
 
+    // Connect signals
+    connect(decisionSelection, SIGNAL(decisionSelected(QString)),
+            this, SLOT(decisionSelected(QString)));
+
     // Display the decision selection widget
     QHBoxLayout *hbox = new QHBoxLayout(this);
     hbox->addWidget(decisionSelection);
@@ -253,4 +257,9 @@ void DecisionMarketCreationWidget::comboCreationUI()
     ui->pushButtonCreateMarket->hide();
     ui->pushButtonSelectDecision->hide();
     ui->lineEditDecisions->setEnabled(false);
+}
+
+void DecisionMarketCreationWidget::decisionSelected(QString decisionHex)
+{
+    ui->lineEditDecisions->setText(decisionHex);
 }
