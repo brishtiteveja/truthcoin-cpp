@@ -18,6 +18,9 @@ public:
     explicit DecisionSelectionView(QWidget *parent = 0);
     ~DecisionSelectionView();
 
+public slots:
+    void loadDecisions(QList<marketDecision *> decisions);
+
 private:
     Ui::DecisionSelectionView *ui;
 

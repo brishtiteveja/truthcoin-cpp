@@ -7,12 +7,12 @@ DecisionSelectionModel::DecisionSelectionModel(QObject *parent) :
 
 int DecisionSelectionModel::rowCount(const QModelIndex &parent) const
 {
-    return decisions.size();
+    return model.size();
 }
 
 int DecisionSelectionModel::columnCount(const QModelIndex &parent) const
 {
-    return 1;
+    return 2;
 }
 
 QVariant DecisionSelectionModel::data(const QModelIndex &index, int role) const
@@ -27,9 +27,17 @@ QVariant DecisionSelectionModel::data(const QModelIndex &index, int role) const
     switch(role) {
     case Qt::DisplayRole:
     {
-        // Decision ID
+        // Decision prompt
         if (col == 0) {
-            return QString("DecisionID");
+            QString decisionPrompt = QString::fromStdString(model.at(row)->prompt);
+
+            return decisionPrompt;
+        }
+        // Decision ID
+        if (col == 1) {
+            QString decisionID = QString::fromStdString(model.at(row)->GetHash().GetHex());
+
+            return decisionID;
         }
         break;
     }
@@ -47,9 +55,30 @@ QVariant DecisionSelectionModel::headerData(int section, Qt::Orientation orienta
             switch (section)
             {
             case 0:
-                return QString("DecisionID");
+                return QString("Prompt");
+                break;
+            case 1:
+                return QString("ID");
             }
         }
     }
     return QVariant();
+}
+
+void DecisionSelectionModel::on_tableView_doubleClicked(const QModelIndex &index)
+{
+
+}
+
+void DecisionSelectionModel::loadDecisions(QList<marketDecision *> decisions)
+{
+    if (decisions.isEmpty()) return;
+
+    beginInsertRows(QModelIndex(), 0, decisions.size());
+
+    for (int i = 0; i < decisions.size(); i++) {
+        model.push_back(decisions.at(i));
+    }
+
+    endInsertRows();
 }

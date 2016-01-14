@@ -156,15 +156,15 @@ void DecisionMarketCreationWidget::on_pushButtonSelectDecision_clicked()
     // Grab decisions on the branch
     vector<marketDecision *> decisions = pmarkettree->GetDecisions(uBranch);
 
-    std::cout << "#Decisions?: " << decisions.size() << std::endl;
-    for (unsigned int i = 0; i < decisions.size(); i++) {
-        std::cout << "Prompt: " << decisions.at(i)->prompt << std::endl;
-    }
-
+    // Setup the decision selection widget
     decisionSelection = new DecisionSelectionView(this);
+    QVector<marketDecision *> qvDecisions = QVector<marketDecision *>::fromStdVector(decisions);
+    QList<marketDecision *> qlDecisions = QList<marketDecision *>::fromVector(qvDecisions);
+    decisionSelection->loadDecisions(qlDecisions);
+
+    // Display the decision selection widget
     QHBoxLayout *hbox = new QHBoxLayout(this);
     hbox->addWidget(decisionSelection);
-
     QDialog *dialog = new QDialog(this);
     dialog->setWindowTitle("Select Decision");
     dialog->setLayout(hbox);

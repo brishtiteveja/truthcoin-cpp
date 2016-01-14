@@ -20,9 +20,11 @@ public:
 signals:
 
 public slots:
+    void on_tableView_doubleClicked(const QModelIndex &index);
+    void loadDecisions(QList<marketDecision *> decisions);
 
 private:
-    QList<marketDecision *> decisions;
+    QList<marketDecision *> model;
 
 };
 
