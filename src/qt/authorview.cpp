@@ -35,6 +35,9 @@ AuthorView::AuthorView(QWidget *parent) :
 
     connect(pendingTableModel, SIGNAL(finalizeComplete()),
             this, SLOT(on_finalizeComplete()));
+
+    connect(pendingTableModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SLOT(calculateFees()));
 }
 
 AuthorView::~AuthorView()
@@ -94,6 +97,7 @@ void AuthorView::on_pushButtonCreateMarket_clicked()
 void AuthorView::on_pushButtonFinalize_clicked()
 {
     pendingTableModel->finalize();
+    calculateFees();
 }
 
 void AuthorView::on_finalizeError(const QString &errorMessage)
@@ -106,7 +110,12 @@ void AuthorView::on_finalizeError(const QString &errorMessage)
     errorMessageBox.exec();
 }
 
-void AuthorView::on_finalizeComplete()
+void AuthorView::calculateFees()
 {
+    double fees = 0.0;
+    for (int i = 0; i < pendingTableModel->rowCount(); i++) {
+        fees += 0.02;
+    }
 
+    ui->labelFeesValue->setText(QString::number(fees));
 }
