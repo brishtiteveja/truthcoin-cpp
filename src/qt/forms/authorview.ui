@@ -38,6 +38,12 @@
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QPushButton" name="pushButtonCreateCombo">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
            <property name="text">
             <string>Create Decision and Market</string>
            </property>
@@ -45,6 +51,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButtonCreateDecision">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
            <property name="text">
             <string>Create Decision</string>
            </property>
@@ -52,6 +64,12 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButtonCreateMarket">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
            <property name="text">
             <string>Create Market</string>
            </property>
@@ -100,13 +118,6 @@
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="1">
-          <widget class="QLabel" name="labelFeesValue">
-           <property name="text">
-            <string>0.0</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="0">
           <widget class="QLabel" name="labelTotal">
            <property name="text">
@@ -155,7 +166,7 @@
        <widget class="QPushButton" name="pushButtonFinalize">
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>160</width>
           <height>40</height>
          </size>
         </property>

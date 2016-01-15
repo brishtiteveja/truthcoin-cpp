@@ -117,5 +117,5 @@ void AuthorView::calculateFees()
         fees += 0.02;
     }
 
-    ui->labelFeesValue->setText(QString::number(fees));
+    ui->labelTotalValue->setText(QString::number(fees));
 }
