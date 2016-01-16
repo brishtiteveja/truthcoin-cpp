@@ -13,6 +13,8 @@ AuthorView::AuthorView(QWidget *parent) :
 
     // Setup model & author pending table
     pendingTableView = new QTableView(this);
+    pendingTableView->horizontalHeader()->setStretchLastSection(true);
+    pendingTableView->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
     pendingTableModel = new AuthorPendingTableModel(this);
     pendingTableView->setModel(pendingTableModel);
     ui->frameLeft->layout()->addWidget(pendingTableView);

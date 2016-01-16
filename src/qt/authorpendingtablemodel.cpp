@@ -17,7 +17,7 @@ int AuthorPendingTableModel::rowCount(const QModelIndex & /*parent*/) const
 
 int AuthorPendingTableModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 3;
+    return 18;
 }
 
 QVariant AuthorPendingTableModel::data(const QModelIndex &index, int role) const
@@ -34,9 +34,11 @@ QVariant AuthorPendingTableModel::data(const QModelIndex &index, int role) const
     {
         json_spirit::Array pendingCreation = pending.at(row);
 
+        /* Display data shared between decisions and markets */
+
         // Type
+        std::string type = json_spirit::write_string(pendingCreation.back(), true);
         if (col == 0) {
-            std::string type = json_spirit::write_string(pendingCreation.back(), true);
             return QString::fromStdString(type);
         }
 
@@ -48,7 +50,115 @@ QVariant AuthorPendingTableModel::data(const QModelIndex &index, int role) const
 
         // Fee
         if (col == 2) {
-            return "0.0"; // Dummy temp
+            return "0.02"; // Dummy temp
+        }
+
+        /* Display data unique to decisions */
+
+        if (type == "\"decision\"") {
+            // Fill blank spots (columns 8 - 17)
+            if (col >= 8 && col <= 17) {
+                return ("NA");
+            }
+
+            // Branch ID
+            if (col == 3) {
+                std::string branchID = json_spirit::write_string(pendingCreation.at(1), true);
+                return QString::fromStdString(branchID);
+            }
+
+            // Prompt
+            if (col == 4) {
+                std::string prompt = json_spirit::write_string(pendingCreation.at(2), true);
+                return QString::fromStdString(prompt);
+            }
+
+            // Event Over By
+            if (col == 5) {
+                int eventOverBy = pendingCreation.at(3).get_int();
+                return eventOverBy;
+            }
+
+            // Answer Optionality
+            if (col == 6) {
+                bool answerOptionality = pendingCreation.at(4).get_bool();
+                return answerOptionality;
+            }
+
+            // Is Scaled?
+            if (col == 7) {
+                bool scaled = pendingCreation.at(5).get_bool();
+                return scaled;
+            }
+        }
+
+        /* Display data unique to markets */
+
+        if (type == "\"market\"") {
+            // Fill blank spots (3 - 7)
+            if (col >= 3 && col <= 7) {
+                return QString("NA");
+            }
+
+            // Decision ID
+            if (col == 8) {
+                std::string decisionID = json_spirit::write_string(pendingCreation.at(1), true);
+                return QString::fromStdString(decisionID);
+            }
+
+            // Liquidity Factor / B
+            if (col == 9) {
+                double B = pendingCreation.at(2).get_real();
+                return B;
+            }
+
+            // Trading Fee
+            if (col == 10) {
+                double tradingFee = pendingCreation.at(3).get_real();
+                return tradingFee;
+            }
+
+            // Max Commission
+            if (col == 11) {
+                double maxCommission = pendingCreation.at(4).get_real();
+                return maxCommission;
+            }
+
+            // Title
+            if (col == 12) {
+                std::string title = json_spirit::write_string(pendingCreation.at(5), true);
+                return QString::fromStdString(title);
+            }
+
+            // Description
+            if (col == 13) {
+                std::string description = json_spirit::write_string(pendingCreation.at(6), true);
+                return QString::fromStdString(description);
+            }
+
+            // Tags
+            if (col == 14) {
+                std::string tags = json_spirit::write_string(pendingCreation.at(7), true);
+                return QString::fromStdString(tags);
+            }
+
+            // Maturation
+            if (col == 15) {
+                int maturation = pendingCreation.at(8).get_int();
+                return maturation;
+            }
+
+            // txPoWh
+            if (col == 16) {
+                int txPoWh = pendingCreation.at(9).get_int();
+                return txPoWh;
+            }
+
+            // txPoWd
+            if (col == 17) {
+                int txPoWd = pendingCreation.at(10).get_int();
+                return txPoWd;
+            }
         }
 
         break;
@@ -85,6 +195,36 @@ QVariant AuthorPendingTableModel::headerData(int section, Qt::Orientation orient
                 return QString("Address");
             case 2:
                 return QString("Fee");
+            case 3:
+                return QString("Branch");
+            case 4:
+                return QString("Prompt");
+            case 5:
+                return QString("eventOverBy");
+            case 6:
+                return QString("Answer Optional");
+            case 7:
+                return QString("Scaled");
+            case 8:
+                return QString("Decision");
+            case 9:
+                return QString("B");
+            case 10:
+                return QString("Trading Fee");
+            case 11:
+                return QString("Max Commission");
+            case 12:
+                return QString("Title");
+            case 13:
+                return QString("Description");
+            case 14:
+                return QString("Tags");
+            case 15:
+                return QString("Maturation");
+            case 16:
+                return QString("txPoWh");
+            case 17:
+                return QString("txPoWh");
             }
         }
     }
@@ -250,7 +390,6 @@ void AuthorPendingTableModel::finalize()
                 std::string txid = codePair.value_.get_str();
                 // Decision or market?
                 if (messagePair.name_ == "decisionid") {
-                    std::string decisionID = messagePair.value_.get_str();
                     // Remove finalized decisions from the pending model
                     beginRemoveRows(QModelIndex(), pending.size()-1, pending.size()-1);
                     pending.removeAt(i-1);
