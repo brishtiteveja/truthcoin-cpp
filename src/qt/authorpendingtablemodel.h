@@ -9,9 +9,6 @@
 #include <QAbstractTableModel>
 #include <QList>
 
-class marketDecision;
-class marketMarket;
-
 class AuthorPendingTableModel : public QAbstractTableModel
 {
     Q_OBJECT

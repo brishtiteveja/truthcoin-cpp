@@ -1,5 +1,4 @@
 #include "authorpendingtablemodel.h"
-#include "primitives/market.h"
 
 #include <QDialog>
 #include <QHBoxLayout>
