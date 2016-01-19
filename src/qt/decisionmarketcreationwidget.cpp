@@ -150,8 +150,7 @@ void DecisionMarketCreationWidget::on_pushButtonSelectDecision_clicked()
     uBranch.SetHex(branchID.toStdString());
     const marketBranch *branch = pmarkettree->GetBranch(uBranch);
 
-    // Exit if the branch object is empty
-    if (branch->GetHash().IsNull()) return;
+    if (!branch) return;
 
     // Grab decisions on the branch
     vector<marketDecision *> decisions = pmarkettree->GetDecisions(uBranch);
