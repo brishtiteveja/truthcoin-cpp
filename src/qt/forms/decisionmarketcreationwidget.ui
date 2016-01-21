@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>650</width>
-    <height>870</height>
+    <height>882</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -70,7 +70,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="groupBoxDecision">
      <property name="title">
       <string>Select Decision</string>
      </property>
@@ -134,7 +134,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
+    <widget class="QGroupBox" name="groupBoxMarket">
      <property name="title">
       <string>Market Setup</string>
      </property>
@@ -197,7 +197,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupBoxAdvanced">
      <property name="title">
       <string>Advanced</string>
      </property>

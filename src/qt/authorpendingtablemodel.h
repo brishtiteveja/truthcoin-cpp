@@ -5,9 +5,14 @@
 #include "decisioncreationwidget.h"
 #include "decisionmarketcreationwidget.h"
 #include "json/json_spirit_writer_template.h"
+#include "txdb.h"
+#include "txmempool.h"
 
 #include <QAbstractTableModel>
 #include <QList>
+
+extern CTxMemPool mempool;
+extern CMarketTreeDB *pmarkettree;
 
 class AuthorPendingTableModel : public QAbstractTableModel
 {
@@ -19,6 +24,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     void finalize();
+    void finalizeCombo(json_spirit::Array params, unsigned int index);
 
 signals:
     void finalizeError(const QString &errorMessage);

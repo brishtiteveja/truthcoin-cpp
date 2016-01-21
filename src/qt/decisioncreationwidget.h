@@ -20,6 +20,8 @@ public:
     explicit DecisionCreationWidget(QWidget *parent = 0);
     ~DecisionCreationWidget();
 
+    json_spirit::Array createDecisionArray();
+
 signals:
     /** Signal raised when json_spirit::Array for new Decision is created */
     void newDecisionArray(const json_spirit::Array array);
@@ -34,6 +36,9 @@ public slots:
     // Load a json_spirit array for editing
     void editArray(json_spirit::Array array);
 
+    // Setup the UI for the combo creation widget
+    void comboCreationUI();
+
 private slots:
     void on_pushButtonCreateDecision_clicked();
 
@@ -47,7 +52,6 @@ private slots:
 
 private:
     Ui::DecisionCreationWidget *ui;
-    json_spirit::Array createDecisionArray();
     const marketBranch *branch;
     int updateIndex;
 };

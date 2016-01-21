@@ -54,7 +54,7 @@ void AuthorView::on_pushButtonCreateCombo_clicked()
     QHBoxLayout *hbox = new QHBoxLayout(this);
     hbox->addWidget(comboCreationWidget);
 
-    // Pass array to model
+    // Pass arrays to model
     connect(comboCreationWidget, SIGNAL(newComboArray(json_spirit::Array)),
             this, SIGNAL(newPendingCombo(json_spirit::Array)));
 

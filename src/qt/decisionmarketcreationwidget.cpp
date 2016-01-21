@@ -236,7 +236,7 @@ void DecisionMarketCreationWidget::editArray(json_spirit::Array array)
 
     // Load txPoWd
     json_spirit::Value txPoWd = array.at(10);
-    ui->doubleSpinBoxDifficulty->setValue(txPoWd.get_int());
+    ui->doubleSpinBoxDifficulty->setValue(txPoWd.get_real());
 
     if (array.size() == 13) {
         // Show update button and set index
@@ -257,9 +257,14 @@ void DecisionMarketCreationWidget::on_pushButtonUpdateMarket_clicked()
 
 void DecisionMarketCreationWidget::comboCreationUI()
 {
+    ui->groupBoxDecision->hide();
     ui->pushButtonCreateMarket->hide();
-    ui->pushButtonSelectDecision->hide();
-    ui->lineEditDecisions->setEnabled(false);
+
+    ui->lineEditAuthorAddress->setText("Temp");
+    ui->lineEditDecisions->setText("Temp");
+
+    ui->lineEditAuthorAddress->hide();
+    ui->labelAuthorAddress->hide();
 }
 
 void DecisionMarketCreationWidget::decisionSelected(QString decisionHex)

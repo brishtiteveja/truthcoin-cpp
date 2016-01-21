@@ -170,7 +170,7 @@ void DecisionCreationWidget::editArray(json_spirit::Array array)
     ui->plainTextEditPrompt->setPlainText(QString::fromStdString(prompt.get_str()));
 
     // Load event over by
-//    Don't need this until nlocktime is implemented
+//    TODO: Replace with nLockTime
 //    json_spirit::Value eventOverBy = array.at(3);
 //    int overBy = eventOverBy.get_int();
 
@@ -181,17 +181,20 @@ void DecisionCreationWidget::editArray(json_spirit::Array array)
     // Load scaled
     json_spirit::Value scaled = array.at(5);
     bool isScaled = scaled.get_bool();
+    ui->radioButtonScaled->setChecked(isScaled);
     if (isScaled) {
         // Load scale values
         json_spirit::Value scaledMin = array.at(6);
+        ui->doubleSpinBoxScaledMin->setValue(scaledMin.get_real());
         json_spirit::Value scaledMax = array.at(7);
+        ui->doubleSpinBoxScaledMax->setValue(scaledMax.get_real());
     }
 
     // Check for update index from model
     if (isScaled && array.size() == 10) {
         ui->pushButtonCreateDecision->hide();
         ui->pushButtonUpdateDecision->show();
-        json_spirit::Value index = array.at(9);
+        updateIndex = array.at(9).get_int();
     } else if (!isScaled && array.size() == 8) {
         ui->pushButtonCreateDecision->hide();
         ui->pushButtonUpdateDecision->show();
@@ -206,4 +209,10 @@ void DecisionCreationWidget::on_pushButtonUpdateDecision_clicked()
         updatedDecision.push_back(updateIndex);
         emit updatedDecisionArray(updatedDecision);
     }
+}
+
+// Setup the UI for the combo creation widget
+void DecisionCreationWidget::comboCreationUI()
+{
+    ui->pushButtonCreateDecision->hide();
 }

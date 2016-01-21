@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>892</width>
-    <height>498</height>
+    <height>459</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -243,33 +243,33 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonCreateDecision">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Create Decision</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonUpdateDecision">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Update Decision</string>
-        </property>
-       </widget>
-      </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonCreateDecision">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Create Decision</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonUpdateDecision">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Update Decision</string>
+     </property>
     </widget>
    </item>
   </layout>

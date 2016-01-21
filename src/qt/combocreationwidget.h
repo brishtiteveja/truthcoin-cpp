@@ -26,15 +26,26 @@ private:
     DecisionCreationWidget *decisionCreationWidget;
     DecisionMarketCreationWidget *marketCreationWidget;
 
+    json_spirit::Array createComboArray();
+    int updateIndex;
+
 signals:
     /** Signal raised when json_spirit::Array for new Combo (Market & Decision) is created */
     void newComboArray(const json_spirit::Array &array);
 
+    /** Signal raised for user input errors on combo creation widget */
+    void inputError(const QString &error);
+
     /** Signal raised when user updates a decision array */
     void updatedComboArray(const json_spirit::Array array);
 
+public slots:
+    // Load a json_spirit array for editing
+    void editArray(json_spirit::Array array);
+
 private slots:
     void on_pushButtonCreateCombo_clicked();
+    void on_pushButtonUpdateCombo_clicked();
 };
 
 #endif // COMBOCREATIONWIDGET_H

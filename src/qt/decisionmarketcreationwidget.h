@@ -18,6 +18,8 @@ public:
     explicit DecisionMarketCreationWidget(QWidget *parent = 0);
     ~DecisionMarketCreationWidget();
 
+    json_spirit::Array createDecisionMarketArray();
+
 private slots:
     void on_pushButtonCreateMarket_clicked();
 
@@ -48,7 +50,6 @@ signals:
 
 private:
     Ui::DecisionMarketCreationWidget *ui;
-    json_spirit::Array createDecisionMarketArray();
     int updateIndex;
     DecisionSelectionView *decisionSelection;
 };

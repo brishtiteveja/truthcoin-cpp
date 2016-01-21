@@ -35,7 +35,7 @@
          <item>
           <widget class="QLabel" name="labelDecision">
            <property name="text">
-            <string>1: Create Decision</string>
+            <string>Step 1: Create Decision</string>
            </property>
           </widget>
          </item>
@@ -60,7 +60,7 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>2: Create Market</string>
+            <string>Step 2: Create Market</string>
            </property>
           </widget>
          </item>
@@ -71,36 +71,17 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+    <widget class="QPushButton" name="pushButtonCreateCombo">
+     <property name="text">
+      <string>Create Combo</string>
      </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonUpdateCombo">
+     <property name="text">
+      <string>Update Combo</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QLabel" name="labelDecisionCreated">
-        <property name="text">
-         <string>Decision Ready: No</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="labelMarketCreated">
-        <property name="text">
-         <string>Market Ready:   No</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonCreateCombo">
-        <property name="text">
-         <string>Create Decision and Market</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
   </layout>
