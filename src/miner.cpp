@@ -74,7 +74,6 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
 
     /* outcomes: needed by both calc_rep_tx and calc_coin_tx */
     vector<marketOutcome *> outcomes = pmarkettree->GetOutcomes(branch->GetHash());
-
     /* outcome for this height */
     struct marketOutcome *outcome = NULL;
 
@@ -116,6 +115,8 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
     outcome->NA = defaultNA; /* if conflicts, to be changed (TODO) */
     outcome->alpha = branch->alpha;
     outcome->tol = branch->tol;
+    outcome->nVoters = 0;
+
     for(size_t i=0; i < decisions.size(); i++) {
         const marketDecision *decision = decisions[i];
         if (decision->eventOverBy <= minDecisionHeight)
@@ -130,6 +131,7 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
         goto end_rep_tx;
     outcome->voteMatrix.clear();
     outcome->voteMatrix.resize(votes.size()*outcome->nDecisions, outcome->NA);
+
     for(uint32_t i=0; i < preptx.vout.size(); i++) {
         uint160 u;
         vector<vector<unsigned char> > vSolutions;
@@ -175,7 +177,8 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
         }
         outcome->nVoters++;
     }
-    if (!outcome->nVoters) /* if a branch is dead */
+
+    if (outcome->nVoters == 0 || (preptx.vout.size() == 0)) /* if a branch is dead */
         goto end_rep_tx;
 
     /* calculate the new reputations */
@@ -197,7 +200,6 @@ CTransaction getOutcomeTx(marketBranch *branch, uint32_t height)
     for(size_t i=0; i < revealvotes.size(); i++)
         delete revealvotes[i];
     }
-
 
     calc_coin_tx:
     {
@@ -430,6 +432,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 
     // Create branches outcome txs
     uint32_t height = chainActive.Height() + 1;
+
     vector<marketBranch *> branches = pmarkettree->GetBranches();
     for(size_t i=0; i < branches.size(); i++) {
         CTransaction btx = getOutcomeTx(branches[i], height);

@@ -78,7 +78,12 @@ QT_TS = \
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
   qt/forms/askpassphrasedialog.ui \
+  qt/forms/authorview.ui \
   qt/forms/coincontroldialog.ui \
+  qt/forms/combocreationwidget.ui \
+  qt/forms/decisioncreationwidget.ui \
+  qt/forms/decisionmarketcreationwidget.ui \
+  qt/forms/decisionselectionview.ui \
   qt/forms/editaddressdialog.ui \
   qt/forms/helpmessagedialog.ui \
   qt/forms/intro.ui \
@@ -97,6 +102,8 @@ QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
+  qt/moc_authorview.cpp \
+  qt/moc_authorpendingtablemodel.cpp \
   qt/moc_hivemindaddressvalidator.cpp \
   qt/moc_hivemindamountfield.cpp \
   qt/moc_hivemindgui.cpp \
@@ -104,7 +111,12 @@ QT_MOC_CPP = \
   qt/moc_clientmodel.cpp \
   qt/moc_coincontroldialog.cpp \
   qt/moc_coincontroltreewidget.cpp \
+  qt/moc_combocreationwidget.cpp \
   qt/moc_csvmodelwriter.cpp \
+  qt/moc_decisioncreationwidget.cpp \
+  qt/moc_decisionmarketcreationwidget.cpp \
+  qt/moc_decisionselectionview.cpp \
+  qt/moc_decisionselectionmodel.cpp \
   qt/moc_editaddressdialog.cpp \
   qt/moc_guiutil.cpp \
   qt/moc_intro.cpp \
@@ -197,6 +209,8 @@ HIVEMIND_QT_H = \
   qt/addressbookpage.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
+  qt/authorview.h \
+  qt/authorpendingtablemodel.h \
   qt/hivemindaddressvalidator.h \
   qt/hivemindamountfield.h \
   qt/hivemindgui.h \
@@ -204,7 +218,10 @@ HIVEMIND_QT_H = \
   qt/clientmodel.h \
   qt/coincontroldialog.h \
   qt/coincontroltreewidget.h \
+  qt/combocreationwidget.h \
   qt/csvmodelwriter.h \
+  qt/decisioncreationwidget.h \
+  qt/decisionmarketcreationwidget.h \
   qt/editaddressdialog.h \
   qt/guiconstants.h \
   qt/guiutil.h \
@@ -234,6 +251,8 @@ HIVEMIND_QT_H = \
   qt/decisionmarketfilterproxymodel.h \
   qt/decisionmarkettablemodel.h \
   qt/decisionmarketwindow.h \
+  qt/decisionselectionview.h \
+  qt/decisionselectionmodel.h \
   qt/decisiontradefilterproxymodel.h \
   qt/decisiontradetablemodel.h \
   qt/decisiontradewindow.h \
@@ -285,6 +304,7 @@ RES_ICONS = \
   qt/res/icons/address-book.png \
   qt/res/icons/about.png \
   qt/res/icons/about_qt.png \
+  qt/res/icons/author.png \
   qt/res/icons/hivemind.ico \
   qt/res/icons/hivemind.png \
   qt/res/icons/clock1.png \
@@ -360,11 +380,16 @@ endif
 
 if ENABLE_WALLET
 HIVEMIND_QT_CPP += \
+  qt/authorview.cpp \
+  qt/authorpendingtablemodel.cpp \
   qt/addressbookpage.cpp \
   qt/addresstablemodel.cpp \
   qt/askpassphrasedialog.cpp \
   qt/coincontroldialog.cpp \
   qt/coincontroltreewidget.cpp \
+  qt/combocreationwidget.cpp \
+  qt/decisioncreationwidget.cpp \
+  qt/decisionmarketcreationwidget.cpp \
   qt/editaddressdialog.cpp \
   qt/ballotview.cpp \
   qt/ballotballotfilterproxymodel.cpp \
@@ -389,6 +414,8 @@ HIVEMIND_QT_CPP += \
   qt/decisionmarketfilterproxymodel.cpp \
   qt/decisionmarkettablemodel.cpp \
   qt/decisionmarketwindow.cpp \
+  qt/decisionselectionview.cpp \
+  qt/decisionselectionmodel.cpp \
   qt/decisiontradefilterproxymodel.cpp \
   qt/decisiontradetablemodel.cpp \
   qt/decisiontradewindow.cpp \
@@ -423,7 +450,7 @@ HIVEMIND_QT_CPP += \
   qt/walletview.cpp
 endif
 
-RES_IMAGES = 
+RES_IMAGES =
 
 RES_MOVIES = $(wildcard qt/res/movies/spinner-*.png)
 

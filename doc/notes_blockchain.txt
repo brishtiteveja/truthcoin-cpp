@@ -9,29 +9,29 @@ The bitcoin block-chain format is:
                 blockhdr    hdr
                 varint      ntxs
                 {tx}+       transaction array
-  
+
    blockhdr ::= uint32      version_number (0x00000001 or 0x00000002)
                 uint256     prev_block_hash
-                uint256     merkle_root 
+                uint256     merkle_root
                 uint32      time_stamp
                 uint32      difficulty_bits
                 uint32      nonce
- 
+
    tx ::=       uint32      version_number
                 varint      ninputs
                 {input}+    input array
                 varint      noutputs
                 {output}+   output array
                 uint32      lock_time
-   
+
    input ::=    uint256     prev_hash
                 uint32      prev_index
                 script      input_script
                 uint32      sequence
- 
+
    output ::=   uint64      amount
                 script      output_script
-  
+
 Input scripts generally just push data (e.g., a signature as proof of possessing
 the private key) onto the stack which when used with the previous output script
 evaluates to true (e.g., OP_CHECKSIG).
@@ -43,11 +43,11 @@ of the merkle tree of all hashes of the transactions.
 Example output scripts:
 
      Standard Generation Transaction (pay-to-pubkey):
-     script = OP_PUSHx41 publickey_uncompressed OP_CHECKSIG 
+     script = OP_PUSHx41 publickey_uncompressed OP_CHECKSIG
               | OP_PUSHx21 publickey_compressed OP_CHECKSIG
 
      Standard Transaction to Bitcoin address (pay-to-pubkey-hash)
-     script = OP_DUP OP_HASH160 OP_PUSHx14 pubkey_hash 
+     script = OP_DUP OP_HASH160 OP_PUSHx14 pubkey_hash
                   OP_EQUALVERIFY OP_CHECKSIG
               | OP_HASH160 OP_PUSHx14 pubkey_hash OP_EQUAL
 
@@ -57,14 +57,14 @@ Example output scripts:
 
 Example input scripts:
 
-     Standard Signature: 
+     Standard Signature:
      script = OP_PUSHxXX {DER_sig SIGHASH_ALL}
                   OP_PUSHx41 publickey_uncompressed
             | OP_PUSHxXX {DER_sig SIGHASH_ALL}
                   OP_PUSHx21 publickey_compressed
 
-     DER_sig ::=  uint8       DER_type (sequence: 0x30) 
-                  uint8       DER_length (nbytes of sequence) 
+     DER_sig ::=  uint8       DER_type (sequence: 0x30)
+                  uint8       DER_length (nbytes of sequence)
                   uint8       DER_type (integer 0x02)
                   uint8       DER_length (nbytes of the integer)
                   {uint8}+    r
@@ -73,7 +73,7 @@ Example input scripts:
                   {uint8}+    s
 
      DER_sig is the standard DER format of a pair of integers.
-     The signature values (r,s) are the ECDSA values to sign the 
+     The signature values (r,s) are the ECDSA values to sign the
      two-round hash of the current tx (except that the previous
      transaction's input script is used and the SIGHASH_ALL tag
      is added to the end):
@@ -98,7 +98,7 @@ Hivemind Blockchain
 
 Bitcoin's block chain can be viewed as a ledger of actions on a dataset. The
 dataset is the set of all coin allocations to addresses and the actions are
-the transfers of coins from a subset of addresses to other addresses. 
+the transfers of coins from a subset of addresses to other addresses.
 
 Hivemind is a generalization of both the dataset and the set of actions.
 
@@ -124,27 +124,27 @@ Hivemind's actions consists of:
    7. creation of steal votes
    8. creation of reveal votes
    9. publishing outcomes with transfers of bitcoins.
-  10. redistributions of votecoin allocations 
+  10. redistributions of votecoin allocations
 
 Anyone with bitcoins may initiate any of the actions 1,3,4,5. Anyone with
 votecoins will be obligated to initiate actions 6,8. The miners will initiate
 9 and 10.
 
-Each hivemind-specific action is a bitcoin-like transaction where the output 
+Each hivemind-specific action is a bitcoin-like transaction where the output
 script designates one of the actions to be taken. The format of the output
 script is simply:
- 
+
    output_script =
          OP_PUSHxXX    number of bytes
          char          action_type
          {uint8}+      action_data
          OP_MARKET     0xc0
 
-If viewed as a stack operation, action_type and action_data are simply pushed 
-onto the stack and then OP_MARKET acts as an operation to (1) do the action 
-specified by the action_type using action_data as inputs and (2) clear the 
-stack with a TRUE result. The action_type byte will specify one of the 
-hivemind-specific actions 2-8 above.  The specific format for action_data is 
+If viewed as a stack operation, action_type and action_data are simply pushed
+onto the stack and then OP_MARKET acts as an operation to (1) do the action
+specified by the action_type using action_data as inputs and (2) clear the
+stack with a TRUE result. The action_type byte will specify one of the
+hivemind-specific actions 2-8 above.  The specific format for action_data is
 as follows.
 
 
@@ -173,18 +173,18 @@ Create Branch
   longer be a part of their previous branches and the output votecoins will now
   be a part of the new branch.
 
-  Note 2: Each block number ending in a multiple of tau denotes the start of a 
+  Note 2: Each block number ending in a multiple of tau denotes the start of a
   voting period for the branch's recently ended decisions. The schedule is
 
      block number / range
      -----------------------------------   -----------------------------------
-     n*tau                                 ballots available for all decisions 
-                                              ending ((n-1)*tau, n*tau] 
+     n*tau                                 ballots available for all decisions
+                                              ending ((n-1)*tau, n*tau]
      (n*tau, n*tau+ballotTime]             sealed ballots may be submitted
      (n*tau, n*tau+ballotTime+unsealTime)  unsealed ballots may be submitted
      n*tau + ballotTime + unsealTime       miner runs outcome algorithm
-                                               
-  We must have ballotTime + unsealTime less than tau so that the change of 
+
+  We must have ballotTime + unsealTime less than tau so that the change of
   votecoins in an outcome is set before the next run of the outcome algorithm.
 
   It is desireable to have tau correspond to approximately two weeks (for 10
@@ -192,10 +192,10 @@ Create Branch
 
   Note 3: The outcome algorithm is best when there are many decisions on a
   ballot, but not too many. The cost to create a decision for a ballot is thus
-  structured to depend on how many decisions have already been created for 
-  that specific ballot. The parameters 
+  structured to depend on how many decisions have already been created for
+  that specific ballot. The parameters
        freeDecisions <= targetDecisions <= maxDecisions.
-  are required.  For the N-th decision ending in (n-1)*tau, n*tau], the 
+  are required.  For the N-th decision ending in (n-1)*tau, n*tau], the
   "listing fee" cost to create another decision in that interval will be
 
      cost                                  N
@@ -204,13 +204,13 @@ Create Branch
      baseListingFee                        [freeDecisions, targetDecisions)
      (N - targetDecisions)*baseListingFee  [targetDecisions, maxDecisions)
      impossible                            [maxDecisions,infty)
-     
+
   Note 4: TODO: consensusThreshold requirement for the outcome algorithm
 
   Note 5: TODO: minTradingFee
 
   Note 6: TODO: The creation of a new branch is a controlled process.
- 
+
 
 Create Decision
 ------------------
@@ -225,20 +225,20 @@ Create Decision
                 uint64      if scaled, maximum
                 uint8       answer optionality (0=not optional, 1=optional)
 
-  Note 1: The creator of the decision pays a listing fee according to the 
+  Note 1: The creator of the decision pays a listing fee according to the
   branch parameters and will receive a portion of the trading fees of all
-  markets on that decision. The outcome algorithm will allocate 25% of 
-  each market's trading fees across the bitcoin public keys the market's
+  markets on that decision. The outcome algorithm will allocate 25% of
+  each market's trading fees across the bitcoin public keys in the market's
   decision list.
 
 
 Create Market
 ------------------
-     
+
   action_type = char        'M' (createmarket)
   action_data = uint160     bitcoin public key
                 uint64      B (liquidity parameter)
-                uint64      tradingFee     
+                uint64      tradingFee
                 uint64      maxCommission
                 string      title
                 string      description
@@ -250,17 +250,17 @@ Create Market
                 {uint8}+    decisionFunctionids
                 uint32      txPoWh transaction proof-of-work hashid
                 uint32      txPoWd transaction proof-of-work difficulty level
-     
+
 
   Note 1: The market will be dependent on the outcome of each decision
-  in the list. The maturation is set to be the maximum of the decision's 
+  in the list. The maturation is set to be the maximum of the decision's
   eventOverBy numbers.
- 
+
   Note 2: The market may depend on a function of the scaled decisions.
   The initial list of functions are
 
      id                                    f(X)
-     ----------------------                ------------------ 
+     ----------------------                ------------------
      X1 [default]                          X
      X2                                    X*X
      X3                                    X*X*X
@@ -302,7 +302,7 @@ Create Trade
 
 Create Reveal Vote
 ------------------
-     
+
   action_type = char        'R' (createrevealvote)
   action_data = uint256     branchid
                 uint32      height
@@ -314,7 +314,7 @@ Create Reveal Vote
 
   Note 1: The voteid is a previously submitted sealed vote.
 
-  Note 2: voteid must match the hash of the outcome with zeros in 
+  Note 2: voteid must match the hash of the outcome with zeros in
   place of the voteid.
 
 
@@ -339,16 +339,16 @@ Create Steal Vote
                 uint256     voteid
 
   Note 1: The voteid is a previously submitted sealed vote.
-     
+
 
 Create Outcome
 ------------------
 
   action_type = char        'O' (createoutcomes)
-  action_data =   
+  action_data =
                 TODO
-     
+
   action_type = char        'R' (redistribution of votecoins)
   action_data = varint      noutputs
                 {output}+   output array (pay-to-pubkey-hash)
-     
+
